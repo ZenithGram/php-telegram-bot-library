@@ -1,5 +1,5 @@
 {
-    "name": "zhenyagr/tgz",
+    "name": "zhenyagr/zenithgram",
     "description": "Библиотека для разработки ботов в Telegram",
     "type": "library",
     "require": {
