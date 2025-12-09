@@ -1,5 +1,5 @@
-# Что такое TGZ?
-**TGZ** — это современная PHP-библиотека для создания ботов в Telegram.
+# Что такое ZenithGram?
+**ZenithGram** — это современная PHP-библиотека для создания ботов в Telegram.
 Позволяет быстро и удобно работать с Bot API, поддерживает Webhook и LongPoll, а также все типы сообщений и клавиатур.
 
 ## Поддерживаемые возможности
@@ -15,7 +15,7 @@
 ## Используя composer
 1. Установить
 ```bash
-composer require zhenyagr/tgz:dev-main
+composer require zhenyagr/zenithgram:dev-main
 ```
 
 2. Подключить `autoload.php`
