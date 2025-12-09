@@ -10,6 +10,7 @@ use ZhenyaGR\TGZ\Dto\UserDto;
 use ZhenyaGR\TGZ\Dto\ChatDto;
 use ZhenyaGR\TGZ\Utils\EnvironmentDetector;
 
+// test auto-update in packagist
 class TGZ
 {
     use ErrorHandler;
