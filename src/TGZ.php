@@ -12,6 +12,7 @@ use ZhenyaGR\TGZ\Utils\EnvironmentDetector;
 
 // test auto-update in packagist
 // test two
+// tree
 class TGZ
 {
     use ErrorHandler;
