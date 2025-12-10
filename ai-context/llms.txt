@@ -32,7 +32,7 @@
 - [Inline](https://zenithgram.github.io/classes/inline.md): Класс для создания инлайн-ответов.
 - [DTO](https://zenithgram.github.io/classes/dto.md): Объекты данных UserDto и ChatDto.
 
-#### ZenithGram
+#### ZG
 
 - [msg](https://zenithgram.github.io/classes/zenithMethods/msg.md): Создает экземпляр класса Message для отправки сообщений.
 - [poll](https://zenithgram.github.io/classes/zenithMethods/poll.md): Создает экземпляр класса Poll для создания опросов.
