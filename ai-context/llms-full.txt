@@ -27,14 +27,14 @@ description: Ограничивает доступ к маршруту по ID �
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 $bot->onCommand('ban', '/ban %w')
-    ->func(function(TGZ $tg, $banned_user) {
+    ->func(function(ZG $tg, $banned_user) {
         $tg->msg("✅ Пользователь `{$banned_user}` забанен")->send();
         
     })
@@ -48,18 +48,18 @@ $bot->run();
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 $bot->onCommand('ban', '/ban %w')
-    ->func(function(TGZ $tg, $banned_user) {
+    ->func(function(ZG $tg, $banned_user) {
         $tg->msg("✅ Пользователь `{$banned_user}` забанен")->send();
         
     })
-    ->access(123456, function(TGZ $tg) {
+    ->access(123456, function(ZG $tg) {
         $tg->reply("Доступ запрещен"); 
         // Отправит сообщение, если попробует использовать пользователь с ID не 123456
     });
@@ -87,10 +87,10 @@ description: Вспомогательный класс для установки
 ```php
 <?php    
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 $bot->onBotCommand('start', '/start')
@@ -127,9 +127,9 @@ description: Добавляет варианты ответов.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 
 $tg->poll('regular')
     ->question('Вопрос')
@@ -163,9 +163,9 @@ description: Устанавливает адрес.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $query_id = $tg->getQueryId();
 
 $results = [
@@ -240,8 +240,8 @@ description: Методы для ответа на callback (answerCallbackQuery
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 
-use ZhenyaGR\TGZ\TGZ;
-$tg = TGZ::create(ТОКЕН);
+use ZhenyaGR\ZenithGram\ZG;
+$tg = ZG::create(ТОКЕН);
 $tg->initVars(query_id: $query_id, type: $type);
 if ($type === 'callback_query') {
     $tg->answerCallbackQuery($query_id, ['text' => 'Вы нажали на кнопку']);
@@ -269,8 +269,8 @@ if ($type === 'callback_query') {
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 
-use ZhenyaGR\TGZ\TGZ;
-$tg = TGZ::create(ТОКЕН);
+use ZhenyaGR\ZenithGram\ZG;
+$tg = ZG::create(ТОКЕН);
 $tg->initVars(query_id: $query_id, type: $type);
 if ($type === 'inline_query') {
     $tg->answerInlineQuery($query_id, $inline_result);
@@ -303,10 +303,10 @@ description: Прикрепляет аудио к ответу.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 $bot->onText('audio')
@@ -341,9 +341,9 @@ description: Добавляет аудио.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 $text = $tg->getText();
 $type = $tg->getType();
 
@@ -415,11 +415,11 @@ description: Конструктор для создания логики бот�
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
 // Инициализация для работы через Webhook
-$tg = TGZ::create('ВАШ_ТОКЕН_БОТА');
+$tg = ZG::create('ВАШ_ТОКЕН_БОТА');
 $bot = new Bot($tg);
 
 // ... здесь вся логика вашего бота ...
@@ -433,16 +433,16 @@ $bot->run();
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 
-use ZhenyaGR\TGZ\LongPoll;
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\LongPoll;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
 $lp = LongPoll::create('ВАШ_ТОКЕН_БОТА');
 $bot = new Bot(); // Сразу не передаем TGZ
 // ... здесь вся логика вашего бота ...
 
-$lp->listen(function(TGZ $tg) {
-    $bot->tgz($tg)->run();
+$lp->listen(function(ZG $tg) {
+    $bot->zg($tg)->run();
 });
 ```
 
@@ -458,10 +458,10 @@ $lp->listen(function(TGZ $tg) {
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // --- Определяем маршруты и действия ---
@@ -522,10 +522,10 @@ description: Определяет кнопку и привязывает к не
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // 1. Определяем действия для каждой кнопки
@@ -650,9 +650,9 @@ description: Методы для простой сборки клавиатур�
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(ТОКЕН);
+$tg = ZG::create(ТОКЕН);
 
 $kbd = [[$tg->buttonText('Нажми меня')]];
 $tg->msg('Текстовая кнопка')
@@ -680,9 +680,9 @@ $tg->msg('Текстовая кнопка')
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(ТОКЕН);
+$tg = ZG::create(ТОКЕН);
 
 $kbd = [[$tg->buttonCallback('Нажми меня', 'callback_data')]];
 $tg->msg('Callback-кнопка')
@@ -710,9 +710,9 @@ $tg->msg('Callback-кнопка')
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(ТОКЕН);
+$tg = ZG::create(ТОКЕН);
 
 $kbd = [[$tg->buttonUrl('Нажми меня', 'https://google.com')]];
 $tg->msg('Url-кнопка')
@@ -748,9 +748,9 @@ description: Выполняет произвольный метод Telegram Bot
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create('ВАШ_ТОКЕН_БОТА');
+$tg = ZG::create('ВАШ_ТОКЕН_БОТА');
 
 $me = $tg->callAPI('getMe');
 $name = "Имя бота: " . $me['result']['first_name'] . "\n";
@@ -790,9 +790,9 @@ description: Отправляет опрос закрытым.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 
 $tg->poll('regular')
     ->question('Вопрос')
@@ -827,9 +827,9 @@ description: Устанавливает дату закрытия опроса.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 
 $tg->poll('regular')
     ->question('Вопрос')
@@ -865,9 +865,9 @@ description: Устанавливает координаты.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $query_id = $tg->getQueryId();
 
 $results = [
@@ -909,9 +909,9 @@ description: Копирует сообщение из одного чата в �
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(ТОКЕН);
+$tg = ZG::create(ТОКЕН);
 
 $msg_id = $tg->getMsgId();
 $tg->copyMsg($msg_id);
@@ -943,9 +943,9 @@ description: Устанавливает правильный ответ (для 
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 
 $tg->poll('quiz')
     ->question('Вопрос')
@@ -974,9 +974,9 @@ description: Собирает массив результата.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $query_id = $tg->getQueryId();
 
 $results = [
@@ -1048,9 +1048,9 @@ description: Устанавливает режим разметки по умо�
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(ТОКЕН);
+$tg = ZG::create(ТОКЕН);
 $tg->defaultParseMode('MarkdownV2');
 
 $tg->msg('*Привет!*')->send();
@@ -1116,9 +1116,9 @@ description: Удаляет сообщение по его ID.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(ТОКЕН);
+$tg = ZG::create(ТОКЕН);
 
 $msg_id = $tg->getMsgId();
 $tg->delMsg($msg_id);
@@ -1150,9 +1150,9 @@ description: Устанавливает описание.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $query_id = $tg->getQueryId();
 
 $results = [
@@ -1193,10 +1193,10 @@ description: Отправляет анимированный эмодзи.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 $emoji = ["🎲", "🎯", "🏀", "⚽", "🎳", "🎰"];
 $dice = $emoji[array_rand($emoji)];
@@ -1233,9 +1233,9 @@ description: Отправляет анимированный эмодзи-куб
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 $text = $tg->getText();
 $type = $tg->getType();
 
@@ -1281,10 +1281,10 @@ description: Прикрепляет документ к ответу.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 $bot->onText('doc')
@@ -1319,9 +1319,9 @@ description: Добавляет документ.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 $text = $tg->getText();
 $type = $tg->getType();
 
@@ -1401,11 +1401,11 @@ DTO (Data Transfer Object) - простой объект, хранящий в с
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
-use ZhenyaGR\TGZ\Dto\UserDto; // Импортируем класс
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
+use ZhenyaGR\ZenithGram\Dto\UserDto; // Импортируем класс
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 $bot->onCommand('/userdto')
@@ -1458,11 +1458,11 @@ $bot->run();
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
-use ZhenyaGR\TGZ\Dto\ChatDto; // Импортируем класс
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
+use ZhenyaGR\ZenithGram\Dto\ChatDto; // Импортируем класс
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 $bot->onCommand('/chatdto')
@@ -1524,10 +1524,10 @@ description: Редактирует подпись к медиа (для callbac
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // Определяем кнопку, которая будет редактировать сообщение
@@ -1576,14 +1576,14 @@ description: Редактирует подпись медиа по ID.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 $bot->onBotCommand('edit', '/edit')
-    ->func(function(TGZ $tg) {
+    ->func(function(ZG $tg) {
         // !!! У СООБЩЕНИЯ ОБЯЗАТЕЛЬНО ДОЛЖНО БЫТЬ МЕДИА
         $response = $tg->msg("Это сообщение будет изменено.")
             ->img('https://example.com/img.jpg')
@@ -1599,7 +1599,7 @@ $bot->onBotCommand('edit', '/edit')
 
 // 2. Обрабатываем нажатие на кнопку
 $bot->onCallback('edit_in_chat', '/edit_in_chat')
-    ->func(function(TGZ $tg) {
+    ->func(function(ZG $tg) {
         // ID чата, в котором нужно отредактировать сообщение
         $chatIdToEdit = 123456789;
         // ID сообщения для редактирования (предположим, мы его уже знаем)
@@ -1643,11 +1643,11 @@ description: Заменяет медиа в сообщении по ID.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
-use ZhenyaGR\TGZ\Button;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
+use ZhenyaGR\ZenithGram\Button;
 
-$tg = TGZ::create('ВАШ_ТОКЕН');
+$tg = ZG::create('ВАШ_ТОКЕН');
 $bot = new Bot($tg);
 
 // 1. По команде /start отправляем исходное сообщение с фото кота и кнопкой
@@ -1660,7 +1660,7 @@ $bot->onBotCommand('start', '/start')
 
 // 2. Обрабатываем нажатие на кнопку
 $bot->onCallback('handle_dog_request', 'show_dog')
-    ->func(function(TGZ $tg) {
+    ->func(function(ZG $tg) {
         // Обязательно отвечаем на callback, чтобы убрать "часики"
         $tg->answerCallbackQuery($tg->getQueryID());
 
@@ -1699,10 +1699,10 @@ description: Редактирует текст исходного сообщен
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // Определяем кнопку, которая будет редактировать сообщение
@@ -1751,14 +1751,14 @@ description: Редактирует текст сообщения по ID.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 $bot->onBotCommand('edit', '/edit')
-    ->func(function(TGZ $tg) {
+    ->func(function(ZG $tg) {
         // Сначала отправляем сообщение
         $response = $tg->msg("Это сообщение будет изменено")->send();
         // Получаем ID отправленного сообщения
@@ -1772,7 +1772,7 @@ $bot->onBotCommand('edit', '/edit')
 
 // 2. Обрабатываем нажатие на кнопку
 $bot->onCallback('edit_in_chat', '/edit_in_chat')
-    ->func(function(TGZ $tg) {
+    ->func(function(ZG $tg) {
         // ID чата, в котором нужно отредактировать сообщение
         $chatIdToEdit = 123456789;
         // ID сообщения для редактирования (предположим, мы его уже знаем)
@@ -1815,9 +1815,9 @@ description: Настройка обработки и логирования о�
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(ТОКЕН);
+$tg = ZG::create(ТОКЕН);
 
 // 1. Отправка ошибок одному пользователю Telegram
 $adminChatId = 123456789; // Ваш Telegram ID
@@ -1854,9 +1854,9 @@ error_log("[$type] Ошибка: " . $message);
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(ТОКЕН)->setUserLogError(123456789);
+$tg = ZG::create(ТОКЕН)->setUserLogError(123456789);
 
 // Фильтрация папки vendor
 $tg->setTracePathFilter('/path/to/your/project/vendor');
@@ -1881,9 +1881,9 @@ $tg->setTracePathFilter('/path/to/your/project/vendor');
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(ТОКЕН);
+$tg = ZG::create(ТОКЕН);
 $adminChatId = 123456789;
 $tg->setUserLogError($adminChatId);
 
@@ -1917,9 +1917,9 @@ description: Добавляет пояснение к викторине.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 
 $tg->poll('quiz')
     ->question('Вопрос')
@@ -1955,9 +1955,9 @@ description: 'Создает экземпляр класса File для раб�
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(ТОКЕН);
+$tg = ZG::create(ТОКЕН);
 
 $img_id = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef...";
 
@@ -1992,9 +1992,9 @@ description: Класс для работы с файлами.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(ТОКЕН);
+$tg = ZG::create(ТОКЕН);
 
 $img_id = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef...";
 
@@ -2009,7 +2009,7 @@ $File = $tg->file($img_id);
 <?php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\File;
+use ZhenyaGR\ZenithGram\File;
 
 $img_id = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef...";
 
@@ -2044,9 +2044,9 @@ description: Устанавливает file_id файла.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $query_id = $tg->getQueryId();
 
 $results = [
@@ -2087,9 +2087,9 @@ description: Устанавливает URL файла.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $query_id = $tg->getQueryId();
 
 $results = [
@@ -2129,11 +2129,11 @@ description: Выполняет пользовательскую функцию-
 
 ## Аргументы обработчика
 
-* `TGZ` - экземпляр класса.
+* `TGZ` - экземпляр основного класса.
   Ваша функция может принимать аргументы, извлеченные из сообщения пользователя:
 * Для `onCommand`: значения, соответствующие плейсхолдерам (`%w`, `%n`, `%s`), или все аргументы команды.
 * Для `onTextPreg`: значения совпадений из `preg_match`.
-* Для `onReferra;`: значения из реферальной ссылки.
+* Для `onReferral`: значения из реферальной ссылки.
 * Для `onLeftChatMember`: экземпляр класса `UserDto`.
 * Для `onNewChatMember`: экземпляры класса `UserDto`.
 
@@ -2142,15 +2142,15 @@ description: Выполняет пользовательскую функцию-
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // Пример с onCommand и аргументами
 $bot->onCommand('ban', '!ban %w %s')
-    ->func(function(TGZ $tg, string $username, string $reason) {
+    ->func(function(ZG $tg, string $username, string $reason) {
         // Здесь может быть ваша логика: запись в БД, проверка прав и т.д.
         $tg->msg("✅ Пользователь `{$username}` забанен по причине: `{$reason}`")
            ->parseMode('MarkdownV2')
@@ -2159,7 +2159,7 @@ $bot->onCommand('ban', '!ban %w %s')
 
 // Пример с onTextPreg для извлечения данных
 $bot->onTextPreg('order', '/заказ номер (\d+)/i')
-    ->func(function(TGZ $tg, int $orderId) {
+    ->func(function(ZG $tg, int $orderId) {
         // Логика поиска заказа в базе данных
         $status = "в пути"; // Пример
         $tg->msg("Статус вашего заказа №{$orderId}: {$status}")->send();
@@ -2167,7 +2167,7 @@ $bot->onTextPreg('order', '/заказ номер (\d+)/i')
 
 // Пример с onCallback, где нужна сложная логика
 $bot->btn('confirm_delete', 'Да, удалить')
-    ->func(function(TGZ $tg) {
+    ->func(function(ZG $tg) {
         $query_id = $tg->getQueryId();
         // Логика удаления...
         $tg->msg("Запись удалена.")->editText();
@@ -2202,9 +2202,9 @@ description: 'Методы получения данных из обновлен
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create('ВАШ_ТОКЕН');
+$tg = ZG::create('ВАШ_ТОКЕН');
 $update = $tg->getUpdate();
 ```
 
@@ -2221,9 +2221,9 @@ $update = $tg->getUpdate();
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create('ВАШ_ТОКЕН');
+$tg = ZG::create('ВАШ_ТОКЕН');
 $chat_id = $tg->getChatId();
 
 ```
@@ -2241,9 +2241,9 @@ $chat_id = $tg->getChatId();
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create('ВАШ_ТОКЕН');
+$tg = ZG::create('ВАШ_ТОКЕН');
 $user_id = $tg->getUserId();
 ```
 
@@ -2260,9 +2260,9 @@ $user_id = $tg->getUserId();
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create('ВАШ_ТОКЕН');
+$tg = ZG::create('ВАШ_ТОКЕН');
 $text = $tg->getText();
 ```
 
@@ -2279,9 +2279,9 @@ $text = $tg->getText();
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create('ВАШ_ТОКЕН');
+$tg = ZG::create('ВАШ_ТОКЕН');
 $message_id = $tg->getMsgId();
 ```
 
@@ -2298,9 +2298,9 @@ $message_id = $tg->getMsgId();
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create('ВАШ_ТОКЕН');
+$tg = ZG::create('ВАШ_ТОКЕН');
 $type = $tg->getType();
 ```
 
@@ -2317,9 +2317,9 @@ $type = $tg->getType();
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create('ВАШ_ТОКЕН');
+$tg = ZG::create('ВАШ_ТОКЕН');
 $query_id = $tg->getQueryId();
 ```
 
@@ -2335,9 +2335,9 @@ $query_id = $tg->getQueryId();
 
 ```php
 <?phprequire_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create('ВАШ_ТОКЕН');
+$tg = ZG::create('ВАШ_ТОКЕН');
 $callback_data = $tg->getCallbackData();
 ```
 
@@ -2350,9 +2350,9 @@ $callback_data = $tg->getCallbackData();
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create('ВАШ_ТОКЕН');
+$tg = ZG::create('ВАШ_ТОКЕН');
 
 $chat_id = $tg->getChatID();
 $text = $tg->getText();
@@ -2393,10 +2393,10 @@ description: Получает file_id из сообщения.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\File;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\File;
 
-$tg = TGZ::create(ТОКЕН);
+$tg = ZG::create(ТОКЕН);
 
 $result = $tg->msg("Вот вам картинка")
     ->img('https://example.com/img.jpg')
@@ -2412,10 +2412,10 @@ $tg->msg("ID картинки: $file_id")->send();
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\File;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\File;
 
-$tg = TGZ::create(ТОКЕН);
+$tg = ZG::create(ТОКЕН);
 
 $update = $tg->getUpdate();
 
@@ -2452,9 +2452,9 @@ description: Загружает файл по URL и возвращает его
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(ТОКЕН);
+$tg = ZG::create(ТОКЕН);
 $chat_id = $tg->getChatId();
 
 $file_id = $tg->getFileID('example.com/image.jpg', $chat_id, 'photo');
@@ -2481,9 +2481,9 @@ description: Получает информацию о файле через API.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(ТОКЕН);
+$tg = ZG::create(ТОКЕН);
 
 $img_id = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef...";
 
@@ -2518,9 +2518,9 @@ description: Возвращает прямую ссылку на файл (дл�
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(ТОКЕН);
+$tg = ZG::create(ТОКЕН);
 
 $img_id = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef...";
 
@@ -2556,9 +2556,9 @@ description: Возвращает размер файла.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(ТОКЕН);
+$tg = ZG::create(ТОКЕН);
 
 $img_id = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef...";
 
@@ -2631,10 +2631,10 @@ description: Прикрепляет GIF к ответу.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 $bot->onText('gif')
@@ -2669,9 +2669,9 @@ description: Добавляет GIF.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 $text = $tg->getText();
 $type = $tg->getType();
 
@@ -2746,9 +2746,9 @@ description: Устанавливает ID результата.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $query_id = $tg->getQueryId();
 
 $results = [
@@ -2789,10 +2789,10 @@ description: Прикрепляет изображение к ответу.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // Отправка изображения по URL
@@ -2834,9 +2834,9 @@ description: Добавляет изображение (или альбом).
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 $text = $tg->getText();
 $type = $tg->getType();
 
@@ -2921,9 +2921,9 @@ description: >-
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(ТОКЕН);
+$tg = ZG::create(ТОКЕН);
 // В $update хранится событие, которое пришло от Телеграма
 $update = $tg->initVars($chat_id, $user_id, $text, $type, $callback_data, $query_id, $msg_id, $is_bot, $is_command);
 
@@ -2935,9 +2935,9 @@ if ($type === 'text') { // Проверяем тип события
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(ТОКЕН);
+$tg = ZG::create(ТОКЕН);
 
 // В $update хранится событие, которое пришло от Телеграма.
 // Все переменные (chat_id, user_id и т.д.) будут заполнены по ссылке.
@@ -3023,8 +3023,8 @@ description: Создает экземпляр класса Inline для отв
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 
-use ZhenyaGR\TGZ\TGZ;
-$tg = TGZ::create(ТОКЕН);
+use ZhenyaGR\ZenithGram\ZG;
+$tg = ZG::create(ТОКЕН);
 $inline_result = [
     $tg->inline('article')
         ->id('article')
@@ -3061,9 +3061,9 @@ description: Класс для создания инлайн-ответов.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $query_id = $tg->getQueryId();
 
 $results = [
@@ -3086,10 +3086,10 @@ $tg->answerInlineQuery($query_id, $results);
 <?php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Inline;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Inline;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $query_id = $tg->getQueryId();
 
 $results = [
@@ -3140,11 +3140,11 @@ description: Добавляет Inline-клавиатуру к сообщени�
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
-use ZhenyaGR\TGZ\Button;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
+use ZhenyaGR\ZenithGram\Button;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // Сначала определим кнопки и их действия через btn()
@@ -3191,11 +3191,11 @@ description: Добавляет Inline-клавиатуру.
 ```php
 <?php    
 require_once __DIR__ . '/vendor/autoload.php'; 
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
-use ZhenyaGR\TGZ\Button;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
+use ZhenyaGR\ZenithGram\Button;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // Создаем кнопку и сразу добавляем обработчик
@@ -3204,7 +3204,7 @@ $bot->btn('buttonBot', 'Оценить')
     ->text('Оцените бота от 1 до 5');
 
 $bot->onCommand('inlineKbd', '/inlineKbd')
-    ->func(function(TGZ $tg) {
+    ->func(function(ZG $tg) {
         $tg->msg("Inline-клавиатура:")
             ->inlineKbd([
                 [Button::cb('Показать профиль', 'show_profile')],
@@ -3269,9 +3269,9 @@ description: Настраивает анонимность опроса.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 
 $tg->poll('regular')
     ->question('Вопрос')
@@ -3316,11 +3316,11 @@ description: Добавляет Reply-клавиатуру к сообщению
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
-use ZhenyaGR\TGZ\Button;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
+use ZhenyaGR\ZenithGram\Button;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // 1. Определяем кнопки и их текстовые представления
@@ -3380,10 +3380,10 @@ description: Добавляет Inline-клавиатуру к результа�
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Button;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Button;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $query_id = $tg->getQueryId();
 
 $buttons = [
@@ -3432,11 +3432,11 @@ description: Добавляет Reply-клавиатуру.
 ```php
 <?php    
 require_once __DIR__ . '/vendor/autoload.php'; 
-use ZhenyaGR\TGZ\TGZ; 
-use ZhenyaGR\TGZ\Bot; 
-use ZhenyaGR\TGZ\Button; 
+use ZhenyaGR\ZenithGram\ZG; 
+use ZhenyaGR\ZenithGram\Bot; 
+use ZhenyaGR\ZenithGram\Button; 
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // Создаем кнопку и сразу добавляем обработчик
@@ -3444,7 +3444,7 @@ $bot->btn('buttonBot', 'Оценить')
     ->text('Оцените бота от 1 до 5');
 
 $bot->onBotCommand('kbd', '/kbd')
-    ->func(function(TGZ $tg) {
+    ->func(function(ZG $tg) {
         $tg->msg("Клавиатура:")
             ->kbd([
                 [Button::text('Показать профиль')],
@@ -3507,9 +3507,9 @@ description: Класс для запуска бота в режиме Long Poll
 // Файл bot.php
 require_once __DIR__ . '/vendor/autoload.php';
 
-use ZhenyaGR\TGZ\LongPoll;
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\LongPoll;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
 // 1. Создаем экземпляр LongPoll с токеном вашего бота
 $lp = LongPoll::create('ВАШ_ТОКЕН_БОТА');
@@ -3528,13 +3528,13 @@ $bot->onDefault()
     ->text('Я не знаю такой команды.');
 
 // 2. Запускаем прослушивание обновлений
-$lp->listen(function(TGZ $tg) use ($bot){
+$lp->listen(function(ZG $tg) use ($bot){
     // Эта функция будет вызываться для каждого нового обновления.
     // В $tg передается готовый к работе экземпляр TGZ.
     
     // Передаем в класс Bot текущее обновление
     // Запускаем роутер для обработки текущего обновления
-    $bot->tgz($tg)->run();
+    $bot->zg($tg)->run();
 });
 ```
 
@@ -3612,9 +3612,9 @@ description: Добавляет скрытую ссылку для превью.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 $text = $tg->getText()
 $type = $tg->getType();
 
@@ -3662,9 +3662,9 @@ description: Конструктор сообщений.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 
 $tg->msg("Привет, Мир")->send();
 ```
@@ -3700,18 +3700,18 @@ description: Регистрирует Middleware для конкретного �
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 $bot->onCommand('ban', '/ban %w')
-    ->func(function(TGZ $tg, string $bunned_user) {
+    ->func(function(ZG $tg, string $bunned_user) {
         $tg->msg("✅ Пользователь `{$bunned_user}` забанен")->send();
         
     })
-    ->middleware(function(TGZ $tg, callable $next) {
+    ->middleware(function(ZG $tg, callable $next) {
         $user_id = $tg->getUserID();
         if ($user_id === 123456) {
             $next();     
@@ -3750,13 +3750,13 @@ description: Регистрирует глобальное Middleware для б�
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
-$bot->middleware(function(TGZ, callable $next) {
+$bot->middleware(function(ZG, callable $next) {
     $user_id = $tg->getUserId();
     if ($user_id === 123456) {
         $next();        
@@ -3804,7 +3804,7 @@ public function middleware(callable $handler): void
 
 Обработчик Middleware принимает два аргумента:
 
-1. `$tg` (`ZhenyaGR\TGZ\TGZ`): Экземпляр основного класса `TGZ`, предоставляющий доступ ко всему контексту и методам API.
+1. `$tg` (`ZhenyaGR\ZenithGram\TGZ`): Экземпляр основного класса `TGZ`, предоставляющий доступ ко всему контексту и методам API.
 2. `$next` (`Closure`): Функция обратного вызова. **Вы должны вызвать `$next()`**, чтобы передать управление дальше по цепочке (к поиску маршрута). Если `$next()` не будет вызван, обработка обновления прекратится.
 
 ### Пример: Проверка регистрации пользователя
@@ -3815,7 +3815,7 @@ public function middleware(callable $handler): void
 <?php
 require 'vendor/autoload.php';
 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
 // Предположим, у нас есть функция для проверки пользователя в БД
 function isUserRegistered(int $user_id): bool {
@@ -3872,7 +3872,7 @@ public function middleware(callable $handler): Action
 <?php
 require 'vendor/autoload.php';
 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
 const ADMIN_IDS = [12345, 54321]; // Список ID администраторов
 
@@ -3946,9 +3946,9 @@ description: Устанавливает MIME-тип контента.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $query_id = $tg->getQueryId();
 
 $results = [
@@ -3990,9 +3990,9 @@ description: Создает экземпляр класса Message для от�
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(ТОКЕН);
+$tg = ZG::create(ТОКЕН);
 $tg->msg("Привет")->send();
 ```
 
@@ -4024,9 +4024,9 @@ description: Разрешает выбор нескольких варианто
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 
 $tg->poll('regular')
     ->question('Вопрос')
@@ -4067,14 +4067,14 @@ description: Запрещает доступ к маршруту по ID пол�
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 $bot->onCommand('ban', '/ban %w')
-    ->func(function(TGZ $tg, $arg1) {
+    ->func(function(ZG $tg, $arg1) {
         $tg->msg("✅ Пользователь `{$arg1}` забанен")->send();
         
     })
@@ -4088,18 +4088,18 @@ $bot->run();
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 $bot->onCommand('ban', '/ban %w')
-    ->func(function(TGZ $tg, $arg1) {
+    ->func(function(ZG $tg, $arg1) {
         $tg->msg("✅ Пользователь `{$arg1}` забанен")->send();
         
     })
-    ->noAccess(123456, function(TGZ $tg) {
+    ->noAccess(123456, function(ZG $tg) {
         $tg->reply("Доступ запрещен"); 
         // Отправит сообщение, если попробует использовать пользователь с ID 123456
     });
@@ -4131,10 +4131,10 @@ description: Срабатывает при получении аудиофайл
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // Отреагирует на любое пришедшее аудио
@@ -4171,10 +4171,10 @@ description: Обработчик стандартных команд (начи�
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // Простая команда без аргументов
@@ -4228,11 +4228,11 @@ onCallback поддерживает специальные плейсхолде�
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
-use ZhenyaGR\TGZ\Button;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
+use ZhenyaGR\ZenithGram\Button;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // По команде /vote отправляем сообщение с кнопками, созданными вручную
@@ -4289,12 +4289,12 @@ description: Обработчик callback_data по регулярному вы
 
 ```php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
-use ZhenyaGR\TGZ\Button;
-use ZhenyaGR\TGZ\Pagination; // Не забудьте подключить класс констант
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
+use ZhenyaGR\ZenithGram\Button;
+use ZhenyaGR\ZenithGram\Pagination; // Не забудьте подключить класс констант
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 function getCatalogKeyboard(TGZ $tg, int $page): array {
@@ -4307,7 +4307,7 @@ function getCatalogKeyboard(TGZ $tg, int $page): array {
 
 // 1. Команда вызова каталога
 $bot->onBotCommand('catalog', '/catalog')
-    ->func(function(TGZ $tg) {
+    ->func(function(ZG $tg) {
         $keyboard = getCatalogKeyboard($tg, 1);
         $tg->msg("📂 Каталог товаров (Стр. 1):")
             ->inlineKbd($keyboard)
@@ -4316,7 +4316,7 @@ $bot->onBotCommand('catalog', '/catalog')
 
 // 2. Обработчик переключения страниц
 $bot->onCallbackPreg('catalog_handler', '/^catalog_page_(\d+)$/')
-    ->func(function(TGZ $tg, int $page) {
+    ->func(function(ZG $tg, int $page) {
         $query_id = $tg->getQueryId();
         $tg->answerCallbackQuery($query_id);
 
@@ -4368,10 +4368,10 @@ description: Обработчик кастомных команд с подде�
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // Простая команда без аргументов
@@ -4381,7 +4381,7 @@ $bot->onCommand('price', 'цена')
 // Команда с числовым аргументом
 // Пользователь пишет: погода 12345
 $bot->onCommand('weather', 'погода %n')
-    ->func(function(TGZ $tg, int $cityId) {
+    ->func(function(ZG $tg, int $cityId) {
         // Логика получения погоды по ID города...
         $tg->msg("Погода для города с ID {$cityId}: солнечно.")->send();
     });
@@ -4389,14 +4389,14 @@ $bot->onCommand('weather', 'погода %n')
 // Команда с несколькими аргументами
 // Пользователь пишет: !kick @user_nickname флуд в чате
 $bot->onCommand('kick', '!kick %w %s')
-    ->func(function(TGZ $tg, string $username, string $reason) {
+    ->func(function(ZG $tg, string $username, string $reason) {
         $tg->msg("Пользователь {$username} исключен. Причина: {$reason}.")->send();
     });
 
 // Команда без плейсхолдеров, но с аргументами (работает для простых случаев)
 // Пользователь пишет: +additem молоко 2шт
 $bot->onCommand('add_item', '+additem')
-    ->func(function(TGZ $tg, string ...$args) {
+    ->func(function(ZG $tg, string ...$args) {
         $item = implode(' ', $args);
         $tg->msg("Предмет '{$item}' добавлен в список.")->send();
     });
@@ -4430,10 +4430,10 @@ description: Глобальный fallback-обработчик для любы�
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // Основные команды бота
@@ -4474,10 +4474,10 @@ description: Срабатывает при получении документа
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // Отреагирует на любой пришедший документ
@@ -4511,10 +4511,10 @@ description: Срабатывает при редактировании сооб
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 $bot->onEditedMessage()
@@ -4547,10 +4547,10 @@ description: Обработчик входящих Inline-запросов.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 $results = [
@@ -4564,7 +4564,7 @@ $results = [
 
 // Отреагирует на любой пришедший inline-запрос
 $bot->onInline()
-    ->func(function(TGZ $tg) use ($results) {
+    ->func(function(ZG $tg) use ($results) {
         $query_id = $tg->getQueryId();
         $tg->answerInlineQuery($query_id, $results);
     });
@@ -4596,10 +4596,10 @@ description: Срабатывает при выходе участника из 
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // Отреагирует на вышедшего/исключенного пользователя
@@ -4619,10 +4619,10 @@ $bot->run();
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // Отреагирует на вышедшего/исключенного пользователя
@@ -4658,10 +4658,10 @@ description: Обработчик любого текстового сообще
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // Отреагирует на любое пришедшее сообщение
@@ -4695,10 +4695,10 @@ description: Срабатывает при вступлении новых уч�
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // Отреагирует на зашедших/добавленных пользователей
@@ -4720,11 +4720,11 @@ $bot->run();
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
-use ZhenyaGR\TGZ\Dto\UserDto;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
+use ZhenyaGR\ZenithGram\Dto\UserDto;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // Отреагирует на зашедших/добавленных пользователей
@@ -4741,11 +4741,11 @@ $bot->run();
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
-use ZhenyaGR\TGZ\Dto\UserDto;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
+use ZhenyaGR\ZenithGram\Dto\UserDto;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // Отреагирует на зашедших/добавленных пользователей
@@ -4781,10 +4781,10 @@ description: Срабатывает при получении изображен
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // Отреагирует на любое пришедшее фото
@@ -4822,14 +4822,14 @@ https://t.me/{bot\_username}?start={referral\_data}
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 $bot->onReferral()
-    ->func(function(TGZ $tg, string $ref) {
+    ->func(function(ZG $tg, string $ref) {
         $tg->reply("Реферальная ссылка: {$ref}"); 
     });
 
@@ -4856,10 +4856,10 @@ description: Обработчик команды /start.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // С помощью отдельного метода
@@ -4897,10 +4897,10 @@ description: Срабатывает при получении стикера.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // Отреагирует на любой пришедший стикер
@@ -4939,10 +4939,10 @@ description: Обработчик точного совпадения текст
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // Создаем кнопки для стандартной клавиатуры
@@ -5003,23 +5003,23 @@ description: Обработчик текста сообщения по регу�
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // Маршрут для извлечения email-адреса из текста
 // Пользователь пишет: "Моя почта my.email@example.com"
 $bot->onTextPreg('find_email', '/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/')
-    ->func(function(TGZ $tg, string $email) {
+    ->func(function(ZG $tg, string $email) {
         $tg->msg("Спасибо! Я записал ваш email: {$email}")->send();
     });
 
 // Маршрут для извлечения суммы и валюты
 // Пользователь пишет: "конвертируй 100 USD"
 $bot->onTextPreg('converter', '^!конвертация\s+(\d+)\s+(RUB|EUR|USD)$')
-    ->func(function(TGZ $tg, int $amount, string $currency) {
+    ->func(function(ZG $tg, int $amount, string $currency) {
 
         // ... логика конвертации ...
         $result = $amount * 90; // Пример
@@ -5054,10 +5054,10 @@ description: Срабатывает при получении видео.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // Отреагирует на любое пришедшее видео
@@ -5091,10 +5091,10 @@ description: Срабатывает при получении видео-соо�
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // Отреагирует на любое пришедшее видео-сообщение
@@ -5128,10 +5128,10 @@ description: Срабатывает при получении голосовог
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // Отреагирует на любое пришедшее голосовое сообщение
@@ -5167,9 +5167,9 @@ description: Устанавливает время жизни опроса.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 
 $tg->poll('regular')
     ->question('Вопрос')
@@ -5202,9 +5202,9 @@ description: Создает экземпляр класса Pagination для г
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(ТОКЕН);
+$tg = ZG::create(ТОКЕН);
 $pager = $tg->pagination();
 ```
 
@@ -5230,10 +5230,10 @@ description: Класс для пагинации страниц.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Button;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Button;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 
 // Генерируем массив кнопок (например, 20 штук)
 $items = [];
@@ -5263,8 +5263,8 @@ $tg->msg("Выберите товар (Страница 1):")
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Pagination;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Pagination;
 
 // Генерируем массив кнопок (например, 20 штук)
 $items = [];
@@ -5282,7 +5282,7 @@ $keyboard = $pag->setItems($items)  // Передаем кнопки
     ->setPrefix('page_')            // Префикс для кнопок навигации
     ->create();                     // Собираем массив
 
-$tg = TGZ::create(ТОКЕН);
+$tg = ZG::create(ТОКЕН);
 
 // Отправляем сообщение с клавиатурой
 $tg->msg("Выберите товар (Страница 1):")
@@ -5318,10 +5318,10 @@ description: Добавляет дополнительные параметры 
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 $bot->onText('params')
@@ -5357,9 +5357,9 @@ description: Добавляет доп. параметры.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $query_id = $tg->getQueryId();
 
 $results = [
@@ -5401,9 +5401,9 @@ description: Устанавливает дополнительные парам�
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 $text = $tg->getText()
 $type = $tg->getType();
 
@@ -5450,10 +5450,10 @@ description: Устанавливает режим разметки для от�
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 $bot->onBotCommand('start', '/start')
@@ -5489,9 +5489,9 @@ description: Устанавливает режим разметки.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $query_id = $tg->getQueryId();
 
 $results = [
@@ -5566,9 +5566,9 @@ description: Устанавливает режим разметки.
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 $text = $tg->getText();
 $type = $tg->getType();
 
@@ -5651,9 +5651,9 @@ description: Устанавливает разметку для объяснен
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 
 $tg->poll('regular')
     ->question('Вопрос')
@@ -5681,9 +5681,9 @@ $tg->poll('regular')
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 
 $tg->poll('regular')
     ->question('Вопрос')
@@ -5711,9 +5711,9 @@ $tg->poll('regular')
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 
 $tg->poll('quiz')
     ->question('Вопрос')
@@ -5783,8 +5783,8 @@ description: Создает экземпляр класса Poll для созд
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 
-use ZhenyaGR\TGZ\TGZ;
-$tg = TGZ::create(ТОКЕН);
+use ZhenyaGR\ZenithGram\ZG;
+$tg = ZG::create(ТОКЕН);
 $tg->poll('regular')
     ->question('Вопрос')
     ->addAnswers('Ответ 1', 'Ответ 2', 'Ответ 3')
@@ -5819,9 +5819,9 @@ description: Класс для создания опросов.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 
 $tg->poll('regular')        // Тип опроса
     ->question('Вопрос')    // Вопрос
@@ -5838,7 +5838,7 @@ $tg->poll('regular')        // Тип опроса
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\Poll;
+use ZhenyaGR\ZenithGram\Poll;
 
 $poll = new Poll('regular'); // Тип опроса
 
@@ -5879,10 +5879,10 @@ description: Показывает всплывающее уведомление 
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // Определяем кнопку
@@ -5929,9 +5929,9 @@ description: Устанавливает вопрос опроса.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 
 $tg->poll('regular')
     ->question('Вопрос')
@@ -5968,10 +5968,10 @@ description: 'Перенаправляет на другой маршрут (н�
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // 1. Действие, на которое будем ссылаться, - главное меню.
@@ -6022,10 +6022,10 @@ description: Перенаправляет выполнение на другой
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // 1. Действие, на которое будем ссылаться, - главное меню.
@@ -6071,10 +6071,10 @@ description: Удаляет Reply-клавиатуру у пользовател
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // Определяем кнопки для клавиатуры
@@ -6124,13 +6124,13 @@ description: Удаляет клавиатуру.
 ```php
 <?php    
 require_once __DIR__ . '/vendor/autoload.php'; 
-use ZhenyaGR\TGZ\TGZ; 
+use ZhenyaGR\ZenithGram\ZG; 
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 $bot->onCommand('removeKbd', '/removeKbd')
-    ->func(function(TGZ $tg) {
+    ->func(function(ZG $tg) {
         $tg->msg("Клавиатура удалена")
             ->removeKbd()   // После отправки сообщения, клавиатура удаляется
             ->send();
@@ -6165,10 +6165,10 @@ description: Делает сообщение ответом (reply) на вхо�
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 $bot->onText('reply')
@@ -6204,9 +6204,9 @@ description: Устанавливает ID сообщения для ответ�
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 $text = $tg->getText();
 $type = $tg->getType();
 
@@ -6255,9 +6255,9 @@ description: Отправляет ответ на текущее сообщен�
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(ТОКЕН);
+$tg = ZG::create(ТОКЕН);
 $type = $tg->getType();
 
 if ($type === 'text' || $type === 'bot_command')
@@ -6313,7 +6313,7 @@ $bot->run();
 // bot.php
 // ... определение всех маршрутов бота ...
 $bot->onCommand('daily_report', 'make_report')
-    ->func(function(TGZ $tg) {
+    ->func(function(ZG $tg) {
         // ... сложная логика формирования отчета ...
         $reportText = "Отчет за сегодня: ...";
         $tg->sendMessage(ADMIN_CHAT_ID, $reportText);
@@ -6357,9 +6357,9 @@ description: Скачивает и сохраняет файл локально.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(ТОКЕН);
+$tg = ZG::create(ТОКЕН);
 
 $img_id = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef...";
 
@@ -6397,9 +6397,9 @@ description: Отправляет сформированное сообщени�
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 $text = $tg->getText();
 $type = $tg->getType();
 
@@ -6444,9 +6444,9 @@ description: Отправляет опрос.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 
 $tg->poll('regular')
     ->question('Вопрос')
@@ -6481,9 +6481,9 @@ description: 'Отправляет статус действия бота (на�
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 $text = $tg->getText();
 $type = $tg->getType();
 
@@ -6544,9 +6544,9 @@ description: Отправляет текстовое сообщение в ук�
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create('ВАШ_ТОКЕН_БОТА');
+$tg = ZG::create('ВАШ_ТОКЕН_БОТА');
 $chat_id = $tg->getChatId();
 
 $tg->sendMessage($chat_id, 'Привет, мир!');
@@ -6722,7 +6722,7 @@ PaginationMode — перечисление `(Enum)`. Содержит 2 кон�
 ## Пример использования
 
 ```php
-use ZhenyaGR\TGZ\Pagination;
+use ZhenyaGR\ZenithGram\Pagination;
 
 // Пример 1: Кнопки-стрелки
 $tg->pagination()->setMode(PaginationMode::ARROWS);
@@ -6764,7 +6764,7 @@ PaginationLayout — перечисление `(Enum)`. Содержит 3 ко�
 ## Пример использования
 
 ```php
-use ZhenyaGR\TGZ\Pagination;
+use ZhenyaGR\ZenithGram\Pagination;
 
 // Пример 1: Разделить на две строки
 $tg->pagination()->setNavigationLayout(PaginationLayout::SPLIT);
@@ -6985,10 +6985,10 @@ description: Отправляет стикер.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 $sticker_id = 'AgACAgIAAxkBAAII...';
 
@@ -7024,9 +7024,9 @@ description: Добавляет стикер.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 $text = $tg->getText();
 $type = $tg->getType();
 
@@ -7077,10 +7077,10 @@ description: Отправляет текстовое сообщение в от�
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 // Простой ответ на команду
@@ -7127,9 +7127,9 @@ description: Устанавливает текст сообщения при в�
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $query_id = $tg->getQueryId();
 
 $results = [
@@ -7170,9 +7170,9 @@ description: Устанавливает текст сообщения.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 $text = $tg->getText();
 $type = $tg->getType();
 
@@ -7273,9 +7273,9 @@ description: Устанавливает миниатюру.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $query_id = $tg->getQueryId();
 
 $results = [
@@ -7317,9 +7317,9 @@ description: Устанавливает заголовок.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $query_id = $tg->getQueryId();
 
 $results = [
@@ -7367,10 +7367,10 @@ description: Прикрепляет видео к ответу.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 $bot->onText('video')
@@ -7405,9 +7405,9 @@ description: Добавляет видео (или альбом).
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 $text = $tg->getText();
 $type = $tg->getType();
 
@@ -7482,10 +7482,10 @@ description: Отправляет голосовое сообщение.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 $bot->onText('voice')
@@ -7521,9 +7521,9 @@ description: Добавляет голосовое сообщение.
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 $text = $tg->getText();
 $type = $tg->getType();
 
@@ -7648,7 +7648,7 @@ description: Создание и отправка опросов и виктор
 Это самый базовый пример. Метод `$tg->poll()` является фабрикой, которая создает и возвращает экземпляр класса `Poll`.
 
 ```php
-$bot->onCommand('poll')->func(function(TGZ $tg) {
+$bot->onCommand('poll')->func(function(ZG $tg) {
     $tg->poll('regular')
         ->question('Как у вас дела?')
         ->addAnswers('Отлично', 'Плохо', 'Не знаю')
@@ -7749,7 +7749,7 @@ description: 'Работа с Fluent Interface для создания, форм
 Это самый базовый пример. Метод `$tg->msg()` является фабрикой, которая создает и возвращает экземпляр класса `Message`.
 
 ```php
-$bot->onCommand('start')->func(function(TGZ $tg) {
+$bot->onCommand('start')->func(function(ZG $tg) {
     $tg->msg("Привет, мир!")->send();
 });
 ```
@@ -7916,7 +7916,7 @@ $tg->msg("Клавиатура убрана.")
 ```php
 // Пример в обработчике callback-запроса
 $bot->onCallback('edit_text')
-    ->func(function(TGZ $tg) {
+    ->func(function(ZG $tg) {
         $query_id = $tg->getQueryID();
         $tg->answerCallbackQuery($query_id);
         
@@ -8051,13 +8051,13 @@ public function onCommand(string $id, array|string $command = null): Action
 
 ```php
 // Простая команда !ping
-$bot->onCommand('ping', '!ping')->func(function(TGZ $tg) {
+$bot->onCommand('ping', '!ping')->func(function(ZG $tg) {
     $tg->reply('pong!');
 });
 
 // Команда бана с числовым ID и текстовой причиной
 // Пользователь пишет: !ban 12345678 флуд в чате
-$bot->onCommand('ban', '!ban %n %s')->func(function(TGZ $tg, $userId, $reason) {
+$bot->onCommand('ban', '!ban %n %s')->func(function(ZG $tg, $userId, $reason) {
     // $userId будет '12345678'
     // $reason будет 'флуд в чате'
     $tg->reply("Пользователь {$userId} забанен по причине: {$reason}");
@@ -8184,7 +8184,7 @@ $results = [
 ];
 
 $bot->onInline()
-    ->func(function(TGZ $tg) use ($results) {
+    ->func(function(ZG $tg) use ($results) {
         $query_id = $tg->getQueryId();
         $tg->answerInlineQuery($query_id, $results);
     });
@@ -8349,9 +8349,9 @@ description: Инструмент для автоматической генер
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 
 // 1. Генерируем тестовый массив кнопок
 $items = [];
@@ -8389,11 +8389,11 @@ $tg->msg("Список товаров (Страница 1):")
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
-use ZhenyaGR\TGZ\Pagination; // Не забудьте подключить класс констант
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
+use ZhenyaGR\ZenithGram\Pagination; // Не забудьте подключить класс констант
 
-$tg = TGZ::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН');
 $bot = new Bot($tg);
 
 function getCatalogKeyboard(TGZ $tg, int $page): array {
@@ -8417,7 +8417,7 @@ function getCatalogKeyboard(TGZ $tg, int $page): array {
 
 // 1. Команда вызова каталога
 $bot->onBotCommand('catalog', '/catalog')
-    ->func(function(TGZ $tg) {
+    ->func(function(ZG $tg) {
         $keyboard = getCatalogKeyboard($tg, 1);
         $tg->msg("📂 Каталог товаров (Стр. 1):")
             ->inlineKbd($keyboard)
@@ -8427,7 +8427,7 @@ $bot->onBotCommand('catalog', '/catalog')
 // 2. Обработчик переключения страниц
 // Используем регулярное выражение для отлова 'catalog_page_1', 'catalog_page_2' и т.д.
 $bot->onCallbackPreg('catalog_handler', '/^catalog_page_(\d+)$/')
-    ->func(function(TGZ $tg, int $page) {
+    ->func(function(ZG $tg, int $page) {
         $query_id = $tg->getQueryId();
         $tg->answerCallbackQuery($query_id); // Убираем "часики"
 
@@ -8453,7 +8453,7 @@ $bot->run();
 // Обработчик переключения страниц
 // Используем плейсхолдер %n (nomber)
 $bot->onCallback('catalog_handler', 'catalog_page_%n')
-    ->func(function(TGZ $tg, int $page) {
+    ->func(function(ZG $tg, int $page) {
         $query_id = $tg->getQueryId();
         $tg->answerCallbackQuery($query_id);
 
@@ -8511,7 +8511,7 @@ $tg->pagination()
    Автоматический режим. Если кнопок навигации мало (<= 2), они встанут в одну строку. Если много (3 или 4) — разделятся на две строки, чтобы кнопки не были слишком узкими.
 
 ```php
-use ZhenyaGR\TGZ\Pagination;
+use ZhenyaGR\ZenithGram\Pagination;
 
 $tg->pagination()
     ->setNavigationLayout(Pagination::LAYOUT_SMART)
@@ -8564,8 +8564,8 @@ description: >-
 
 require 'vendor/autoload.php'; // Убедитесь, что подключили автозагрузчик Composer
 
-use ZhenyaGR\TGZ\LongPoll;
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\LongPoll;
+use ZhenyaGR\ZenithGram\ZG;
 
 $token = 'ВАШ_ТОКЕН_ЗДЕСЬ';
 
@@ -8633,7 +8633,7 @@ $longPoll->listen(function (TGZ $tg) {
 
 require 'vendor/autoload.php'; // Подключаем автозагрузчик
 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
 $token = 'ВАШ_ТОКЕН_ЗДЕСЬ';
 
@@ -8642,7 +8642,7 @@ $token = 'ВАШ_ТОКЕН_ЗДЕСЬ';
 // 2. Декодирует JSON-данные.
 // 3. Создает и настраивает объект TGZ, готовый к работе.
 // 4. Автоматически отправляет ответ "ok" и HTTP-код 200, чтобы Telegram знал, что обновление получено.
-$tg = TGZ::create($token);
+$tg = ZG::create($token);
 
 // Дальнейшая логика обработки точно такая же, как и в Long Poll
 $text = $tg->getText();
@@ -8659,7 +8659,7 @@ if ($text === '/info') {
 }
 
 // Вам не нужно ничего выводить или отправлять "ok" вручную. 
-// TGZ::create() уже сделал это в самом начале.
+// ZG::create() уже сделал это в самом начале.
 ```
 
 ### Шаг 2: Установка Webhook
@@ -8776,9 +8776,9 @@ description: >-
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(ТОКЕН);
+$tg = ZG::create(ТОКЕН);
 
 $tg->reply('Привет, Мир!');
 ```
@@ -8791,9 +8791,9 @@ $tg->reply('Привет, Мир!');
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\ZG;
 
-$tg = TGZ::create(ТОКЕН);
+$tg = ZG::create(ТОКЕН);
 
 $type = $tg->getType(); // Получение типа из события
 
@@ -8807,12 +8807,12 @@ if ($type === 'text' || $type === 'bot_command') {
 ```php
 require_once __DIR__ . '/vendor/autoload.php';
 
-use ZhenyaGR\TGZ\LongPoll;
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\LongPoll;
+use ZhenyaGR\ZenithGram\ZG;
 
 $lp = LongPoll::create($botToken, 20);
 
-$lp->listen(function(TGZ $tg) {
+$lp->listen(function(ZG $tg) {
     
     $type = $tg->getType(); 
     
@@ -8828,10 +8828,10 @@ $lp->listen(function(TGZ $tg) {
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create(ТОКЕН);
+$tg = ZG::create(ТОКЕН);
 $bot = new Bot($tg); // Создаем экземпляр бота
 
 $bot->onCommand('img', '!картинка')
@@ -8847,9 +8847,9 @@ $bot->run(); // Запускаем обработку события
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 
-use ZhenyaGR\TGZ\LongPoll;
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\LongPoll;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
 $lp = LongPoll::create(ТОКЕН);
   
@@ -8860,7 +8860,7 @@ $bot->onCommand('img', '!картинка')
     ->text('Вот твой кот');
     
 $lp->listen(function (TGZ $tg) {
-    $bot->tgz($tg)->run(); // Запускаем обработку события
+    $bot->zg($tg)->run(); // Запускаем обработку события
 });
 ```
 
@@ -8870,10 +8870,10 @@ $lp->listen(function (TGZ $tg) {
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create(ТОКЕН);
+$tg = ZG::create(ТОКЕН);
 $bot = new Bot($tg); // Создаем экземпляр бота
 
 // Создание кнопки с её обработкой
@@ -8928,10 +8928,10 @@ $bot->run();
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
-$tg = TGZ::create(ТОКЕН);
+$tg = ZG::create(ТОКЕН);
 $bot = new Bot($tg); // Создаем экземпляр бота
 
 $bot->onDefault()->func(function () use ($bot) {
@@ -8955,8 +8955,8 @@ $bot->run();
 <?php
 require 'vendor/autoload.php';
 
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
 $tg = new TGZ('BOT_TOKEN');
 $bot = new Bot($tg);
