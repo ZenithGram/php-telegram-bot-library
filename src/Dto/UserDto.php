@@ -1,6 +1,6 @@
 <?php
 
-namespace ZhenyaGR\TGZ\Dto;
+namespace ZhenyaGR\ZenithGram\Dto;
 
 /**
  * Базовый DTO для объекта User из Telegram API.

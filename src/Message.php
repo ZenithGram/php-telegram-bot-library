@@ -1,6 +1,6 @@
 <?php
 
-namespace ZhenyaGR\TGZ;
+namespace ZhenyaGR\ZenithGram;
 
 use CURLFile;
 
@@ -8,7 +8,7 @@ final class Message
 {
     private ApiClient $api;
     private UpdateContext $context;
-    private TGZ $TGZ;
+    private ZG $ZG;
     private ?string $text;
     private array $reply_to = [];
     private array $kbd = [];
@@ -33,18 +33,18 @@ final class Message
      */
     private ?string $media_preview_url = null;
 
-    public function __construct(?string $text, TGZ $TGZ,
+    public function __construct(?string $text, ZG $ZG,
     ) {
         $this->text = $text;
-        $this->parse_mode = $TGZ->parseModeDefault;
-        $this->api = $TGZ->api;
-        $this->context = $TGZ->context;
-        $this->TGZ = $TGZ;
+        $this->parse_mode = $ZG->parseModeDefault;
+        $this->api = $ZG->api;
+        $this->context = $ZG->context;
+        $this->ZG = $ZG;
     }
 
     private function findBotButtons(array $gettingButtons, bool $inline): array
     {
-        $botButtons = $this->TGZ->getBotButtons();
+        $botButtons = $this->ZG->getBotButtons();
 
         foreach ($gettingButtons as $key => $row) {
 
@@ -57,9 +57,9 @@ final class Message
 
                     if (isset($botButtons[$button])) {
                         if ($inline) {
-                            $gettingButtons[$key][$key_2] = $this->TGZ->buttonCallback( $botButtons[$button],$button);
+                            $gettingButtons[$key][$key_2] = $this->ZG->buttonCallback($botButtons[$button],$button);
                         } else {
-                            $gettingButtons[$key][$key_2] = $this->TGZ->buttonText($botButtons[$button]);
+                            $gettingButtons[$key][$key_2] = $this->ZG->buttonText($botButtons[$button]);
                         }
                     } else {
                         throw new \RuntimeException("Не удалось найти кнопку $button");

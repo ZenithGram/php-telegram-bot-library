@@ -1,9 +1,9 @@
 <?php
 
-namespace ZhenyaGR\TGZ;
+namespace ZhenyaGR\ZenithGram;
 
 use Closure;
-use ZhenyaGR\TGZ\Utils\EnvironmentDetector;
+use ZhenyaGR\ZenithGram\Utils\EnvironmentDetector;
 use ErrorException;
 use Throwable, Exception;
 
@@ -28,8 +28,10 @@ trait ErrorHandler
 
     /**
      * Устанавливает обработчик ошибок и исключений, перенаправляя их для логирования и вывода.
+     *
      * @param int|array<int>|callable $ids VK ID пользователя, массив ID или функция-обработчик.
-     * @return ErrorHandler|TGZ Возвращает текущий экземпляр для цепочки вызовов.
+     *
+     * @return ErrorHandler|ZG Возвращает текущий экземпляр для цепочки вызовов.
      */
     public function setUserLogError(callable|array|int $ids): self
     {
@@ -63,8 +65,10 @@ trait ErrorHandler
 
     /**
      * Оставляет в трейсе только пользовательские файлы, без файлов библиотеки
+     *
      * @param bool $enable - вкл/выкл отображение короткого трейса
-     * @return ErrorHandler|TGZ Возвращает текущий экземпляр для цепочки вызовов.
+     *
+     * @return ErrorHandler|ZG Возвращает текущий экземпляр для цепочки вызовов.
      */
     public function shortTrace(bool $enable = true): self
     {

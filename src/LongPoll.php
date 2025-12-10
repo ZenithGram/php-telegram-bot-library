@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace ZhenyaGR\TGZ;
+namespace ZhenyaGR\ZenithGram;
 
 use Closure;
 use Throwable;
-use ZhenyaGR\TGZ\Contracts\ApiInterface;
+use ZhenyaGR\ZenithGram\Contracts\ApiInterface;
 
 /**
  * Класс для получения обновлений от Telegram в режиме Long Polling.
@@ -160,9 +160,9 @@ class LongPoll
 
                 // ШАГ 2: Создаем новый экземпляр TGZ, "заряженный" этим контекстом.
                 // Мы передаем один и тот же объект $this->api, а не создаем его заново.
-                $tg_instance = new TGZ($this->api, $context);
+                $tg_instance = new ZG($this->api, $context);
 
-                $this->api->addTgz($tg_instance);
+                $this->api->addZg($tg_instance);
 
                 // ШАГ 3: Вызываем обработчик пользователя и явно передаем ему
                 // полностью готовый к работе экземпляр TGZ.

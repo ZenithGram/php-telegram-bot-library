@@ -36,12 +36,13 @@ require_once "TGZ/autoload.php";
 # Примеры использования
 
 ## Получение переменных (WEBHOOK)
+
 ```php
 <?php
 require_once __DIR__ . 'vendor/autoload.php';  // Подключаем библиотеку
-use ZhenyaGR\TGZ\TGZ;  // Используем основной класс
+use ZhenyaGR\ZenithGram\ZG;  // Используем основной класс
 
-$tg = TGZ::create(BOT_TOKEN); // Создаем объект бота
+$tg = ZG::create(BOT_TOKEN); // Создаем объект бота
 
 $user_id = $tg->getUserId();
 $chat_id = $tg->getChatId();
@@ -55,16 +56,17 @@ $tg->initVars($chat_id, $user_id, $text, $type, $callback_data, $query_id, $msg_
 ```
 
 ## Получение переменных (LONGPOLL)
+
 ```php
 <?php
 require_once __DIR__ . 'vendor/autoload.php';  // Подключаем библиотеку
-use ZhenyaGR\TGZ\LongPoll;   // Используем класс LongPoll
-use ZhenyaGR\TGZ\TGZ;
+use ZhenyaGR\ZenithGram\LongPoll;   // Используем класс LongPoll
+use ZhenyaGR\ZenithGram\ZG;
 
 $lp = LongPoll::create(BOT_TOKEN); 
 // Создаем объект бота 
 
-$lp->listen(function(TGZ $tg) {
+$lp->listen(function(ZG $tg) {
         
     $user_id = $tg->getUserId();
     $chat_id = $tg->getChatId();
@@ -79,12 +81,13 @@ $lp->listen(function(TGZ $tg) {
 ```
 
 ## Вызов любых методов BOT API. Например copyMessage (WEBHOOK)
+
 ```php
 <?php
 require_once __DIR__ . 'vendor/autoload.php';  // Подключаем библиотеку
-use ZhenyaGR\TGZ\TGZ;  
+use ZhenyaGR\ZenithGram\ZG;  
 
-$tg = TGZ::create(BOT_TOKEN); 
+$tg = ZG::create(BOT_TOKEN); 
 $tg->initVars($chat_id, $user_id, $text, $type, msg_id: $msg_id); 
 // Инициализируем переменные
 
@@ -100,12 +103,13 @@ if ($type == 'text' || $type == 'bot_command') {
 ```
 
 ## Эхо-бот с конструктором сообщений (WEBHOOK)
+
 ```php
 <?php
 require_once __DIR__ . 'vendor/autoload.php';  // Подключаем библиотеку
-use ZhenyaGR\TGZ\TGZ; 
+use ZhenyaGR\ZenithGram\ZG; 
 
-$tg = TGZ::create(BOT_TOKEN);
+$tg = ZG::create(BOT_TOKEN);
 $tg->initVars(text: $text, type: $type);
 
 if ($type == 'text' || $type == 'bot_command') {
@@ -115,15 +119,16 @@ if ($type == 'text' || $type == 'bot_command') {
 ```
 
 ## Вызов любых методов BOT API. Например copyMessage (LONGPOLL)
+
 ```php
 <?php
 require_once __DIR__ . 'vendor/autoload.php';  // Подключаем библиотеку
-use ZhenyaGR\TGZ\LongPoll;  // Меняем класс
-use ZhenyaGR\TGZ\TGZ; 
+use ZhenyaGR\ZenithGram\LongPoll;  // Меняем класс
+use ZhenyaGR\ZenithGram\ZG; 
 
 $lp = LongPoll::create(BOT_TOKEN); 
 
-$lp->listen(function(TGZ $tg) {
+$lp->listen(function(ZG $tg) {
     // Ждём новый update
     
     $tg->initVars($chat_id, $user_id, $text, $type, msg_id: $msg_id); 
@@ -142,15 +147,16 @@ $lp->listen(function(TGZ $tg) {
 ```
 
 ## Эхо-бот с конструктором сообщений (LONGPOLL)
+
 ```php
 <?php
 require_once __DIR__ . 'vendor/autoload.php';  // Подключаем библиотеку
-use ZhenyaGR\TGZ\LongPoll; 
-use ZhenyaGR\TGZ\TGZ; 
+use ZhenyaGR\ZenithGram\LongPoll; 
+use ZhenyaGR\ZenithGram\ZG; 
 
 $lp = LongPoll::create(BOT_TOKEN);
 
-$lp->listen(function(TGZ $tg) {
+$lp->listen(function(ZG $tg) {
 
     $tg->initVars(text: $text, type: $type);
     

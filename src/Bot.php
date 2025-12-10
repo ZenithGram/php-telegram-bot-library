@@ -1,13 +1,13 @@
 <?php
 
-namespace ZhenyaGR\TGZ;
+namespace ZhenyaGR\ZenithGram;
 
-use ZhenyaGR\TGZ\Dto\UserDto;
+use ZhenyaGR\ZenithGram\Dto\UserDto;
 
 class Bot
 {
 
-    private TGZ|null $tg;
+    private ZG|null $tg;
     private UpdateContext|null $context;
     private array $ctx = [];
 
@@ -46,7 +46,7 @@ class Bot
 
     private \Closure|null $middleware_handler = null;
 
-    public function __construct(TGZ|null $tg = null)
+    public function __construct(ZG|null $tg = null)
     {
         $this->tg = $tg;
         $this->context = $tg?->context;
@@ -1053,15 +1053,41 @@ class Bot
 
     }
 
-    public function tgz(TGZ $TGZ): self
+    /**
+     * Метод прокидывает основной класс ZG в класс Bot.
+     *
+     * Создан для удобного использования с методом получения обновления LongPoll.
+     *
+     * @param ZG $ZG    Объект класса ZG
+     *
+     * @return Bot
+     *
+     * @throws \InvalidArgumentException Если один из маршрутов не найден.
+     *
+     * @see https://zhenyagr.github.io/TGZ-Doc/classes/botMethods/gz
+     */
+    public function gz(ZG $ZG): self
     {
-        $this->tg = $TGZ;
-        $this->context = $TGZ->context;
+        $this->tg = $ZG;
+        $this->context = $ZG->context;
 
         return $this;
     }
 
-    public function run(?string $id = null): void
+    /**
+     * Метод является "сердцем" роутера. Он запускает процесс сопоставления (диспетчеризации) входящего обновления с определенными вами маршрутами.
+     *
+     * Обычно run вызывается один раз в конце вашего скрипта без параметров.
+     *
+     * @param null|string $id =    Объект класса ZG
+     *
+     * @return void
+     *
+     * @throws \InvalidArgumentException Если один из маршрутов не найден.
+     *
+     * @see https://zhenyagr.github.io/TGZ-Doc/classes/botMethods/run
+     */
+    public function run(null|string $id = null): void
     {
         if ($id === null) {
             $this->processRedirects();
@@ -1078,7 +1104,6 @@ class Bot
 
             $this->executeAction($actionToRun);
         }
-
     }
 
     private function executeAction(Action $action, ?array $other_files = [])

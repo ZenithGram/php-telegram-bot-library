@@ -1,19 +1,16 @@
 <?php
 
-namespace ZhenyaGR\TGZ;
+namespace ZhenyaGR\ZenithGram;
 
 use CURLFile;
 use Exception;
 use LogicException;
-use ZhenyaGR\TGZ\Contracts\ApiInterface;
-use ZhenyaGR\TGZ\Dto\UserDto;
-use ZhenyaGR\TGZ\Dto\ChatDto;
-use ZhenyaGR\TGZ\Utils\EnvironmentDetector;
+use ZhenyaGR\ZenithGram\Contracts\ApiInterface;
+use ZhenyaGR\ZenithGram\Dto\UserDto;
+use ZhenyaGR\ZenithGram\Dto\ChatDto;
+use ZhenyaGR\ZenithGram\Utils\EnvironmentDetector;
 
-// test auto-update in packagist
-// test two
-// tree
-class TGZ
+class ZG
 {
     use ErrorHandler;
 
@@ -23,7 +20,7 @@ class TGZ
 
     public function __construct(ApiInterface $api, UpdateContext $context)
     {
-        $api->addTgz($this);
+        $api->addZg($this);
         $this->api = $api;
         $this->context = $context;
     }
@@ -63,7 +60,7 @@ class TGZ
      *
      * @param ?string $mode HTML, Markdown, MarkdownV2
      *
-     * @return TGZ
+     * @return ZG
      *
      * @see https://zhenyagr.github.io/TGZ-Doc/classes/tgzMethods/defaultParseMode
      */
@@ -132,7 +129,7 @@ class TGZ
     /**
      * Метод создает объект класса Pagination для конструктора страниц
      *
-     * @return \ZhenyaGR\TGZ\Pagination
+     * @return \ZhenyaGR\ZenithGram\Pagination
      *
      * @see https://zhenyagr.github.io/TGZ-Doc/classes/tgzMethods/pagination
      */
@@ -267,7 +264,7 @@ class TGZ
      *
      * @param string|null $action
      *
-     * @return TGZ
+     * @return ZG
      *
      * @throws \Exception
      *

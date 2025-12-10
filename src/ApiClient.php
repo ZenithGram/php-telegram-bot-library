@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace ZhenyaGR\TGZ;
+namespace ZhenyaGR\ZenithGram;
 
-use ZhenyaGR\TGZ\Utils\EnvironmentDetector;
-use ZhenyaGR\TGZ\Contracts\ApiInterface;
+use ZhenyaGR\ZenithGram\Utils\EnvironmentDetector;
+use ZhenyaGR\ZenithGram\Contracts\ApiInterface;
 class ApiClient implements ApiInterface
 {
     private const API_BASE_URL = 'https://api.telegram.org';
     private string $apiUrl;
     private string $apiFileUrl;
-    private TGZ $tgz;
+    private ZG $tgz;
 
     public function __construct(string $token)
     {
@@ -19,7 +19,7 @@ class ApiClient implements ApiInterface
         $this->apiFileUrl = self::API_BASE_URL  . '/file/bot' . $token . '/';
     }
 
-    public function addTgz(TGZ $tgz)
+    public function addZg(ZG $tgz)
     {
         $this->tgz = $tgz;
     }

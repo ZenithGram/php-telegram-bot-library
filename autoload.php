@@ -1,6 +1,6 @@
 <?php
 
-namespace ZhenyaGR\TGZ;
+namespace ZhenyaGR\ZenithGram;
 
 //Динамическое подключение классов, только при его использовании
 spl_autoload_register(static function ($class) {

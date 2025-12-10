@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ZhenyaGR\TGZ;
+namespace ZhenyaGR\ZenithGram;
 
 class UpdateContext
 {

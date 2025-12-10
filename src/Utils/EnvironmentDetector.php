@@ -1,5 +1,5 @@
 <?php
-namespace ZhenyaGR\TGZ\Utils;
+namespace ZhenyaGR\ZenithGram\Utils;
 
 /**
  * Класс-хелпер для определения среды выполнения PHP.
