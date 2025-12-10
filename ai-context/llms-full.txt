@@ -211,7 +211,7 @@ $tg->pagination()->addReturnBtn('🔙 Вернуться в меню', 'main_men
 ---
 
 ---
-url: 'https://zenithgram.github.io/classes/tgzMethods/answers.md'
+url: 'https://zenithgram.github.io/classes/zenithMethods/answers.md'
 description: Методы для ответа на callback (answerCallbackQuery) и inline запросы.
 ---
 
@@ -390,7 +390,7 @@ if ($type === 'bot_command') {
 
 ## Вспомогательные методы
 
-* [`getFileID`](/classes/tgzMethods/getFileID.md) - Получить ID файла
+* [`getFileID`](/classes/zenithMethods/getFileID.md) - Получить ID файла
 
 ---
 
@@ -623,7 +623,107 @@ Button::location('Текст кнопки');
 ---
 
 ---
-url: 'https://zenithgram.github.io/classes/tgzMethods/callAPI.md'
+url: 'https://zenithgram.github.io/classes/zenithMethods/buttons.md'
+description: Методы для простой сборки клавиатуры.
+---
+
+# buttons
+
+Методы для простой сборки клавиатуры
+
+## buttonText
+
+Метод возвращает массив с текстовой кнопкой
+
+### Параметры метода
+
+| # |    Название    |   Тип    |
+|:-:|:--------------:|:--------:|
+| 1 | **buttonText** | `string` |
+
+### Возвращает
+
+`array` - массив с текстовой кнопкой
+
+### Пример использования
+
+```php
+<?php
+require_once __DIR__ . '/vendor/autoload.php';
+use ZhenyaGR\TGZ\TGZ;
+
+$tg = TGZ::create(ТОКЕН);
+
+$kbd = [[$tg->buttonText('Нажми меня')]];
+$tg->msg('Текстовая кнопка')
+    ->kbd($kbd)
+    ->send();
+```
+
+## buttonCallback
+
+Метод возвращает массив с callback-кнопкой
+
+### Параметры метода
+
+| # |    Название    |   Тип    |
+|:-:|:--------------:|:--------:|
+| 1 | **buttonText** | `string` |
+| 2 | **buttonData** | `string` |
+
+### Возвращает
+
+`array` - массив с callback-кнопкой
+
+### Пример использования
+
+```php
+<?php
+require_once __DIR__ . '/vendor/autoload.php';
+use ZhenyaGR\TGZ\TGZ;
+
+$tg = TGZ::create(ТОКЕН);
+
+$kbd = [[$tg->buttonCallback('Нажми меня', 'callback_data')]];
+$tg->msg('Callback-кнопка')
+    ->kbd($kbd, inline: true)
+    ->send();
+```
+
+## buttonUrl
+
+Метод возвращает массив с url-кнопкой
+
+### Параметры метода
+
+| # |    Название    |   Тип    |
+|:-:|:--------------:|:--------:|
+| 1 | **buttonText** | `string` |
+| 2 | **buttonUrl**  | `string` |
+
+### Возвращает
+
+`array` - массив с url-кнопкой
+
+### Пример использования
+
+```php
+<?php
+require_once __DIR__ . '/vendor/autoload.php';
+use ZhenyaGR\TGZ\TGZ;
+
+$tg = TGZ::create(ТОКЕН);
+
+$kbd = [[$tg->buttonUrl('Нажми меня', 'https://google.com')]];
+$tg->msg('Url-кнопка')
+    ->kbd($kbd, inline: true)
+    ->send();
+```
+
+---
+
+---
+url: 'https://zenithgram.github.io/classes/zenithMethods/callAPI.md'
 description: Выполняет произвольный метод Telegram Bot API.
 ---
 
@@ -784,7 +884,7 @@ $tg->answerInlineQuery($query_id, $results);
 ---
 
 ---
-url: 'https://zenithgram.github.io/classes/tgzMethods/copyMsg.md'
+url: 'https://zenithgram.github.io/classes/zenithMethods/copyMsg.md'
 description: Копирует сообщение из одного чата в другой.
 ---
 
@@ -925,7 +1025,7 @@ $tg->msg('Страница 1')->inlineKbd($keyboard)->send();
 ---
 
 ---
-url: 'https://zenithgram.github.io/classes/tgzMethods/defaultParseMode.md'
+url: 'https://zenithgram.github.io/classes/zenithMethods/defaultParseMode.md'
 description: Устанавливает режим разметки по умолчанию для всех сообщений.
 ---
 
@@ -992,7 +1092,7 @@ __Подчёркнутый__
 ---
 
 ---
-url: 'https://zenithgram.github.io/classes/tgzMethods/delMsg.md'
+url: 'https://zenithgram.github.io/classes/zenithMethods/delMsg.md'
 description: Удаляет сообщение по его ID.
 ---
 
@@ -1268,7 +1368,7 @@ if ($type === 'bot_command') {
 
 ## Вспомогательные методы
 
-* [`getFileID`](/classes/tgzMethods/getFileID.md) - Получить ID файла
+* [`getFileID`](/classes/zenithMethods/getFileID.md) - Получить ID файла
 
 ---
 
@@ -1688,7 +1788,7 @@ $bot->run();
 ---
 
 ---
-url: 'https://zenithgram.github.io/classes/tgzMethods/errors.md'
+url: 'https://zenithgram.github.io/classes/zenithMethods/errors.md'
 description: Настройка обработки и логирования ошибок (ErrorHandler).
 ---
 
@@ -1832,7 +1932,7 @@ $tg->poll('quiz')
 ---
 
 ---
-url: 'https://zenithgram.github.io/classes/tgzMethods/file.md'
+url: 'https://zenithgram.github.io/classes/zenithMethods/file.md'
 description: 'Создает экземпляр класса File для работы с файлами (скачивание, инфо).'
 ---
 
@@ -2081,7 +2181,7 @@ $bot->run();
 ---
 
 ---
-url: 'https://zenithgram.github.io/classes/tgzMethods/get.md'
+url: 'https://zenithgram.github.io/classes/zenithMethods/get.md'
 description: 'Методы получения данных из обновления (getChatId, getText и др.).'
 ---
 
@@ -2327,7 +2427,7 @@ $tg->msg("ID вашего файла: $file_id")->send();
 ---
 
 ---
-url: 'https://zenithgram.github.io/classes/tgzMethods/getFileID.md'
+url: 'https://zenithgram.github.io/classes/zenithMethods/getFileID.md'
 description: Загружает файл по URL и возвращает его file_id.
 ---
 
@@ -2618,7 +2718,7 @@ if ($type === 'bot_command') {
 
 ## Вспомогательные методы
 
-* [`getFileID`](/classes/tgzMethods/getFileID.md) - Получить ID файла
+* [`getFileID`](/classes/zenithMethods/getFileID.md) - Получить ID файла
 
 ---
 
@@ -2783,12 +2883,12 @@ if ($type === 'bot_command') {
 
 ## Вспомогательные методы
 
-* [`getFileID`](/classes/tgzMethods/getFileID.md) - Получить ID файла
+* [`getFileID`](/classes/zenithMethods/getFileID.md) - Получить ID файла
 
 ---
 
 ---
-url: 'https://zenithgram.github.io/classes/tgzMethods/initVars.md'
+url: 'https://zenithgram.github.io/classes/zenithMethods/initVars.md'
 description: >-
   Инициализирует основные переменные (chat_id, user_id, text) из входящего
   обновления.
@@ -2899,7 +2999,7 @@ $update = $tg->initVars($chat_id, $user_id);
 ---
 
 ---
-url: 'https://zenithgram.github.io/classes/tgzMethods/inline.md'
+url: 'https://zenithgram.github.io/classes/zenithMethods/inline.md'
 description: Создает экземпляр класса Inline для ответов на Inline-запросы.
 ---
 
@@ -3867,7 +3967,7 @@ $tg->answerInlineQuery($query_id, $results);
 ---
 
 ---
-url: 'https://zenithgram.github.io/classes/tgzMethods/msg.md'
+url: 'https://zenithgram.github.io/classes/zenithMethods/msg.md'
 description: Создает экземпляр класса Message для отправки сообщений.
 ---
 
@@ -5081,7 +5181,7 @@ $tg->poll('regular')
 ---
 
 ---
-url: 'https://zenithgram.github.io/classes/tgzMethods/pagination.md'
+url: 'https://zenithgram.github.io/classes/zenithMethods/pagination.md'
 description: Создает экземпляр класса Pagination для генерации страниц.
 ---
 
@@ -5659,7 +5759,7 @@ __Подчёркнутый__
 ---
 
 ---
-url: 'https://zenithgram.github.io/classes/tgzMethods/poll.md'
+url: 'https://zenithgram.github.io/classes/zenithMethods/poll.md'
 description: Создает экземпляр класса Poll для создания опросов.
 ---
 
@@ -6131,7 +6231,7 @@ if ($type === 'bot_command') {
 ---
 
 ---
-url: 'https://zenithgram.github.io/classes/tgzMethods/reply.md'
+url: 'https://zenithgram.github.io/classes/zenithMethods/reply.md'
 description: Отправляет ответ на текущее сообщение (сокращенный метод).
 ---
 
@@ -6357,7 +6457,7 @@ $tg->poll('regular')
 ---
 
 ---
-url: 'https://zenithgram.github.io/classes/tgzMethods/sendAction.md'
+url: 'https://zenithgram.github.io/classes/zenithMethods/sendAction.md'
 description: 'Отправляет статус действия бота (например, ''typing'').'
 ---
 
@@ -6419,7 +6519,7 @@ upload\_photo
 ---
 
 ---
-url: 'https://zenithgram.github.io/classes/tgzMethods/sendMessage.md'
+url: 'https://zenithgram.github.io/classes/zenithMethods/sendMessage.md'
 description: Отправляет текстовое сообщение в указанный чат (прямой метод).
 ---
 
@@ -6947,7 +7047,7 @@ if ($type === 'bot_command') {
 
 ## Вспомогательные методы
 
-* [`getFileID`](/classes/tgzMethods/getFileID.md) - Получить ID файла
+* [`getFileID`](/classes/zenithMethods/getFileID.md) - Получить ID файла
 
 ---
 
@@ -7096,21 +7196,21 @@ if ($type === 'bot_command') {
 ---
 
 ---
-url: 'https://zenithgram.github.io/classes/botMethods/tgz.md'
+url: 'https://zenithgram.github.io/classes/botMethods/zg.md'
 description: Передает экземпляр TGZ в конструктор Bot.
 ---
 
-# tgz
+# zg
 
-Метод прокидывает основной класс `TGZ` в класс `Bot`.
+Метод прокидывает основной класс `ZG` в класс `Bot`.
 
 Создан для удобного использования с методом получения обновления `LongPoll`.
 
 ## Параметры
 
-| # | Название |  Тип  | Описание                       |
-|:-:|:--------:|:-----:|:-------------------------------|
-| 1 | **TGZ**  | `TGZ` | Объект основного класса `TGZ`. |
+| # | Название | Тип  | Описание                      |
+|:-:|:--------:|:----:|:------------------------------|
+| 1 |  **ZG**  | `ZG` | Объект основного класса `ZG`. |
 
 ## Возвращает
 
@@ -7124,9 +7224,9 @@ description: Передает экземпляр TGZ в конструктор B
 <?php
 require_once 'vendor/autoload.php';
 
-use ZhenyaGR\TGZ\LongPoll;
-use ZhenyaGR\TGZ\TGZ;
-use ZhenyaGR\TGZ\Bot;
+use ZhenyaGR\ZenithGram\LongPoll;
+use ZhenyaGR\ZenithGram\ZG;
+use ZhenyaGR\ZenithGram\Bot;
 
 $lp = LongPoll::create(BOT_TOKEN);
 
@@ -7135,9 +7235,9 @@ $bot = new Bot(); // Не передаём основной класс сраз�
 // Инициализация всех команд происходит до начала опроса. Это повышает производительность бота
 $bot->onStart()->text('Привет!');
 
-$lp->listen(function(TGZ $tg) use ($bot) {
+$lp->listen(function(ZG $tg) use ($bot) {
 
-    $bot->tgz($tg)->run();
+    $bot->zg($tg)->run();
     // Добавляем объект основного класса в Bot до вызова run
     // Чтобы бот имел доступ к актуальному обновлению и доступ
 
@@ -7145,83 +7245,6 @@ $lp->listen(function(TGZ $tg) use ($bot) {
 
 
 
-```
-
----
-
----
-url: 'https://zenithgram.github.io/classes/tgz.md'
-description: Основной класс библиотеки.
----
-
-# **TGZ**
-
-Основной класс библиотеки `TGZ`.
-
-## Создание экземпляра `TGZ`
-
-Для создания экземпляра класса используется `create` – статический фабричный метод.
-
-::: tip Токен
-Токен создаётся, используя бота [BotFather](https://t.me/BotFather)
-:::
-
-### Параметры метода
-
-| # | Название  |   Тип    | Описание                                              |
-|:-:|:---------:|:--------:|-------------------------------------------------------|
-| 1 | **token** | `string` | Токен вашего Telegram бота, полученный от @BotFather. |
-
-### Возвращает
-
-`TGZ` - экземпляр класса `TGZ`, готовый к использованию.
-
-### Пример использования
-
-```php
-<?php
-require_once __DIR__ . '/vendor/autoload.php';
-
-use ZhenyaGR\TGZ\TGZ;
-
-// Замените 'ТОКЕН' на фактический токен вашего бота
-$tg = TGZ::create('ТОКЕН');
-```
-
-## Сценарии использования
-
-1. Создание других экземпляров
-
-```php
-$message = $tg->msg();  // Класс Message
-$bot = new Bot($tg);    // Класс Bot
-```
-
-2. Отправка запросов к Telegram API
-
-```php
-$me = $tg->callAPI('getMe');
-$tg->answerCallbackQuery($query_id, ['text' => "Вы нажали кнопку!"]);
-```
-
-3. Работа с контекстом
-
-```php
-// Устаревший метод
-$tg->initVars($chat_id, $user_id, $text, $type, $callback_data, $query_id, $msg_id, $is_bot, $is_command);
-
-// Стандартные геттеры
-$chat_id = $tg->getChatId();
-$user_id = $tg->getUserId();
-```
-
-4. Создание кнопок
-
-```php
-$keyboard = [
-    [$tg->buttonCallback('Кнопка', 'callback_data')],
-    [$tg->buttonUrl('Другая кнопка', 'google.com')],
-];
 ```
 
 ---
@@ -7431,7 +7454,7 @@ if ($type === 'bot_command') {
 
 ## Вспомогательные методы
 
-* [`getFileID`](/classes/tgzMethods/getFileID.md) - Получить ID файла
+* [`getFileID`](/classes/zenithMethods/getFileID.md) - Получить ID файла
 
 ---
 
@@ -7534,7 +7557,75 @@ if ($type === 'bot_command')
 
 ## Вспомогательные методы
 
-* [`getFileID`](/classes/tgzMethods/getFileID.md) - Получить ID файла
+* [`getFileID`](/classes/zenithMethods/getFileID.md) - Получить ID файла
+
+---
+
+---
+url: 'https://zenithgram.github.io/classes/zenith.md'
+description: Основной класс библиотеки.
+---
+
+# **ZG**
+
+Основной класс библиотеки `ZG`.
+
+## Создание экземпляра `ZG`
+
+Для создания экземпляра класса используется `create` – статический фабричный метод.
+
+::: tip Токен
+Токен создаётся, используя бота [BotFather](https://t.me/BotFather)
+:::
+
+### Параметры метода
+
+| # | Название  |   Тип    | Описание                                              |
+|:-:|:---------:|:--------:|-------------------------------------------------------|
+| 1 | **token** | `string` | Токен вашего Telegram бота, полученный от @BotFather. |
+
+### Возвращает
+
+`ZG` - экземпляр класса `ZG`, готовый к использованию.
+
+### Пример использования
+
+```php
+<?php
+require_once __DIR__ . '/vendor/autoload.php';
+
+use ZhenyaGR\ZenithGram\ZG;
+
+// Замените 'ТОКЕН' на фактический токен вашего бота
+$tg = ZG::create('ТОКЕН');
+```
+
+## Сценарии использования
+
+1. Создание других экземпляров
+
+```php
+$message = $tg->msg();  // Класс Message
+$bot = new Bot($tg);    // Класс Bot
+```
+
+2. Отправка запросов к Telegram API
+
+```php
+$me = $tg->callAPI('getMe');
+$tg->answerCallbackQuery($query_id, ['text' => "Вы нажали кнопку!"]);
+```
+
+3. Работа с контекстом
+
+```php
+// Устаревший метод
+$tg->initVars($chat_id, $user_id, $text, $type, $callback_data, $query_id, $msg_id, $is_bot, $is_command);
+
+// Стандартные геттеры
+$chat_id = $tg->getChatId();
+$user_id = $tg->getUserId();
+```
 
 ---
 
@@ -8620,7 +8711,7 @@ https://api.telegram.org/bot12345:ABC-DEF/setWebhook?url=https://mydomain.com/bo
 ---
 
 ---
-url: 'https://zenithgram.github.io/install/who_tgz.md'
+url: 'https://zenithgram.github.io/install/who_zenith.md'
 description: >-
   Обзор возможностей библиотеки: Webhook/LongPoll, цепочки методов, роутинг и
   работа с медиа.

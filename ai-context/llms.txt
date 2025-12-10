@@ -6,7 +6,7 @@
 
 ### Начало работы
 
-- [Почему TGZ?](https://zenithgram.github.io/install/who_tgz.md): Обзор возможностей библиотеки: Webhook/LongPoll, цепочки методов, роутинг и работа с медиа.
+- [Почему TGZ?](https://zenithgram.github.io/install/who_zenith.md): Обзор возможностей библиотеки: Webhook/LongPoll, цепочки методов, роутинг и работа с медиа.
 - [Примеры ботов](https://zenithgram.github.io/install/examples.md): Коллекция примеров кода: Echo-бот, LongPoll, Webhook и использование конструктора Bot.
 
 ### Использование
@@ -20,7 +20,7 @@
 
 ### Классы
 
-- [TGZ](https://zenithgram.github.io/classes/tgz.md): Основной класс библиотеки.
+- [ZG](https://zenithgram.github.io/classes/zenith.md): Основной класс библиотеки.
 - [LongPoll](https://zenithgram.github.io/classes/longpoll.md): Класс для запуска бота в режиме Long Polling.
 - [Bot](https://zenithgram.github.io/classes/bot.md): Конструктор для создания логики бота.
 - [Action](https://zenithgram.github.io/classes/action.md): Вспомогательный класс для установки действий.
@@ -32,25 +32,25 @@
 - [Inline](https://zenithgram.github.io/classes/inline.md): Класс для создания инлайн-ответов.
 - [DTO](https://zenithgram.github.io/classes/dto.md): Объекты данных UserDto и ChatDto.
 
-#### TGZ
+#### ZenithGram
 
-- [msg](https://zenithgram.github.io/classes/tgzMethods/msg.md): Создает экземпляр класса Message для отправки сообщений.
-- [poll](https://zenithgram.github.io/classes/tgzMethods/poll.md): Создает экземпляр класса Poll для создания опросов.
-- [pagination](https://zenithgram.github.io/classes/tgzMethods/pagination.md): Создает экземпляр класса Pagination для генерации страниц.
-- [inline](https://zenithgram.github.io/classes/tgzMethods/inline.md): Создает экземпляр класса Inline для ответов на Inline-запросы.
-- [file](https://zenithgram.github.io/classes/tgzMethods/file.md): Создает экземпляр класса File для работы с файлами (скачивание, инфо).
-- [initVars](https://zenithgram.github.io/classes/tgzMethods/initVars.md): Инициализирует основные переменные (chat_id, user_id, text) из входящего обновления.
-- [get](https://zenithgram.github.io/classes/tgzMethods/get.md): Методы получения данных из обновления (getChatId, getText и др.).
-- [getFileID](https://zenithgram.github.io/classes/tgzMethods/getFileID.md): Загружает файл по URL и возвращает его file_id.
-- [defaultParseMode](https://zenithgram.github.io/classes/tgzMethods/defaultParseMode.md): Устанавливает режим разметки по умолчанию для всех сообщений.
-- [errors](https://zenithgram.github.io/classes/tgzMethods/errors.md): Настройка обработки и логирования ошибок (ErrorHandler).
-- [sendMessage](https://zenithgram.github.io/classes/tgzMethods/sendMessage.md): Отправляет текстовое сообщение в указанный чат (прямой метод).
-- [reply](https://zenithgram.github.io/classes/tgzMethods/reply.md): Отправляет ответ на текущее сообщение (сокращенный метод).
-- [copyMsg](https://zenithgram.github.io/classes/tgzMethods/copyMsg.md): Копирует сообщение из одного чата в другой.
-- [delMsg](https://zenithgram.github.io/classes/tgzMethods/delMsg.md): Удаляет сообщение по его ID.
-- [sendAction](https://zenithgram.github.io/classes/tgzMethods/sendAction.md): Отправляет статус действия бота (например, 'typing').
-- [answers](https://zenithgram.github.io/classes/tgzMethods/answers.md): Методы для ответа на callback (answerCallbackQuery) и inline запросы.
-- [callAPI](https://zenithgram.github.io/classes/tgzMethods/callAPI.md): Выполняет произвольный метод Telegram Bot API.
+- [msg](https://zenithgram.github.io/classes/zenithMethods/msg.md): Создает экземпляр класса Message для отправки сообщений.
+- [poll](https://zenithgram.github.io/classes/zenithMethods/poll.md): Создает экземпляр класса Poll для создания опросов.
+- [pagination](https://zenithgram.github.io/classes/zenithMethods/pagination.md): Создает экземпляр класса Pagination для генерации страниц.
+- [inline](https://zenithgram.github.io/classes/zenithMethods/inline.md): Создает экземпляр класса Inline для ответов на Inline-запросы.
+- [file](https://zenithgram.github.io/classes/zenithMethods/file.md): Создает экземпляр класса File для работы с файлами (скачивание, инфо).
+- [initVars](https://zenithgram.github.io/classes/zenithMethods/initVars.md): Инициализирует основные переменные (chat_id, user_id, text) из входящего обновления.
+- [get](https://zenithgram.github.io/classes/zenithMethods/get.md): Методы получения данных из обновления (getChatId, getText и др.).
+- [getFileID](https://zenithgram.github.io/classes/zenithMethods/getFileID.md): Загружает файл по URL и возвращает его file_id.
+- [defaultParseMode](https://zenithgram.github.io/classes/zenithMethods/defaultParseMode.md): Устанавливает режим разметки по умолчанию для всех сообщений.
+- [errors](https://zenithgram.github.io/classes/zenithMethods/errors.md): Настройка обработки и логирования ошибок (ErrorHandler).
+- [sendMessage](https://zenithgram.github.io/classes/zenithMethods/sendMessage.md): Отправляет текстовое сообщение в указанный чат (прямой метод).
+- [reply](https://zenithgram.github.io/classes/zenithMethods/reply.md): Отправляет ответ на текущее сообщение (сокращенный метод).
+- [copyMsg](https://zenithgram.github.io/classes/zenithMethods/copyMsg.md): Копирует сообщение из одного чата в другой.
+- [delMsg](https://zenithgram.github.io/classes/zenithMethods/delMsg.md): Удаляет сообщение по его ID.
+- [sendAction](https://zenithgram.github.io/classes/zenithMethods/sendAction.md): Отправляет статус действия бота (например, 'typing').
+- [answers](https://zenithgram.github.io/classes/zenithMethods/answers.md): Методы для ответа на callback (answerCallbackQuery) и inline запросы.
+- [callAPI](https://zenithgram.github.io/classes/zenithMethods/callAPI.md): Выполняет произвольный метод Telegram Bot API.
 
 #### Bot
 
@@ -78,7 +78,7 @@
 - [onDefault](https://zenithgram.github.io/classes/botMethods/onDefault.md): Глобальный fallback-обработчик для любых необработанных событий.
 - [redirect](https://zenithgram.github.io/classes/botMethods/redirect.md): Перенаправляет выполнение на другой маршрут.
 - [middleware](https://zenithgram.github.io/classes/botMethods/middleware.md): Регистрирует глобальное Middleware для бота.
-- [tgz](https://zenithgram.github.io/classes/botMethods/tgz.md): Передает экземпляр TGZ в конструктор Bot.
+- [tgz](https://zenithgram.github.io/classes/botMethods/zg.md): Передает экземпляр TGZ в конструктор Bot.
 - [run](https://zenithgram.github.io/classes/botMethods/run.md): Запускает обработку обновлений и маршрутизацию.
 
 #### Action
@@ -190,5 +190,6 @@
 
 ### Other
 
+- [buttons](https://zenithgram.github.io/classes/zenithMethods/buttons.md): Методы для простой сборки клавиатуры.
 - [Untitled](https://zenithgram.github.io/index.md)
 
