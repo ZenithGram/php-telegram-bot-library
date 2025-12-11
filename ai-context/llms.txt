@@ -6,7 +6,7 @@
 
 ### Начало работы
 
-- [Почему TGZ?](https://zenithgram.github.io/install/who_zenith.md): Обзор возможностей библиотеки: Webhook/LongPoll, цепочки методов, роутинг и работа с медиа.
+- [Почему ZenithGram?](https://zenithgram.github.io/install/who_zenith.md): Обзор возможностей библиотеки: Webhook/LongPoll, цепочки методов, роутинг и работа с медиа.
 - [Примеры ботов](https://zenithgram.github.io/install/examples.md): Коллекция примеров кода: Echo-бот, LongPoll, Webhook и использование конструктора Bot.
 
 ### Использование
@@ -41,7 +41,6 @@
 - [file](https://zenithgram.github.io/classes/zenithMethods/file.md): Создает экземпляр класса File для работы с файлами (скачивание, инфо).
 - [initVars](https://zenithgram.github.io/classes/zenithMethods/initVars.md): Инициализирует основные переменные (chat_id, user_id, text) из входящего обновления.
 - [get](https://zenithgram.github.io/classes/zenithMethods/get.md): Методы получения данных из обновления (getChatId, getText и др.).
-- [getFileID](https://zenithgram.github.io/classes/zenithMethods/getFileID.md): Загружает файл по URL и возвращает его file_id.
 - [defaultParseMode](https://zenithgram.github.io/classes/zenithMethods/defaultParseMode.md): Устанавливает режим разметки по умолчанию для всех сообщений.
 - [errors](https://zenithgram.github.io/classes/zenithMethods/errors.md): Настройка обработки и логирования ошибок (ErrorHandler).
 - [sendMessage](https://zenithgram.github.io/classes/zenithMethods/sendMessage.md): Отправляет текстовое сообщение в указанный чат (прямой метод).
