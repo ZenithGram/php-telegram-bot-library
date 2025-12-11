@@ -189,5 +189,5 @@
 
 ### Other
 
-- [https://vitepress.dev/reference/default-theme-home-page](https://zenithgram.github.io/index.md)
+- [Untitled](https://zenithgram.github.io/index.md)
 
