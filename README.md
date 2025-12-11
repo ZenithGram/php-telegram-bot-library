@@ -1,3 +1,9 @@
+[![Latest Stable Version](https://poser.pugx.org/zenithgram/zenithgram/v/stable)](https://packagist.org/packages/zenithgram/zenithgram)
+[![Total Downloads](https://poser.pugx.org/zenithgram/zenithgram/downloads)](https://packagist.org/packages/zenithgram/zenithgram)
+[![License](https://poser.pugx.org/zenithgram/zenithgram/license)](https://packagist.org/packages/zenithgram/zenithgram)
+[![PHP Version Require](https://poser.pugx.org/zenithgram/zenithgram/require/php)](https://packagist.org/packages/zenithgram/zenithgram)
+[![Documentation](https://img.shields.io/badge/read-documentation-success?logo=readthedocs&logoColor=white)](https://zenithgram.github.io)
+
 # Что такое ZenithGram?
 **ZenithGram** — это современная PHP-библиотека для создания ботов в Telegram.
 Позволяет быстро и удобно работать с Bot API, поддерживает Webhook и LongPoll, а также все типы сообщений и клавиатур.
