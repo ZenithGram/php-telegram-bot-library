@@ -5,29 +5,9 @@
 </p>
 
 <p align="center">
-  <!-- ПЕРВАЯ СТРОКА: Статистика -->
-  <a href="https://packagist.org/packages/zenithgram/zenithgram">
-    <img src="https://img.shields.io/packagist/v/zenithgram/zenithgram?style=flat-square&color=8992bb" alt="Latest Stable Version">
-  </a>
-  <a href="https://packagist.org/packages/zenithgram/zenithgram">
-    <img src="https://img.shields.io/packagist/php-v/zenithgram/zenithgram?style=flat-square&color=blue" alt="PHP Version">
-  </a>
-  <a href="https://packagist.org/packages/zenithgram/zenithgram">
-    <img src="https://img.shields.io/packagist/dt/zenithgram/zenithgram?style=flat-square&color=orange" alt="Total Downloads">
-  </a>
-  <a href="https://packagist.org/packages/zenithgram/zenithgram">
-    <img src="https://img.shields.io/packagist/l/zenithgram/zenithgram?style=flat-square&color=success" alt="License">
-  </a>
-
-  <br> <!-- Перенос строки -->
-
-  <!-- ВТОРАЯ СТРОКА: Ссылки -->
-  <a href="https://zenithgram.github.io">
-    <img src="https://img.shields.io/badge/-Documentation-007ec6?style=flat-square&logo=readthedocs&logoColor=white" alt="Документация">
-  </a>
-  <!-- Если есть Telegram канал/чат, раскомментируйте строку ниже и вставьте свою ссылку -->
-  <!-- <a href="https://t.me/ВАША_ССЫЛКА"><img src="https://img.shields.io/badge/-Telegram-26A5E4?style=flat-square&logo=telegram&logoColor=white" alt="Telegram"></a> -->
+<a href="https://packagist.org/packages/zenithgram/zenithgram"><img src="https://img.shields.io/packagist/v/zenithgram/zenithgram?style=flat-square&color=8992bb" alt="Latest Stable Version"></a><a href="https://packagist.org/packages/zenithgram/zenithgram"><img src="https://img.shields.io/packagist/php-v/zenithgram/zenithgram?style=flat-square&color=blue" alt="PHP Version"></a><a href="https://packagist.org/packages/zenithgram/zenithgram"><img src="https://img.shields.io/packagist/dt/zenithgram/zenithgram?style=flat-square&color=orange" alt="Total Downloads"></a><a href="https://packagist.org/packages/zenithgram/zenithgram"><img src="https://img.shields.io/packagist/l/zenithgram/zenithgram?style=flat-square&color=success" alt="License"></a><br><a href="https://zenithgram.github.io"><img src="https://img.shields.io/badge/-Documentation-007ec6?style=flat-square&logo=readthedocs&logoColor=white" alt="Документация"></a>
 </p>
+
 
 
 # Что такое ZenithGram?
