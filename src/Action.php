@@ -1,8 +1,8 @@
 <?php
 
-namespace ZhenyaGR\ZenithGram;
+namespace ZenithGram\ZenithGram;
 
-use ZhenyaGR\ZenithGram\Inline;
+use ZenithGram\ZenithGram\Inline;
 
 class Action
 {

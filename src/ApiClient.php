@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace ZhenyaGR\ZenithGram;
+namespace ZenithGram\ZenithGram;
 
-use ZhenyaGR\ZenithGram\Utils\EnvironmentDetector;
-use ZhenyaGR\ZenithGram\Contracts\ApiInterface;
+use ZenithGram\ZenithGram\Utils\EnvironmentDetector;
+use ZenithGram\ZenithGram\Contracts\ApiInterface;
 class ApiClient implements ApiInterface
 {
     private const API_BASE_URL = 'https://api.telegram.org';

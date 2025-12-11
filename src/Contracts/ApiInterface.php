@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ZhenyaGR\ZenithGram\Contracts;
+namespace ZenithGram\ZenithGram\Contracts;
 
 interface ApiInterface
 {

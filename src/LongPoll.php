@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace ZhenyaGR\ZenithGram;
+namespace ZenithGram\ZenithGram;
 
 use Closure;
 use Throwable;
-use ZhenyaGR\ZenithGram\Contracts\ApiInterface;
+use ZenithGram\ZenithGram\Contracts\ApiInterface;
 
 /**
  * Класс для получения обновлений от Telegram в режиме Long Polling.

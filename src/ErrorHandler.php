@@ -1,9 +1,9 @@
 <?php
 
-namespace ZhenyaGR\ZenithGram;
+namespace ZenithGram\ZenithGram;
 
 use Closure;
-use ZhenyaGR\ZenithGram\Utils\EnvironmentDetector;
+use ZenithGram\ZenithGram\Utils\EnvironmentDetector;
 use ErrorException;
 use Throwable, Exception;
 

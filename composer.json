@@ -1,5 +1,5 @@
 {
-    "name": "zhenyagr/zenithgram",
+    "name": "zenithgram/zenithgram",
     "description": "Библиотека для разработки ботов в Telegram",
     "type": "library",
     "require": {
@@ -9,7 +9,7 @@
     },
     "autoload": {
         "psr-4": {
-            "ZhenyaGR\\ZenithGram\\": "src/"
+            "ZenithGram\\ZenithGram\\": "src/"
         }
     },
     "prefer-stable": true,

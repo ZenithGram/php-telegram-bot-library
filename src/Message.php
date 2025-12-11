@@ -1,6 +1,6 @@
 <?php
 
-namespace ZhenyaGR\ZenithGram;
+namespace ZenithGram\ZenithGram;
 
 use CURLFile;
 

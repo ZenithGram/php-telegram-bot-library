@@ -1,8 +1,8 @@
 <?php
 
-namespace ZhenyaGR\ZenithGram;
+namespace ZenithGram\ZenithGram;
 
-use ZhenyaGR\ZenithGram\Dto\UserDto;
+use ZenithGram\ZenithGram\Dto\UserDto;
 
 class Bot
 {

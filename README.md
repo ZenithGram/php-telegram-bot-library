@@ -40,7 +40,7 @@ require_once "TGZ/autoload.php";
 ```php
 <?php
 require_once __DIR__ . 'vendor/autoload.php';  // Подключаем библиотеку
-use ZhenyaGR\ZenithGram\ZG;  // Используем основной класс
+use ZenithGram\ZenithGram\ZG;  // Используем основной класс
 
 $tg = ZG::create(BOT_TOKEN); // Создаем объект бота
 
@@ -60,8 +60,8 @@ $tg->initVars($chat_id, $user_id, $text, $type, $callback_data, $query_id, $msg_
 ```php
 <?php
 require_once __DIR__ . 'vendor/autoload.php';  // Подключаем библиотеку
-use ZhenyaGR\ZenithGram\LongPoll;   // Используем класс LongPoll
-use ZhenyaGR\ZenithGram\ZG;
+use ZenithGram\ZenithGram\LongPoll;   // Используем класс LongPoll
+use ZenithGram\ZenithGram\ZG;
 
 $lp = LongPoll::create(BOT_TOKEN); 
 // Создаем объект бота 
@@ -85,7 +85,7 @@ $lp->listen(function(ZG $tg) {
 ```php
 <?php
 require_once __DIR__ . 'vendor/autoload.php';  // Подключаем библиотеку
-use ZhenyaGR\ZenithGram\ZG;  
+use ZenithGram\ZenithGram\ZG;  
 
 $tg = ZG::create(BOT_TOKEN); 
 $tg->initVars($chat_id, $user_id, $text, $type, msg_id: $msg_id); 
@@ -107,7 +107,7 @@ if ($type == 'text' || $type == 'bot_command') {
 ```php
 <?php
 require_once __DIR__ . 'vendor/autoload.php';  // Подключаем библиотеку
-use ZhenyaGR\ZenithGram\ZG; 
+use ZenithGram\ZenithGram\ZG; 
 
 $tg = ZG::create(BOT_TOKEN);
 $tg->initVars(text: $text, type: $type);
@@ -123,8 +123,8 @@ if ($type == 'text' || $type == 'bot_command') {
 ```php
 <?php
 require_once __DIR__ . 'vendor/autoload.php';  // Подключаем библиотеку
-use ZhenyaGR\ZenithGram\LongPoll;  // Меняем класс
-use ZhenyaGR\ZenithGram\ZG; 
+use ZenithGram\ZenithGram\LongPoll;  // Меняем класс
+use ZenithGram\ZenithGram\ZG; 
 
 $lp = LongPoll::create(BOT_TOKEN); 
 
@@ -151,8 +151,8 @@ $lp->listen(function(ZG $tg) {
 ```php
 <?php
 require_once __DIR__ . 'vendor/autoload.php';  // Подключаем библиотеку
-use ZhenyaGR\ZenithGram\LongPoll; 
-use ZhenyaGR\ZenithGram\ZG; 
+use ZenithGram\ZenithGram\LongPoll; 
+use ZenithGram\ZenithGram\ZG; 
 
 $lp = LongPoll::create(BOT_TOKEN);
 

@@ -1,14 +1,14 @@
 <?php
 
-namespace ZhenyaGR\ZenithGram;
+namespace ZenithGram\ZenithGram;
 
 use CURLFile;
 use Exception;
 use LogicException;
-use ZhenyaGR\ZenithGram\Contracts\ApiInterface;
-use ZhenyaGR\ZenithGram\Dto\UserDto;
-use ZhenyaGR\ZenithGram\Dto\ChatDto;
-use ZhenyaGR\ZenithGram\Utils\EnvironmentDetector;
+use ZenithGram\ZenithGram\Contracts\ApiInterface;
+use ZenithGram\ZenithGram\Dto\UserDto;
+use ZenithGram\ZenithGram\Dto\ChatDto;
+use ZenithGram\ZenithGram\Utils\EnvironmentDetector;
 
 class ZG
 {
@@ -129,7 +129,7 @@ class ZG
     /**
      * Метод создает объект класса Pagination для конструктора страниц
      *
-     * @return \ZhenyaGR\ZenithGram\Pagination
+     * @return \ZenithGram\ZenithGram\Pagination
      *
      * @see https://zenithgram.github.io/classes/tgzMethods/pagination
      */

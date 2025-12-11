@@ -1,6 +1,6 @@
 <?php
 
-namespace ZhenyaGR\ZenithGram\Dto;
+namespace ZenithGram\ZenithGram\Dto;
 
 /**
  * DTO для объекта Chat из Telegram API.
