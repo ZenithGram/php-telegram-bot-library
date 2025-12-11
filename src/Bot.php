@@ -59,7 +59,7 @@ class Bot
      *
      * @return void
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/botMethods/middleware
+     * @see https://zenithgram.github.io/classes/botMethods/middleware
      */
     public function middleware(callable $handler): void
     {
@@ -74,7 +74,7 @@ class Bot
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/botMethods/btn
+     * @see https://zenithgram.github.io/classes/botMethods/btn
      */
     public function btn(string $id, string|null $text = null): Action
     {
@@ -94,7 +94,7 @@ class Bot
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/botMethods/onBotCommand
+     * @see https://zenithgram.github.io/classes/botMethods/onBotCommand
      */
     public function onBotCommand(string $id, array|string|null $command = null,
     ): Action {
@@ -109,7 +109,7 @@ class Bot
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/botMethods/onStart
+     * @see https://zenithgram.github.io/classes/botMethods/onStart
      */
     public function onStart(): Action
     {
@@ -124,7 +124,7 @@ class Bot
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/botMethods/onReferral
+     * @see https://zenithgram.github.io/classes/botMethods/onReferral
      */
     public function onReferral(): Action
     {
@@ -139,7 +139,7 @@ class Bot
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/botMethods/onEditedMessage
+     * @see https://zenithgram.github.io/classes/botMethods/onEditedMessage
      */
     public function onEditedMessage(): Action
     {
@@ -157,7 +157,7 @@ class Bot
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/botMethods/onCommand
+     * @see https://zenithgram.github.io/classes/botMethods/onCommand
      */
     public function onCommand(string $id, array|string|null $command = null,
     ): Action {
@@ -175,7 +175,7 @@ class Bot
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/botMethods/onText
+     * @see https://zenithgram.github.io/classes/botMethods/onText
      */
     public function onText(string $id, array|string|null $text = null): Action
     {
@@ -193,7 +193,7 @@ class Bot
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/botMethods/onTextPreg
+     * @see https://zenithgram.github.io/classes/botMethods/onTextPreg
      */
     public function onTextPreg(string $id, array|string|null $pattern = null,
     ): Action {
@@ -211,7 +211,7 @@ class Bot
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/botMethods/onCallback
+     * @see https://zenithgram.github.io/classes/botMethods/onCallback
      */
     public function onCallback(string $id, array|string|null $data = null,
     ): Action {
@@ -229,7 +229,7 @@ class Bot
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/botMethods/onCallbackPreg
+     * @see https://zenithgram.github.io/classes/botMethods/onCallbackPreg
      */
     public function onCallbackPreg(string $id, array|string|null $pattern = null,
     ): Action {
@@ -244,7 +244,7 @@ class Bot
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/botMethods/onInline
+     * @see https://zenithgram.github.io/classes/botMethods/onInline
      */
     public function onInline(): Action
     {
@@ -259,7 +259,7 @@ class Bot
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/botMethods/onSticker
+     * @see https://zenithgram.github.io/classes/botMethods/onSticker
      */
     public function onSticker(): Action
     {
@@ -274,7 +274,7 @@ class Bot
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/botMethods/onMessage
+     * @see https://zenithgram.github.io/classes/botMethods/onMessage
      */
     public function onMessage(): Action
     {
@@ -289,7 +289,7 @@ class Bot
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/botMethods/onPhoto
+     * @see https://zenithgram.github.io/classes/botMethods/onPhoto
      */
     public function onPhoto(): Action
     {
@@ -304,7 +304,7 @@ class Bot
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/botMethods/onVideo
+     * @see https://zenithgram.github.io/classes/botMethods/onVideo
      */
     public function onVideo(): Action
     {
@@ -319,7 +319,7 @@ class Bot
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/botMethods/onAudio
+     * @see https://zenithgram.github.io/classes/botMethods/onAudio
      */
     public function onAudio(): Action
     {
@@ -334,7 +334,7 @@ class Bot
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/botMethods/onVoice
+     * @see https://zenithgram.github.io/classes/botMethods/onVoice
      */
     public function onVoice(): Action
     {
@@ -349,7 +349,7 @@ class Bot
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/botMethods/onDocument
+     * @see https://zenithgram.github.io/classes/botMethods/onDocument
      */
     public function onDocument(): Action
     {
@@ -364,7 +364,7 @@ class Bot
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/botMethods/onVideoNote
+     * @see https://zenithgram.github.io/classes/botMethods/onVideoNote
      */
     public function onVideoNote(): Action
     {
@@ -379,7 +379,7 @@ class Bot
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/botMethods/onNewChatMember
+     * @see https://zenithgram.github.io/classes/botMethods/onNewChatMember
      */
     public function onNewChatMember(): Action
     {
@@ -395,7 +395,7 @@ class Bot
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/botMethods/onLeftChatMember
+     * @see https://zenithgram.github.io/classes/botMethods/onLeftChatMember
      */
     public function onLeftChatMember(): Action
     {
@@ -410,7 +410,7 @@ class Bot
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/botMethods/onDefault
+     * @see https://zenithgram.github.io/classes/botMethods/onDefault
      */
     public function onDefault(): Action
     {
@@ -1064,7 +1064,7 @@ class Bot
      *
      * @throws \InvalidArgumentException Если один из маршрутов не найден.
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/botMethods/gz
+     * @see https://zenithgram.github.io/classes/botMethods/gz
      */
     public function gz(ZG $ZG): self
     {
@@ -1085,7 +1085,7 @@ class Bot
      *
      * @throws \InvalidArgumentException Если один из маршрутов не найден.
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/botMethods/run
+     * @see https://zenithgram.github.io/classes/botMethods/run
      */
     public function run(null|string $id = null): void
     {
@@ -1132,7 +1132,7 @@ class Bot
      *
      * @throws \InvalidArgumentException Если один из маршрутов не найден.
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/botMethods/redirect
+     * @see https://zenithgram.github.io/classes/botMethods/redirect
      */
     public function redirect(string $id, string $to_id): Bot
     {

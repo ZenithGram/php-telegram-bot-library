@@ -48,7 +48,7 @@ class ZG
      *
      * @throws Exception
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/tgzMethods/callAPI
+     * @see https://zenithgram.github.io/classes/tgzMethods/callAPI
      */
     public function callAPI(string $method, ?array $params = []): array
     {
@@ -62,7 +62,7 @@ class ZG
      *
      * @return ZG
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/tgzMethods/defaultParseMode
+     * @see https://zenithgram.github.io/classes/tgzMethods/defaultParseMode
      */
     public function defaultParseMode(?string $mode = null): self
     {
@@ -89,7 +89,7 @@ class ZG
      *
      * @return Message
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/tgzMethods/msg
+     * @see https://zenithgram.github.io/classes/tgzMethods/msg
      */
     public function msg(string $text = ''): Message
     {
@@ -105,7 +105,7 @@ class ZG
      *
      * @return Poll
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/tgzMethods/poll
+     * @see https://zenithgram.github.io/classes/tgzMethods/poll
      */
     public function poll(string $type = 'regular'): Poll
     {
@@ -119,7 +119,7 @@ class ZG
      *
      * @return Inline
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/tgzMethods/inline
+     * @see https://zenithgram.github.io/classes/tgzMethods/inline
      */
     public function inline(string $type = ''): Inline
     {
@@ -131,7 +131,7 @@ class ZG
      *
      * @return \ZhenyaGR\ZenithGram\Pagination
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/tgzMethods/pagination
+     * @see https://zenithgram.github.io/classes/tgzMethods/pagination
      */
     public function pagination(): Pagination
     {
@@ -145,7 +145,7 @@ class ZG
      *
      * @return File
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/tgzMethods/file
+     * @see https://zenithgram.github.io/classes/tgzMethods/file
      */
     public function file(string $file_id): File
     {
@@ -162,7 +162,7 @@ class ZG
      *
      * @throws \Exception
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/tgzMethods/delMsg
+     * @see https://zenithgram.github.io/classes/tgzMethods/delMsg
      */
     public function delMsg(array|int $msg_ids = null,
         int|string $chat_id = null,
@@ -197,7 +197,7 @@ class ZG
      * @throws \Exception
      *
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/tgzMethods/copyMsg
+     * @see https://zenithgram.github.io/classes/tgzMethods/copyMsg
      */
     public function copyMsg(int|array $msg_ids = null,
         int|string $chat_id = null, int|string $from_chat_id = null,
@@ -236,7 +236,7 @@ class ZG
      *
      * @throws \Exception
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/tgzMethods/getFileID
+     * @see https://zenithgram.github.io/classes/tgzMethods/getFileID
      */
     public function getFileID(string $url, string $type = 'document',
         int|string $chat_id = null,
@@ -268,7 +268,7 @@ class ZG
      *
      * @throws \Exception
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/tgzMethods/sendAction
+     * @see https://zenithgram.github.io/classes/tgzMethods/sendAction
      */
     public function sendAction(?string $action = 'typing'): self
     {
@@ -307,7 +307,7 @@ class ZG
      *
      * @throws \Exception
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/tgzMethods/sendMessage
+     * @see https://zenithgram.github.io/classes/tgzMethods/sendMessage
      */
     public function sendMessage(int $chatID, string $text, array $params = [],
     ): array {
@@ -331,7 +331,7 @@ class ZG
      *
      * @throws \Exception
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/tgzMethods/reply
+     * @see https://zenithgram.github.io/classes/tgzMethods/reply
      */
     public function reply(string $message, array $params = []): array
     {
@@ -397,7 +397,7 @@ class ZG
      * @return array
      * @throws \Exception
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/tgzMethods/answers
+     * @see https://zenithgram.github.io/classes/tgzMethods/answers
      */
     public function answerCallbackQuery(string $callbackQueryID,
         array $options = [],
@@ -419,7 +419,7 @@ class ZG
      * @return array
      * @throws \Exception
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/tgzMethods/answers
+     * @see https://zenithgram.github.io/classes/tgzMethods/answers
      */
     public function answerInlineQuery(string $inlineQueryID, array $results,
         array $extra = [],
@@ -447,7 +447,7 @@ class ZG
      *
      * @return array
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/tgzMethods/initVars
+     * @see https://zenithgram.github.io/classes/tgzMethods/initVars
      */
     public function initVars(
         &$chat_id = null,
@@ -496,7 +496,7 @@ class ZG
      *
      * @return array
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/tgzMethods/get#getupdate
+     * @see https://zenithgram.github.io/classes/tgzMethods/get#getupdate
      */
     public function getUpdate(): array
     {
@@ -508,7 +508,7 @@ class ZG
      *
      * @return ?string
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/tgzMethods/get#getcallbackdata
+     * @see https://zenithgram.github.io/classes/tgzMethods/get#getcallbackdata
      */
     public function getCallbackData(): ?string
     {
@@ -520,7 +520,7 @@ class ZG
      *
      * @return ?string
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/tgzMethods/get#getqueryid
+     * @see https://zenithgram.github.io/classes/tgzMethods/get#getqueryid
      */
     public function getQueryId(): ?string
     {
@@ -532,7 +532,7 @@ class ZG
      *
      * @return ?string
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/tgzMethods/get#gettype
+     * @see https://zenithgram.github.io/classes/tgzMethods/get#gettype
      */
     public function getType(): ?string
     {
@@ -544,7 +544,7 @@ class ZG
      *
      * @return ?string
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/tgzMethods/get#getmsgid
+     * @see https://zenithgram.github.io/classes/tgzMethods/get#getmsgid
      */
     public function getMsgId(): ?string
     {
@@ -556,7 +556,7 @@ class ZG
      *
      * @return ?string
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/tgzMethods/get#getchatid
+     * @see https://zenithgram.github.io/classes/tgzMethods/get#getchatid
      */
     public function getText(): ?string
     {
@@ -568,7 +568,7 @@ class ZG
      *
      * @return ?int user_id
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/tgzMethods/get#getuserid
+     * @see https://zenithgram.github.io/classes/tgzMethods/get#getuserid
      */
     public function getUserId(): ?int
     {
@@ -580,7 +580,7 @@ class ZG
      *
      * @return ?string
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/tgzMethods/get#getchatid
+     * @see https://zenithgram.github.io/classes/tgzMethods/get#getchatid
      */
     public function getChatId(): ?string
     {
@@ -598,7 +598,7 @@ class ZG
      * @return UserDto Объект пользователя.
      * @throws LogicException Если данные пользователя не найдены в событии.
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/tgzMethods/get#getuserdto
+     * @see https://zenithgram.github.io/classes/tgzMethods/get#getuserdto
      */
     public function getUserDto(): UserDto
     {
@@ -639,7 +639,7 @@ class ZG
      * @return ChatDto Объект чата.
      * @throws LogicException Если данные чата не найдены в событии.
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/tgzMethods/get#getchatdto
+     * @see https://zenithgram.github.io/classes/tgzMethods/get#getchatdto
      */
     public function getChatDto(): ChatDto
     {

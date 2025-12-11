@@ -81,7 +81,7 @@ final class Message
      * @return Message
      *
      * @throws \JsonException
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/messageMethods/inlineKbd
+     * @see https://zenithgram.github.io/classes/messageMethods/inlineKbd
      */
     public function inlineKbd(array $buttons,
     ): Message {
@@ -108,7 +108,7 @@ final class Message
      * @return Message
      *
      * @throws \JsonException
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/messageMethods/kbd
+     * @see https://zenithgram.github.io/classes/messageMethods/kbd
      */
     public function kbd(array $buttons, bool $one_time = false,
         bool $resize = false,
@@ -135,7 +135,7 @@ final class Message
      * @return Message
      *
      * @throws \JsonException
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/messageMethods/removeKbd
+     * @see https://zenithgram.github.io/classes/messageMethods/removeKbd
      */
     public function removeKbd(): Message
     {
@@ -155,7 +155,7 @@ final class Message
      *
      * @return Message
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/messageMethods/text
+     * @see https://zenithgram.github.io/classes/messageMethods/text
      */
     public function text(string $text): static
     {
@@ -171,7 +171,7 @@ final class Message
      *
      * @return Message
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/messageMethods/parseMode
+     * @see https://zenithgram.github.io/classes/messageMethods/parseMode
      */
     public function parseMode(?string $mode = null): Message
     {
@@ -190,7 +190,7 @@ final class Message
      *
      * @return Message
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/messageMethods/params
+     * @see https://zenithgram.github.io/classes/messageMethods/params
      */
     public function params(array $params = []): static
     {
@@ -206,7 +206,7 @@ final class Message
      *
      * @return Message
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/messageMethods/reply
+     * @see https://zenithgram.github.io/classes/messageMethods/reply
      */
     public function reply(?int $reply_to_message_id = null): static
     {
@@ -267,7 +267,7 @@ final class Message
      *
      * @return Message
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/messageMethods/dice
+     * @see https://zenithgram.github.io/classes/messageMethods/dice
      */
     public function dice(string $dice): static
     {
@@ -284,7 +284,7 @@ final class Message
      *
      * @return Message
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/messageMethods/gif
+     * @see https://zenithgram.github.io/classes/messageMethods/gif
      */
     public function gif(string|array $url): static
     {
@@ -302,7 +302,7 @@ final class Message
      *
      * @return Message
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/messageMethods/voice
+     * @see https://zenithgram.github.io/classes/messageMethods/voice
      */
     public function voice(string $url): static
     {
@@ -320,7 +320,7 @@ final class Message
      *
      * @return Message
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/messageMethods/audio
+     * @see https://zenithgram.github.io/classes/messageMethods/audio
      */
     public function audio(string|array $url): static
     {
@@ -338,7 +338,7 @@ final class Message
      *
      * @return Message
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/messageMethods/video
+     * @see https://zenithgram.github.io/classes/messageMethods/video
      */
     public function video(string|array $url): static
     {
@@ -356,7 +356,7 @@ final class Message
      *
      * @return Message
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/messageMethods/doc
+     * @see https://zenithgram.github.io/classes/messageMethods/doc
      */
     public function doc(string|array $url): static
     {
@@ -374,7 +374,7 @@ final class Message
      *
      * @return Message
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/messageMethods/entity
+     * @see https://zenithgram.github.io/classes/messageMethods/entity
      */
     public function entities(array $entities): self
     {
@@ -390,7 +390,7 @@ final class Message
      *
      * @return Message
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/messageMethods/img
+     * @see https://zenithgram.github.io/classes/messageMethods/img
      */
     public function img(string|array $url): static
     {
@@ -410,7 +410,7 @@ final class Message
      *
      * @return Message
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/messageMethods/mediaPreview
+     * @see https://zenithgram.github.io/classes/messageMethods/mediaPreview
      */
     public function mediaPreview(string $url): static
     {
@@ -426,7 +426,7 @@ final class Message
      *
      * @return Message
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/messageMethods/sticker
+     * @see https://zenithgram.github.io/classes/messageMethods/sticker
      */
     public function sticker(string $file_id): static
     {
@@ -490,7 +490,7 @@ final class Message
      *
      * @throws \JsonException
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/messageMethods/send
+     * @see https://zenithgram.github.io/classes/messageMethods/send
      */
     public function send(?int $chatID = null): array
     {
@@ -565,7 +565,7 @@ final class Message
      *
      * @throws \Exception
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/messageMethods/editText
+     * @see https://zenithgram.github.io/classes/messageMethods/editText
      */
     public function editText(?string $messageID = null, ?int $chatID = null,
     ): array {
@@ -612,7 +612,7 @@ final class Message
      *
      * @throws \Exception
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/messageMethods/editCaption
+     * @see https://zenithgram.github.io/classes/messageMethods/editCaption
      */
     public function editCaption(?string $messageID = null,
         ?int $chatID = null,
@@ -659,7 +659,7 @@ final class Message
      *
      * @throws \Exception
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/messageMethods/editMedia
+     * @see https://zenithgram.github.io/classes/messageMethods/editMedia
      */
     public function editMedia(?string $messageID = null, ?int $chatID = null,
     ): array {

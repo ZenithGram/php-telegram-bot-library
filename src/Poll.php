@@ -36,7 +36,7 @@ class Poll
      *
      * @return Poll
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/pollMethods/parseMode
+     * @see https://zenithgram.github.io/classes/pollMethods/parseMode
      */
     public function parseMode(?string $parse_mode = ''): self
     {
@@ -56,7 +56,7 @@ class Poll
      *
      * @return Poll
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/pollMethods/parseMode
+     * @see https://zenithgram.github.io/classes/pollMethods/parseMode
      */
     public function questionParseMode(?string $parse_mode = ''): self
     {
@@ -75,7 +75,7 @@ class Poll
      *
      * @return Poll
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/pollMethods/question
+     * @see https://zenithgram.github.io/classes/pollMethods/question
      */
     public function question(string $question): self
     {
@@ -91,7 +91,7 @@ class Poll
      *
      * @return Poll
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/pollMethods/addAnswers
+     * @see https://zenithgram.github.io/classes/pollMethods/addAnswers
      */
     public function addAnswers(string ...$answers): self
     {
@@ -107,7 +107,7 @@ class Poll
      *
      * @return Poll
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/pollMethods/isAnonymous
+     * @see https://zenithgram.github.io/classes/pollMethods/isAnonymous
      */
     public function isAnonymous(?bool $anon = true): self
     {
@@ -123,7 +123,7 @@ class Poll
      *
      * @return Poll
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/pollMethods/multipleAnswers
+     * @see https://zenithgram.github.io/classes/pollMethods/multipleAnswers
      */
     public function multipleAnswers(bool $multiple = true): self
     {
@@ -139,7 +139,7 @@ class Poll
      *
      * @return Poll
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/pollMethods/correctAnswer
+     * @see https://zenithgram.github.io/classes/pollMethods/correctAnswer
      */
     public function correctAnswer(int $id): self
     {
@@ -157,7 +157,7 @@ class Poll
      *
      * @return Poll
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/pollMethods/explanation
+     * @see https://zenithgram.github.io/classes/pollMethods/explanation
      */
     public function explanation(string $explanation): self
     {
@@ -175,7 +175,7 @@ class Poll
      *
      * @return Poll
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/pollMethods/parseMode
+     * @see https://zenithgram.github.io/classes/pollMethods/parseMode
      */
     public function explanationParseMode(?string $parse_mode = ''): self
     {
@@ -196,7 +196,7 @@ class Poll
      *
      * @return Poll
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/pollMethods/close
+     * @see https://zenithgram.github.io/classes/pollMethods/close
      */
     public function close(?bool $close = true): self
     {
@@ -212,7 +212,7 @@ class Poll
      *
      * @return Poll
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/pollMethods/openPeriod
+     * @see https://zenithgram.github.io/classes/pollMethods/openPeriod
      */
     public function openPeriod(int $seconds): self
     {
@@ -233,7 +233,7 @@ class Poll
      *
      * @return Poll
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/pollMethods/closeDate
+     * @see https://zenithgram.github.io/classes/pollMethods/closeDate
      */
     public function closeDate(int $timestamp): self
     {
@@ -256,7 +256,7 @@ class Poll
      *
      * @return array
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/pollMethods/send
+     * @see https://zenithgram.github.io/classes/pollMethods/send
      *
      * @throws \JsonException
      */

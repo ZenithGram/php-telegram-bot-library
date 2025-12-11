@@ -12,7 +12,7 @@ class Button
      *
      * @return array
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/button#cb
+     * @see https://zenithgram.github.io/classes/button#cb
      */
     public static function cb(string $text, string $data): array
     {
@@ -27,7 +27,7 @@ class Button
      *
      * @return array
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/button#url
+     * @see https://zenithgram.github.io/classes/button#url
      */
     public static function url(string $text, string $url): array
     {
@@ -42,7 +42,7 @@ class Button
      *
      * @return array
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/button#webApp
+     * @see https://zenithgram.github.io/classes/button#webApp
      */
     public static function webApp(string $text, string $url): array
     {
@@ -56,7 +56,7 @@ class Button
      *
      * @return array
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/button#text
+     * @see https://zenithgram.github.io/classes/button#text
      */
     public static function text(string $text): array
     {
@@ -70,7 +70,7 @@ class Button
      *
      * @return array
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/button#contact
+     * @see https://zenithgram.github.io/classes/button#contact
      */
     public static function contact(string $text): array
     {
@@ -84,7 +84,7 @@ class Button
      *
      * @return array
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/button#location
+     * @see https://zenithgram.github.io/classes/button#location
      */
     public static function location(string $text): array
     {

@@ -36,7 +36,7 @@ class Pagination
      *
      * @return Pagination
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/paginationMethods/setMode
+     * @see https://zenithgram.github.io/classes/paginationMethods/setMode
      */
     public function setMode(PaginationMode $mode): self
     {
@@ -52,7 +52,7 @@ class Pagination
      *
      * @return Pagination
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/paginationMethods/setMaxPageBtn
+     * @see https://zenithgram.github.io/classes/paginationMethods/setMaxPageBtn
      */
     public function setMaxPageBtn(int $max): self
     {
@@ -74,7 +74,7 @@ class Pagination
      *
      * @return Pagination
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/paginationMethods/setNumberStyle
+     * @see https://zenithgram.github.io/classes/paginationMethods/setNumberStyle
      */
     public function setNumberStyle(PaginationNumberStyle|callable $style): self
     {
@@ -106,7 +106,7 @@ class Pagination
      *
      * @return Pagination
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/paginationMethods/setActivePageFormat
+     * @see https://zenithgram.github.io/classes/paginationMethods/setActivePageFormat
      */
     public function setActivePageFormat(string $left_or_pattern,
         string|null $right = null,
@@ -128,7 +128,7 @@ class Pagination
      *
      * @return Pagination
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/paginationMethods/setItems
+     * @see https://zenithgram.github.io/classes/paginationMethods/setItems
      */
     public function setItems(array $items): self
     {
@@ -147,7 +147,7 @@ class Pagination
      *
      * @return Pagination
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/paginationMethods/setTotalItems
+     * @see https://zenithgram.github.io/classes/paginationMethods/setTotalItems
      */
     public function setTotalItems(int $totalItems): self
     {
@@ -163,7 +163,7 @@ class Pagination
      *
      * @return Pagination
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/paginationMethods/setPerPage
+     * @see https://zenithgram.github.io/classes/paginationMethods/setPerPage
      */
     public function setPerPage(int $perPage): self
     {
@@ -183,7 +183,7 @@ class Pagination
      *
      * @return Pagination
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/paginationMethods/setColumns
+     * @see https://zenithgram.github.io/classes/paginationMethods/setColumns
      */
     public function setColumns(int $columns): self
     {
@@ -203,7 +203,7 @@ class Pagination
      *
      * @return Pagination
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/paginationMethods/setPage
+     * @see https://zenithgram.github.io/classes/paginationMethods/setPage
      */
     public function setPage(int $page): self
     {
@@ -223,7 +223,7 @@ class Pagination
      *
      * @return Pagination
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/paginationMethods/setPrefix
+     * @see https://zenithgram.github.io/classes/paginationMethods/setPrefix
      */
     public function setPrefix(string $callbackPrefix): self
     {
@@ -245,7 +245,7 @@ class Pagination
      *
      * @return Pagination
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/paginationMethods/setSigns
+     * @see https://zenithgram.github.io/classes/paginationMethods/setSigns
      */
     public function setSigns(string $prevText, string $nextText): self
     {
@@ -270,7 +270,7 @@ class Pagination
      *
      * @return Pagination
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/paginationMethods/setSideSigns
+     * @see https://zenithgram.github.io/classes/paginationMethods/setSideSigns
      */
     public function setSideSigns(string $firstText, string $lastText): self
     {
@@ -296,7 +296,7 @@ class Pagination
      *
      * @return Pagination
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/paginationMethods/setNavigationLayout
+     * @see https://zenithgram.github.io/classes/paginationMethods/setNavigationLayout
      */
     public function setNavigationLayout(PaginationLayout $layout): self
     {
@@ -313,7 +313,7 @@ class Pagination
      *
      * @return Pagination
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/paginationMethods/addReturnBtn
+     * @see https://zenithgram.github.io/classes/paginationMethods/addReturnBtn
      */
     public function addReturnBtn(string $text, string $callbackData): self
     {
@@ -336,7 +336,7 @@ class Pagination
      *
      * @return Pagination
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/paginationMethods/addHeaderBtn
+     * @see https://zenithgram.github.io/classes/paginationMethods/addHeaderBtn
      */
     public function addHeaderBtn(array $buttons): self
     {
@@ -356,7 +356,7 @@ class Pagination
      *
      * @return int
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/paginationMethods/getTotalPage
+     * @see https://zenithgram.github.io/classes/paginationMethods/getTotalPage
      */
     public function getTotalPage(): int
     {
@@ -370,7 +370,7 @@ class Pagination
      *
      * @return array
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/paginationMethods/create
+     * @see https://zenithgram.github.io/classes/paginationMethods/create
      */
     public function create(): array
     {
@@ -616,7 +616,7 @@ enum PaginationLayout: int
     /**
      * Все 4 кнопки будут находиться на одной строке
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/paginationMethods/setNavigationLayout#возможные-значения-константы
+     * @see https://zenithgram.github.io/classes/paginationMethods/setNavigationLayout#возможные-значения-константы
      *
      */
     case ROW = 0;
@@ -628,7 +628,7 @@ enum PaginationLayout: int
      * Кнопки "Первая страница" и "Последняя страница" будут находиться на
      * второй строке
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/paginationMethods/setNavigationLayout#возможные-значения-константы
+     * @see https://zenithgram.github.io/classes/paginationMethods/setNavigationLayout#возможные-значения-константы
      *
      */
     case SPLIT = 1;
@@ -639,7 +639,7 @@ enum PaginationLayout: int
      *
      * Иначе будут на разных
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/paginationMethods/setNavigationLayout#возможные-значения-константы
+     * @see https://zenithgram.github.io/classes/paginationMethods/setNavigationLayout#возможные-значения-константы
      *
      */
     case SMART = 2;

@@ -40,7 +40,7 @@ class LongPoll
      *
      * @return self
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/longpoll
+     * @see https://zenithgram.github.io/classes/longpoll
      */
     public static function create(string $token, int $timeout = 20): self
     {
@@ -97,7 +97,7 @@ class LongPoll
      * Если вызвать этот метод, бот начнет обработку только с новых сообщений, пришедших после его запуска.
      *
      * @return self
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/longpoll
+     * @see https://zenithgram.github.io/classes/longpoll
      */
     public function skipOldUpdates(): self
     {
@@ -114,7 +114,7 @@ class LongPoll
      *                         Пример: function(TGZ $tg) {ваш код}
      *
      * @throws \JsonException
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/longpoll
+     * @see https://zenithgram.github.io/classes/longpoll
      */
     public function listen(Closure $handler): void
     {

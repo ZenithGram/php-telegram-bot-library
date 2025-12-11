@@ -49,7 +49,7 @@ class Inline
      *
      * @return Inline
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/inlineMethods/id
+     * @see https://zenithgram.github.io/classes/inlineMethods/id
      */
     public function id(string $id): self
     {
@@ -65,7 +65,7 @@ class Inline
      *
      * @return Inline
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/inlineMethods/title
+     * @see https://zenithgram.github.io/classes/inlineMethods/title
      */
     public function title(string $title): self
     {
@@ -81,7 +81,7 @@ class Inline
      *
      * @return Inline
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/inlineMethods/description
+     * @see https://zenithgram.github.io/classes/inlineMethods/description
      */
     public function description(string $description): self
     {
@@ -97,7 +97,7 @@ class Inline
      *
      * @return Inline
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/inlineMethods/text
+     * @see https://zenithgram.github.io/classes/inlineMethods/text
      */
     public function text(string $text): self
     {
@@ -113,7 +113,7 @@ class Inline
      *
      * @return Inline
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/inlineMethods/fileUrl
+     * @see https://zenithgram.github.io/classes/inlineMethods/fileUrl
      */
     public function fileUrl(string $url = ''): self
     {
@@ -129,7 +129,7 @@ class Inline
      *
      * @return Inline
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/inlineMethods/fileID
+     * @see https://zenithgram.github.io/classes/inlineMethods/fileID
      */
     public function fileID(string $id = ''): self
     {
@@ -145,7 +145,7 @@ class Inline
      *
      * @return Inline
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/inlineMethods/mimeType
+     * @see https://zenithgram.github.io/classes/inlineMethods/mimeType
      */
     public function mimeType(string $mime): self
     {
@@ -161,7 +161,7 @@ class Inline
      *
      * @return Inline
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/inlineMethods/thumb
+     * @see https://zenithgram.github.io/classes/inlineMethods/thumb
      */
     public function thumb(string $url = ''): self
     {
@@ -177,7 +177,7 @@ class Inline
      *
      * @return Inline
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/inlineMethods/kbd
+     * @see https://zenithgram.github.io/classes/inlineMethods/kbd
      */
     public function kbd(array $buttons = []): self
     {
@@ -193,7 +193,7 @@ class Inline
      *
      * @return Inline
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/inlineMethods/params
+     * @see https://zenithgram.github.io/classes/inlineMethods/params
      */
     public function params(array $params = []): self
     {
@@ -209,7 +209,7 @@ class Inline
      *
      * @return Inline
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/inlineMethods/parseMode
+     * @see https://zenithgram.github.io/classes/inlineMethods/parseMode
      */
     public function parseMode(string $mode = ''): self
     {
@@ -229,7 +229,7 @@ class Inline
      *
      * @return Inline
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/inlineMethods/coordinates
+     * @see https://zenithgram.github.io/classes/inlineMethods/coordinates
      */
     public function coordinates(float $latitude, float $longitude): self
     {
@@ -246,7 +246,7 @@ class Inline
      *
      * @return Inline
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/inlineMethods/address
+     * @see https://zenithgram.github.io/classes/inlineMethods/address
      */
     public function address(string $address): self
     {
@@ -500,7 +500,7 @@ class Inline
      *
      * @return array
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/inlineMethods/create
+     * @see https://zenithgram.github.io/classes/inlineMethods/create
      */
     public function create(): array
     {

@@ -45,7 +45,7 @@ class File
      *
      * @return int|float Размер файла
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/file
+     * @see https://zenithgram.github.io/classes/file
      */
     public function getFileSize(string $units = 'B', int $precision = 5): int|float
     {
@@ -78,7 +78,7 @@ class File
      * @throws \RuntimeException Если файл слишком большой, или не удалось
      *                           создать директорию/скачать файл.
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/file
+     * @see https://zenithgram.github.io/classes/file
      */
     public function save(string $path): string
     {

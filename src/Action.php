@@ -31,7 +31,7 @@ class Action
      *
      * @return Bot
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/actionMethods/middleware
+     * @see https://zenithgram.github.io/classes/actionMethods/middleware
      */
     public function middleware(callable $handler): self
     {
@@ -48,7 +48,7 @@ class Action
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/actionMethods/func
+     * @see https://zenithgram.github.io/classes/actionMethods/func
      */
     public function func(callable $handler): self
     {
@@ -65,7 +65,7 @@ class Action
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/actionMethods/redirect
+     * @see https://zenithgram.github.io/classes/actionMethods/redirect
      */
     public function redirect(string $id): self
     {
@@ -81,7 +81,7 @@ class Action
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/actionMethods/text
+     * @see https://zenithgram.github.io/classes/actionMethods/text
      */
     public function text(string $text = ''): self
     {
@@ -97,7 +97,7 @@ class Action
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/actionMethods/editText
+     * @see https://zenithgram.github.io/classes/actionMethods/editText
      */
     public function editText(string $text = ''): self
     {
@@ -114,7 +114,7 @@ class Action
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/actionMethods/editCaption
+     * @see https://zenithgram.github.io/classes/actionMethods/editCaption
      */
     public function editCaption(string $text = ''): self
     {
@@ -131,7 +131,7 @@ class Action
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/actionMethods/img
+     * @see https://zenithgram.github.io/classes/actionMethods/img
      */
     public function img(string|array $img): self
     {
@@ -147,7 +147,7 @@ class Action
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/actionMethods/gif
+     * @see https://zenithgram.github.io/classes/actionMethods/gif
      */
     public function gif(string|array $gif): self
     {
@@ -163,7 +163,7 @@ class Action
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/actionMethods/params
+     * @see https://zenithgram.github.io/classes/actionMethods/params
      */
     public function params(array $params): self
     {
@@ -180,7 +180,7 @@ class Action
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/actionMethods/params
+     * @see https://zenithgram.github.io/classes/actionMethods/params
      */
     public function parseMode(string $parseMode): self
     {
@@ -197,7 +197,7 @@ class Action
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/actionMethods/reply
+     * @see https://zenithgram.github.io/classes/actionMethods/reply
      */
     public function reply(?int $message_id = null): self
     {
@@ -215,7 +215,7 @@ class Action
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/actionMethods/dice
+     * @see https://zenithgram.github.io/classes/actionMethods/dice
      */
     public function dice(string $emoji): self
     {
@@ -231,7 +231,7 @@ class Action
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/actionMethods/voice
+     * @see https://zenithgram.github.io/classes/actionMethods/voice
      */
     public function voice(string $voice): self
     {
@@ -247,7 +247,7 @@ class Action
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/actionMethods/audio
+     * @see https://zenithgram.github.io/classes/actionMethods/audio
      */
     public function audio(string|array $audio): self
     {
@@ -263,7 +263,7 @@ class Action
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/actionMethods/doc
+     * @see https://zenithgram.github.io/classes/actionMethods/doc
      */
     public function doc(string|array $doc): self
     {
@@ -279,7 +279,7 @@ class Action
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/actionMethods/sticker
+     * @see https://zenithgram.github.io/classes/actionMethods/sticker
      */
     public function sticker(string $file_id): self
     {
@@ -295,7 +295,7 @@ class Action
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/actionMethods/video
+     * @see https://zenithgram.github.io/classes/actionMethods/video
      */
     public function video(string|array $video): self
     {
@@ -311,7 +311,7 @@ class Action
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/actionMethods/query
+     * @see https://zenithgram.github.io/classes/actionMethods/query
      */
     public function query(string $query): self
     {
@@ -328,7 +328,7 @@ class Action
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/actionMethods/kbd
+     * @see https://zenithgram.github.io/classes/actionMethods/kbd
      */
     public function kbd(array $buttons, bool $one_time = false,
         bool $resize = true,
@@ -348,7 +348,7 @@ class Action
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/actionMethods/inlineKbd
+     * @see https://zenithgram.github.io/classes/actionMethods/inlineKbd
      */
     public function inlineKbd(array $buttons): self
     {
@@ -365,7 +365,7 @@ class Action
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/actionMethods/removeKbd
+     * @see https://zenithgram.github.io/classes/actionMethods/removeKbd
      */
     public function removeKbd(): self
     {
@@ -382,7 +382,7 @@ class Action
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/actionMethods/access
+     * @see https://zenithgram.github.io/classes/actionMethods/access
      */
     public function access(int|array $ids, ?callable $handler = null): self
     {
@@ -402,7 +402,7 @@ class Action
      *
      * @return Action
      *
-     * @see https://zhenyagr.github.io/TGZ-Doc/classes/actionMethods/noAccess
+     * @see https://zenithgram.github.io/classes/actionMethods/noAccess
      */
     public function noAccess(int|array $ids, ?callable $handler = null): self
     {
