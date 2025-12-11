@@ -1,4 +1,4 @@
-# TGZ Library Documentation
+# ZenithGram Library Documentation
 
 > Powerful PHP library for creating Telegram bots with Webhook & LongPoll support
 
@@ -190,6 +190,5 @@
 
 ### Other
 
-- [buttons](https://zenithgram.github.io/classes/zenithMethods/buttons.md): Методы для простой сборки клавиатуры.
 - [Untitled](https://zenithgram.github.io/index.md)
 
