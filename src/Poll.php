@@ -40,8 +40,8 @@ class Poll
      */
     public function parseMode(MessageParseMode $parse_mode): self
     {
-        $this->explanation_parse_mode = $parse_mode;
-        $this->question_parse_mode = $parse_mode;
+        $this->explanation_parse_mode = $parse_mode->value;
+        $this->question_parse_mode = $parse_mode->value;
 
         return $this;
     }
@@ -57,7 +57,7 @@ class Poll
      */
     public function questionParseMode(MessageParseMode $parse_mode): self
     {
-        $this->question_parse_mode = $parse_mode;
+        $this->question_parse_mode = $parse_mode->value;
 
         return $this;
     }
@@ -174,7 +174,7 @@ class Poll
     public function explanationParseMode(MessageParseMode $parse_mode): self
     {
         if ($this->type === 'quiz') {
-            $this->explanation_parse_mode = $parse_mode;
+            $this->explanation_parse_mode = $parse_mode->value;
         }
 
         return $this;

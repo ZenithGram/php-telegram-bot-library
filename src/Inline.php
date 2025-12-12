@@ -213,7 +213,7 @@ class Inline
      */
     public function parseMode(MessageParseMode $mode): self
     {
-        $this->parse_mode = $mode;
+        $this->parse_mode = $mode->value;
 
         return $this;
     }
