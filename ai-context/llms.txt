@@ -31,6 +31,7 @@
 - [Pagination](https://zenithgram.github.io/classes/pagination.md): Класс для пагинации страниц.
 - [Inline](https://zenithgram.github.io/classes/inline.md): Класс для создания инлайн-ответов.
 - [DTO](https://zenithgram.github.io/classes/dto.md): Объекты данных UserDto и ChatDto.
+- [Enum](https://zenithgram.github.io/classes/enum.md): Все Enum и их значения
 
 #### ZG
 
