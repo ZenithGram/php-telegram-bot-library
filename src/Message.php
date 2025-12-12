@@ -72,7 +72,6 @@ final class Message
         return $gettingButtons;
     }
 
-
     /**
      * Добавляет inline-клавиатуру к сообщению
      *
@@ -98,6 +97,7 @@ final class Message
 
         return $this;
     }
+
     /**
      * Добавляет клавиатуру к сообщению
      *
@@ -167,17 +167,14 @@ final class Message
     /**
      * Задает режим парсинга
      *
-     * @param ?string $mode 'HTML', 'Markdown', 'MarkdownV2'
+     * @param MessageParseMode $mode
      *
      * @return Message
      *
      * @see https://zenithgram.github.io/classes/messageMethods/parseMode
      */
-    public function parseMode(?string $mode = null): Message
+    public function parseMode(MessageParseMode $mode): Message
     {
-        $mode = in_array($mode, ['HTML', 'Markdown', 'MarkdownV2', '']) ? $mode
-            : null;
-
         $this->parse_mode = $mode;
 
         return $this;
@@ -480,7 +477,6 @@ final class Message
         $this->media_preview_url = null;
     }
 
-
     /**
      * Отправляет сообщение
      *
@@ -710,7 +706,6 @@ final class Message
         return $this->api->callAPI('editMessageMedia', $params);
     }
 
-
     private function getIdentifier(?string $messageID = null,
         ?int $chatID = null,
     ): array {
@@ -729,7 +724,6 @@ final class Message
             'message_id' => $messageID ?: $this->context->getMessageId(),
         ];
     }
-
 
     private function sendMediaGroup(array $params): array
     {
@@ -851,10 +845,6 @@ final class Message
         }
     }
 
-    /**
-     * Диагностирует проблему с URL после сбоя отправки.
-     * Бросает уточненное исключение, если находит проблему.
-     */
     private function diagnoseUrlError(string $url, string $originalError): void
     {
         // Настраиваем контекст с таймаутом, чтобы бот не вис надолго при проверке
