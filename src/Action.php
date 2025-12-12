@@ -176,13 +176,13 @@ class Action
     /**
      * Устанавливает режим парсинга сообщения
      *
-     * @param string $parseMode Режим Парсинга: HTML, Markdown, MarkdownV2
+     * @param MessageParseMode $parseMode
      *
      * @return Action
      *
      * @see https://zenithgram.github.io/classes/actionMethods/params
      */
-    public function parseMode(string $parseMode): self
+    public function parseMode(MessageParseMode $parseMode): self
     {
         $this->messageData['parseMode'] = $parseMode;
 

@@ -8,13 +8,13 @@ class Poll
     private ApiClient $api;
     private UpdateContext $context;
     private string $type = 'regular';
-    private ?string $question_parse_mode = null;
+    private MessageParseMode $question_parse_mode = MessageParseMode::None;
     private ?string $question = null;
     private array $options = [];
     private bool $is_anonymous = true;
     private bool $allows_multiple_answers = false;
     private ?int $correct_option_id = null;
-    private ?string $explanation_parse_mode = null;
+    private MessageParseMode $explanation_parse_mode = MessageParseMode::None;
     private ?string $explanation = null;
     private bool $is_closed = false;
     private ?int $open_period = null;
@@ -32,17 +32,14 @@ class Poll
     /**
      * Устанавливает режим разметки для вопроса и объяснения
      *
-     * @param string|null $parse_mode 'HTML', 'Markdown', 'MarkdownV2'
+     * @param MessageParseMode $parse_mode
      *
      * @return Poll
      *
      * @see https://zenithgram.github.io/classes/pollMethods/parseMode
      */
-    public function parseMode(?string $parse_mode = ''): self
+    public function parseMode(MessageParseMode $parse_mode): self
     {
-        $parse_mode = in_array(
-            $parse_mode, ['HTML', 'Markdown', 'MarkdownV2', ''], true,
-        ) ? $parse_mode : '';
         $this->explanation_parse_mode = $parse_mode;
         $this->question_parse_mode = $parse_mode;
 
@@ -52,17 +49,14 @@ class Poll
     /**
      * Устанавливает режим разметки для вопроса
      *
-     * @param string|null $parse_mode 'HTML', 'Markdown', 'MarkdownV2'
+     * @param MessageParseMode $parse_mode
      *
      * @return Poll
      *
      * @see https://zenithgram.github.io/classes/pollMethods/parseMode
      */
-    public function questionParseMode(?string $parse_mode = ''): self
+    public function questionParseMode(MessageParseMode $parse_mode): self
     {
-        $parse_mode = in_array(
-            $parse_mode, ['HTML', 'Markdown', 'MarkdownV2', ''], true,
-        ) ? $parse_mode : '';
         $this->question_parse_mode = $parse_mode;
 
         return $this;
@@ -171,18 +165,15 @@ class Poll
     /**
      * Устанавливает режим разметки для объяснения
      *
-     * @param string|null $parse_mode 'HTML', 'Markdown', 'MarkdownV2'
+     * @param MessageParseMode $parse_mode
      *
      * @return Poll
      *
      * @see https://zenithgram.github.io/classes/pollMethods/parseMode
      */
-    public function explanationParseMode(?string $parse_mode = ''): self
+    public function explanationParseMode(MessageParseMode $parse_mode): self
     {
         if ($this->type === 'quiz') {
-            $parse_mode = in_array(
-                $parse_mode, ['HTML', 'Markdown', 'MarkdownV2', ''], true,
-            ) ? $parse_mode : '';
             $this->explanation_parse_mode = $parse_mode;
         }
 

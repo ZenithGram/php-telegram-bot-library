@@ -16,7 +16,7 @@ class ZG
 
     public ApiInterface $api;
     public UpdateContext $context;
-    public string $parseModeDefault = '';
+    public MessageParseMode $parseModeDefault = MessageParseMode::None;
 
     public function __construct(ApiInterface $api, UpdateContext $context)
     {
@@ -58,19 +58,14 @@ class ZG
     /**
      * Устанавливает режим парсинга по умолчанию для всех сообщений
      *
-     * @param ?string $mode HTML, Markdown, MarkdownV2
+     * @param MessageParseMode::None $mode
      *
      * @return ZG
      *
      * @see https://zenithgram.github.io/classes/tgzMethods/defaultParseMode
      */
-    public function defaultParseMode(?string $mode = null): self
+    public function defaultParseMode(MessageParseMode $mode): self
     {
-        if ($mode !== 'HTML' && $mode !== 'Markdown' && $mode !== 'MarkdownV2'
-            && $mode !== null
-        ) {
-            $mode = null;
-        }
         $this->parseModeDefault = $mode;
 
         return $this;
