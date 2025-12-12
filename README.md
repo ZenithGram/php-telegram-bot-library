@@ -102,7 +102,7 @@ $bot->onBotCommand('vote', '/vote')
     ->text('Вам нравится ZenithGram?')
     ->inlineKbd([
         ['yes', 'no'], // Используем ID кнопок
-        [$tg->buttonUrl('Документация', 'https://zenithgram.github.io')]
+        [Button::url('Документация', 'https://zenithgram.github.io')]
     ]);
 
 $bot->run();
