@@ -28,7 +28,7 @@
 Установите библиотеку через Composer:
 
 ```bash
-composer require zhenyagr/zenithgram
+composer require zenithgram/zenithgram
 ```
 
 ---
@@ -104,6 +104,8 @@ $bot->onBotCommand('vote', '/vote')
         ['yes', 'no'], // Используем ID кнопок
         [$tg->buttonUrl('Документация', 'https://zenithgram.github.io')]
     ]);
+
+$bot->run();
 ```
 
 ### Пагинация
