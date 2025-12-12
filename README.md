@@ -114,7 +114,7 @@ $bot->run();
 ```php
 // Создаем 50 кнопок
 $items = [];
-for ($i = 0; $i < 50; $i++) $items[] = $tg->buttonCallback("Товар $i", "item_$i");
+for ($i = 0; $i < 50; $i++) $items[] = Button::cb("Товар $i", "item_$i");
 
 // Генерируем клавиатуру для 1-й страницы
 $keyboard = $tg->pagination()
