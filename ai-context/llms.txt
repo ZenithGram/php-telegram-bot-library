@@ -14,9 +14,9 @@
 - [Получение обновлений](https://zenithgram.github.io/using/getting-updates.md): Настройка методов получения обновлений: Long Polling для разработки и Webhook для продакшена.
 - [Конструктор сообщений](https://zenithgram.github.io/using/messages.md): Работа с Fluent Interface для создания, форматирования и отправки сообщений.
 - [Конструктор опросов](https://zenithgram.github.io/using/poll.md): Создание и отправка опросов и викторин.
-- [Обработчики](https://zenithgram.github.io/using/handlers.md): Маршрутизация событий (команды, текст, кнопки, медиа) в классе Bot.
+- [Обработчики событий (Маршрутизация)](https://zenithgram.github.io/using/handlers.md)
 - [Middleware](https://zenithgram.github.io/using/middleware.md): Промежуточное ПО для фильтрации запросов, логирования и проверки прав доступа.
-- [Пагинация страниц](https://zenithgram.github.io/using/pagination.md): Инструмент для автоматической генерации постраничной навигации в клавиатурах.
+- [Пагинация (Pagination)](https://zenithgram.github.io/using/pagination.md)
 
 ### Классы
 
