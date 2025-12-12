@@ -1064,9 +1064,9 @@ class Bot
      *
      * @throws \InvalidArgumentException Если один из маршрутов не найден.
      *
-     * @see https://zenithgram.github.io/classes/botMethods/gz
+     * @see https://zenithgram.github.io/classes/botMethods/zg
      */
-    public function gz(ZG $ZG): self
+    public function zg(ZG $ZG): self
     {
         $this->tg = $ZG;
         $this->context = $ZG->context;

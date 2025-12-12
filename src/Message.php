@@ -12,7 +12,7 @@ final class Message
     private ?string $text;
     private array $reply_to = [];
     private array $kbd = [];
-    private ?string $parse_mode;
+    private MessageParseMode $parse_mode;
     private array $params_additionally = [];
     private bool $sendPhoto = false;
     private bool $sendAnimation = false;
@@ -810,7 +810,7 @@ final class Message
     private function mediaSend(string $type, $params)
     {
         $params['caption'] = $this->text;
-        if ($this->parse_mode !== null) {
+        if ($this->parse_mode !== '') {
             $params['parse_mode'] = $this->parse_mode;
         }
 
