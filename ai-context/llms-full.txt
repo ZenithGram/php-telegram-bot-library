@@ -2063,6 +2063,7 @@ description: Выполняет пользовательскую функцию-
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
+use ZenithGram\ZenithGram\MessageParseMode;
 
 $tg = ZG::create('ТОКЕН_БОТА');
 $bot = new Bot($tg);
@@ -2072,7 +2073,7 @@ $bot->onCommand('ban', '!ban %w %s')
     ->func(function(ZG $tg, string $username, string $reason) {
         // Здесь может быть ваша логика: запись в БД, проверка прав и т.д.
         $tg->msg("✅ Пользователь `{$username}` забанен по причине: `{$reason}`")
-           ->parseMode('MarkdownV2')
+           ->parseMode(MessageParseMode::MarkdownV2)
            ->send();
     });
 
@@ -7559,18 +7560,18 @@ $tg->msg("Начальный текст.")
 
 Устанавливает режим форматирования текста.
 
-* **Доступные режимы:** `'HTML'`, `'MarkdownV2'`, `'Markdown'`.
-* Если передать `null` или пустую строку, форматирование будет отключено.
+**Доступные режимы** описаны в [MessageParseMode](/classes/enum#messageparsemode)
+.
 
 ```php
 // Использование HTML
 $tg->msg("<b>Жирный текст</b> и <i>курсив</i>.")
-   ->parseMode('HTML')
+   ->parseMode(MessageParseMode::HTML)
    ->send();
 
 // Использование MarkdownV2
 $tg->msg("*Жирный текст* и _курсив_.")
-   ->parseMode('MarkdownV2')
+   ->parseMode(MessageParseMode::MarkdownV2)
    ->send();
 ```
 
@@ -7722,7 +7723,7 @@ $tg->msg("Новая подпись к новому фото")
 | Метод          | Описание                                                                                               |
 |----------------|--------------------------------------------------------------------------------------------------------|
 | `text`         | Устанавливает текст сообщения или подпись к медиа.                                                     |
-| `parseMode`    | Задает режим парсинга (`HTML`, `MarkdownV2`).                                                          |
+| `parseMode`    | Задает режим парсинга.                                                                                 |
 | `kbd`          | Добавляет Reply-клавиатуру.                                                                            |
 | `inlineKbd`    | Добавляет Inline-клавиатуру.                                                                           |
 | `removeKbd`    | Удаляет клавиатуру.                                                                                    |
