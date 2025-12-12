@@ -58,7 +58,7 @@ class ZG
     /**
      * Устанавливает режим парсинга по умолчанию для всех сообщений
      *
-     * @param MessageParseMode::None $mode
+     * @param MessageParseMode $mode
      *
      * @return ZG
      *

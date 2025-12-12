@@ -12,7 +12,7 @@ final class Message
     private ?string $text;
     private array $reply_to = [];
     private array $kbd = [];
-    private MessageParseMode $parse_mode;
+    private string $parse_mode;
     private array $params_additionally = [];
     private bool $sendPhoto = false;
     private bool $sendAnimation = false;
@@ -36,7 +36,7 @@ final class Message
     public function __construct(?string $text, ZG $ZG,
     ) {
         $this->text = $text;
-        $this->parse_mode = $ZG->parseModeDefault;
+        $this->parse_mode = $ZG->parseModeDefault->value;
         $this->api = $ZG->api;
         $this->context = $ZG->context;
         $this->ZG = $ZG;
