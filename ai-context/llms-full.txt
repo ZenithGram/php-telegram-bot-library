@@ -8804,6 +8804,112 @@ $bot->onCallback('grade_1')->text('Спасибо за непредвзятую 
 $bot->run();
 ```
 
+## Бот с пагинацией (Catalog Bot)
+
+```php
+<?php
+require_once __DIR__ . '/vendor/autoload.php';
+use ZenithGram\ZenithGram\ZG;
+use ZenithGram\ZenithGram\Bot;
+use ZenithGram\ZenithGram\Button;
+
+$tg = ZG::create('ТОКЕН_БОТА');
+$bot = new Bot($tg);
+
+// Функция для генерации клавиатуры
+// В реальном проекте будет использоваться база данных и т.д.
+function getCatalogKeyboard(ZG $tg, int $page): array {
+    $items = [];
+    for ($i = 1; $i <= 50; $i++) {
+        $items[] = Button::cb("Товар #$i", "buy_item_$i");
+    }
+
+    return $tg->pagination()
+        ->setItems($items)
+        ->setPerPage(6)         // 6 товаров на странице
+        ->setColumns(2)         // 2 колонки
+        ->setPage($page)
+        ->setPrefix('catalog_page_') // Префикс для навигации
+        ->addReturnBtn('🔙 Закрыть', 'close_menu')
+        ->create();
+}
+
+// 1. Команда открытия каталога
+$bot->onBotCommand('shop', '/shop')
+    ->func(function(ZG $tg) {
+        $tg->msg("📦 Каталог товаров (Стр. 1):")
+           ->inlineKbd(getCatalogKeyboard($tg, 1))
+           ->send();
+    });
+
+// 2. Обработка переключения страниц (ловится паттерн catalog_page_ЧИСЛО)
+$bot->onCallbackPreg('shop_nav', '/^catalog_page_(\d+)$/')
+    ->func(function(ZG $tg, $page) {
+        $tg->answerCallbackQuery($tg->getQueryId());
+        
+        $tg->msg("📦 Каталог товаров (Стр. $page):")
+           ->inlineKbd(getCatalogKeyboard($tg, (int)$page))
+           ->editText();
+    });
+
+// 3. Обработка покупки товара (ловится buy_item_ЧИСЛО)
+$bot->onCallbackPreg('buy_item', '/^buy_item_(\d+)$/')
+    ->func(function(ZG $tg, $itemId) {
+        $tg->answerCallbackQuery(
+            $tg->getQueryId, 
+            ['text' => "Товар #$itemId добавлен в корзину! ✅"]
+        )
+    });
+
+// 4. Закрытие меню
+$bot->onCallback('close', 'close_menu')
+    ->text('Каталог закрыт.')
+    ->editText();
+
+$bot->run();
+```
+
+## Админ-панель с Middleware
+
+```php
+<?php
+require_once __DIR__ . '/vendor/autoload.php';
+use ZenithGram\ZenithGram\ZG;
+use ZenithGram\ZenithGram\Bot;
+
+$tg = ZG::create('ТОКЕН_БОТА');
+$bot = new Bot($tg);
+
+$admins = [123456789, 987654321]; // ID администраторов
+
+$bot->onBotCommand('start', '/start')->text('Привет! Я бот.');
+
+// Группа админских команд
+$bot->onBotCommand('admin', '/admin')
+    ->middleware(function(ZG $tg, callable $next) use ($admins) {
+        // Проверяем права доступа
+        if (in_array($tg->getUserId(), $admins)) {
+            $next(); // Пропускаем дальше, если админ
+        } else {
+            $tg->reply("⛔ Доступ запрещен!");
+        }
+    })
+    ->func(function(ZG $tg) {
+        $tg->msg("Добро пожаловать в панель администратора!")
+           ->inlineKbd([
+               ['stats_admin'],
+               ['broadcast_admin']
+           ])
+           ->send();
+    });
+
+// Действия кнопок админки
+$bot->btn('stats_admin', '📊 Статистика')->query('Всего пользователей: 100500');
+$bot->btn('broadcast_admin', '📢 Рассылка')->text('Введите текст рассылки...');
+
+$bot->run();
+```
+
 ### Больше примеров
 
 В документации для каждого метода есть примеры его использования.
