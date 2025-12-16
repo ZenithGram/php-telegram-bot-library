@@ -2145,7 +2145,25 @@ use ZenithGram\ZenithGram\ZG;
 
 $tg = ZG::create('ВАШ_ТОКЕН');
 $chat_id = $tg->getChatId();
+```
 
+## getChatDto
+
+Метод возвращает DTO-объект со всеми данными чата.
+
+### Возвращает
+
+`ChatDto` - Объект, содержащий информацию о чате
+
+### Пример использования
+
+```php
+<?php
+require_once __DIR__ . '/vendor/autoload.php';
+use ZenithGram\ZenithGram\ZG;
+
+$tg = ZG::create('ВАШ_ТОКЕН');
+$chat_id = $tg->getChatDto()->id;
 ```
 
 ## getUserId
@@ -2165,6 +2183,25 @@ use ZenithGram\ZenithGram\ZG;
 
 $tg = ZG::create('ВАШ_ТОКЕН');
 $user_id = $tg->getUserId();
+```
+
+## getUserDto
+
+Метод возвращает DTO-объект со всеми данными пользователя.
+
+### Возвращает
+
+`ChatDto` - Объект, содержащий информацию о чате
+
+### Пример использования
+
+```php
+<?php
+require_once __DIR__ . '/vendor/autoload.php';
+use ZenithGram\ZenithGram\ZG;
+
+$tg = ZG::create('ВАШ_ТОКЕН');
+$user_id = $tg->getUserDto()->id;
 ```
 
 ## getText
