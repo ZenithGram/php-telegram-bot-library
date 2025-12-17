@@ -93,14 +93,14 @@ class Action
     /**
      * Включает режим ForceReply
      *
-     * @param string|null $placeholder По умолчанию - null
-     * @param bool|null $selective По умолчанию - null
+     * @param string $placeholder По умолчанию - ''
+     * @param bool $selective По умолчанию - false
      *
      * @return Action
      *
      * @see https://zenithgram.github.io/classes/actionMethods/forceReply
      */
-    public function forceReply(null|string $placeholder = null, null|bool $selective = null): self
+    public function forceReply(string $placeholder = '', bool $selective = false): self
     {
         $this->messageData['forceReply'] = ['placeholder' => $placeholder, 'selective' => $selective];
 

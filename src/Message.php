@@ -151,8 +151,8 @@ final class Message
     /**
      * Включает режим ForceReply
      *
-     * @param string|null $placeholder По умолчанию - null
-     * @param bool|null $selective По умолчанию - null
+     * @param string $placeholder По умолчанию - ''
+     * @param bool $selective По умолчанию - false
      *
      * @return Message
      *
