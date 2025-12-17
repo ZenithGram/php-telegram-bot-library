@@ -151,7 +151,7 @@ final class Message
     /**
      * Включает режим ForceReply
      *
-     * @param string|null $input_field По умолчанию - null
+     * @param string|null $placeholder По умолчанию - null
      * @param bool|null $selective По умолчанию - null
      *
      * @return Message
@@ -159,19 +159,13 @@ final class Message
      * @throws \JsonException
      * @see https://zenithgram.github.io/classes/messageMethods/forceReply
      */
-    public function forceReply(null|string $input_field = null, null|bool $selective = null): Message
+    public function forceReply(string $placeholder = '', bool $selective = false): Message
     {
         $kbd = [
             'force_reply' => true,
+            'input_field_placeholder' => $placeholder,
+            'selective' => $selective,
         ];
-
-        if ($input_field !== null) {
-            $kbd['input_field_placeholder'] = $input_field;
-        }
-
-        if ($selective !== null) {
-            $kbd['selective'] = $selective;
-        }
 
         $this->kbd = [
             'reply_markup' => json_encode($kbd, JSON_THROW_ON_ERROR),
