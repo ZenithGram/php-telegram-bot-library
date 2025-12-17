@@ -979,6 +979,10 @@ class Bot
             );
         }
 
+        if (isset($messageData['forceReply'])) {
+            $msg->forceReply($messageData['forceReply']['input_field'], $messageData['forceReply']['selective']);
+        }
+
         if (isset($messageData['remove_keyboard'])) {
             $msg->removeKbd();
         }

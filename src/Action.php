@@ -91,6 +91,23 @@ class Action
     }
 
     /**
+     * Включает режим ForceReply
+     *
+     * @param string|null $input_field По умолчанию - null
+     * @param bool|null $selective По умолчанию - null
+     *
+     * @return Action
+     *
+     * @see https://zenithgram.github.io/classes/actionMethods/forceReply
+     */
+    public function forceReply(null|string $input_field = null, null|bool $selective = null): self
+    {
+        $this->messageData['forceReply'] = ['input_field' => $input_field, 'selective' => $selective];
+
+        return $this;
+    }
+
+    /**
      * Изменяет текст сообщения
      *
      * @param string $text Новый текст

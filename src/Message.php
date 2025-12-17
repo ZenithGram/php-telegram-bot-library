@@ -149,17 +149,33 @@ final class Message
     }
 
     /**
-     * Задает текст сообщения
+     * Включает режим ForceReply
      *
-     * @param string $text
+     * @param string|null $input_field По умолчанию - null
+     * @param bool|null $selective По умолчанию - null
      *
      * @return Message
      *
-     * @see https://zenithgram.github.io/classes/messageMethods/text
+     * @throws \JsonException
+     * @see https://zenithgram.github.io/classes/messageMethods/forceReply
      */
-    public function text(string $text): static
+    public function forceReply(null|string $input_field = null, null|bool $selective = null): Message
     {
-        $this->text = $text;
+        $kbd = [
+            'force_reply' => true,
+        ];
+
+        if ($input_field !== null) {
+            $kbd['input_field_placeholder'] = $input_field;
+        }
+
+        if ($selective !== null) {
+            $kbd['selective'] = $selective;
+        }
+
+        $this->kbd = [
+            'reply_markup' => json_encode($kbd, JSON_THROW_ON_ERROR),
+        ];
 
         return $this;
     }
@@ -176,6 +192,22 @@ final class Message
     public function parseMode(MessageParseMode $mode): Message
     {
         $this->parse_mode = $mode->value;
+
+        return $this;
+    }
+
+    /**
+     * Задает текст сообщения
+     *
+     * @param string $text
+     *
+     * @return Message
+     *
+     * @see https://zenithgram.github.io/classes/messageMethods/text
+     */
+    public function text(string $text): static
+    {
+        $this->text = $text;
 
         return $this;
     }
@@ -873,7 +905,7 @@ final class Message
                     "❌ Ошибка: Telegram не принимает формат SVG.\n" .
                     "🕵️ Диагностика: По ссылке обнаружен Content-Type: '{$contentType}'.\n" .
                     "💡 Решение: Используйте .png или .jpg версию изображения.\n" .
-                    "Ссылка: {$url}"
+                    "Ссылка: {$url}",
                 );
             }
 
@@ -883,7 +915,7 @@ final class Message
                     "❌ Ошибка: По ссылке находится не картинка, а HTML-страница.\n" .
                     "🕵️ Диагностика: Content-Type: '{$contentType}'.\n" .
                     "💡 Причина: Возможно, ссылка ведет на страницу просмотра, а не на сам файл, или сайт включил защиту от ботов.\n" .
-                    "Ссылка: {$url}"
+                    "Ссылка: {$url}",
                 );
             }
         }
