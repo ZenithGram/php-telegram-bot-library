@@ -102,6 +102,7 @@
 - [kbd](https://zenithgram.github.io/classes/actionMethods/kbd.md): Добавляет Reply-клавиатуру к сообщению.
 - [inlineKbd](https://zenithgram.github.io/classes/actionMethods/inlineKbd.md): Добавляет Inline-клавиатуру к сообщению.
 - [removeKbd](https://zenithgram.github.io/classes/actionMethods/removeKbd.md): Удаляет Reply-клавиатуру у пользователя.
+- [forceReply](https://zenithgram.github.io/classes/actionMethods/forceReply.md): Открывает интерфейс ответа.
 - [reply](https://zenithgram.github.io/classes/actionMethods/reply.md): Делает сообщение ответом (reply) на входящее.
 - [params](https://zenithgram.github.io/classes/actionMethods/params.md): Добавляет дополнительные параметры API к запросу.
 - [editText](https://zenithgram.github.io/classes/actionMethods/editText.md): Редактирует текст исходного сообщения (для callback).
@@ -122,6 +123,7 @@
 - [kbd](https://zenithgram.github.io/classes/messageMethods/kbd.md): Добавляет Reply-клавиатуру.
 - [inlineKbd](https://zenithgram.github.io/classes/messageMethods/inlineKbd.md): Добавляет Inline-клавиатуру.
 - [removeKbd](https://zenithgram.github.io/classes/messageMethods/removeKbd.md): Удаляет клавиатуру.
+- [forceReply](https://zenithgram.github.io/classes/messageMethods/forceReply.md): Открывает интерфейс ответа.
 - [parseMode](https://zenithgram.github.io/classes/messageMethods/parseMode.md): Устанавливает режим разметки.
 - [reply](https://zenithgram.github.io/classes/messageMethods/reply.md): Устанавливает ID сообщения для ответа.
 - [params](https://zenithgram.github.io/classes/messageMethods/params.md): Устанавливает дополнительные параметры.
