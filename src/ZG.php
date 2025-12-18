@@ -547,15 +547,39 @@ class ZG
     }
 
     /**
+     * Возвращает переменную msg_id из отвеченного сообщения
+     *
+     * @return ?string
+     *
+     * @see https://zenithgram.github.io/classes/tgzMethods/get#getreplymsgid
+     */
+    public function getReplyMsgId(): ?string
+    {
+        return $this->context->getReplyMessageId();
+    }
+
+    /**
      * Возвращает переменную text
      *
      * @return ?string
      *
-     * @see https://zenithgram.github.io/classes/tgzMethods/get#getchatid
+     * @see https://zenithgram.github.io/classes/tgzMethods/get#gettext
      */
     public function getText(): ?string
     {
         return $this->context->getText();
+    }
+
+    /**
+     * Возвращает переменную text из отвеченного сообщения
+     *
+     * @return ?string
+     *
+     * @see https://zenithgram.github.io/classes/tgzMethods/get#getreplytext
+     */
+    public function getReplyText(): ?string
+    {
+        return $this->context->getReplyText();
     }
 
     /**
@@ -568,6 +592,18 @@ class ZG
     public function getUserId(): ?int
     {
         return $this->context->getUserId();
+    }
+
+    /**
+     * Возвращает переменную user_id из отвеченного сообщения
+     *
+     * @return ?int user_id
+     *
+     * @see https://zenithgram.github.io/classes/tgzMethods/get#getreplyuserid
+     */
+    public function getReplyUserId(): ?int
+    {
+        return $this->context->getReplyUserId();
     }
 
     /**

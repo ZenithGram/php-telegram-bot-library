@@ -52,12 +52,23 @@ class UpdateContext
             ?? null;
     }
 
+    public function getReplyUserId(): ?int
+    {
+        return $this->update['message']['reply_to_message']['from']['id'] ?? null;
+    }
+
     public function getText(): ?string
     {
         return $this->update['message']['text']
             ?? $this->update['message']['caption']
             ?? $this->update['inline_query']['query']
             ?? null;
+    }
+
+    public function getReplyText(): ?string
+    {
+        return $this->update['message']['reply_to_message']['text'] ?? null;
+
     }
 
     public function getMessageId(): null|int|string
@@ -67,6 +78,11 @@ class UpdateContext
             $this->update['callback_query']['message']['message_id'] ??
             $this->update['callback_query']['inline_message_id'] ??
             null;
+    }
+
+    public function getReplyMessageId(): null|int|string
+    {
+        return $this->update['message']['reply_to_message']['message_id'] ?? null;
     }
 
     public function getCallbackData(): ?string
