@@ -2,7 +2,7 @@
 
 namespace ZenithGram\ZenithGram;
 
-use Amp\File;
+use Amp\File as AmpFile;
 
 class File {
     private array $file_info = [];
@@ -73,9 +73,9 @@ class File {
         // --- АСИНХРОННАЯ МАГИЯ ---
 
         // 1. Проверяем существование папки асинхронно
-        if (!File\isDirectory($directory)) {
+        if (!AmpFile\isDirectory($directory)) {
             // 2. Создаем директорию рекурсивно (как mkdir -p)
-            File\createDirectoryRecursively($directory, 0775);
+            AmpFile\createDirectoryRecursively($directory, 0775);
         }
 
         // 3. Скачиваем файл через ApiClient
