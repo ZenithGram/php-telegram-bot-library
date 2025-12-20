@@ -6,6 +6,7 @@ namespace ZenithGram\ZenithGram;
 
 use Closure;
 use Throwable;
+
 use function Amp\async;
 use function Amp\delay;
 
@@ -31,6 +32,7 @@ class LongPoll
     public function skipOldUpdates(): self
     {
         $this->skipOldUpdates = true;
+
         return $this;
     }
 
@@ -59,13 +61,16 @@ class LongPoll
 
                     // МАГИЯ AMP: async() запускает код в отдельном файбере.
                     // Мы НЕ ждем завершения handler($tg), мы сразу переходим к следующему обновлению.
-                    async(function () use ($handler, $updateData) {
+                    async(function() use ($handler, $updateData) {
                         try {
                             $this->processUpdate($handler, $updateData);
                         } catch (Throwable $e) {
                             // Логируем ошибку конкретного апдейта, но не роняем бота
                             // Тут можно подключить Logger, пока просто вывод в stderr
-                            fwrite(STDERR, "[Update Error] " . $e->getMessage() . PHP_EOL);
+                            fwrite(
+                                STDERR,
+                                "[Update Error] ".$e->getMessage().PHP_EOL,
+                            );
                         }
                     });
                 }
@@ -73,7 +78,7 @@ class LongPoll
             } catch (Throwable $e) {
                 // Ошибка уровня сети или API (например, Telegram упал)
                 // Делаем паузу, чтобы не долбить API в цикле ошибок
-                fwrite(STDERR, "[Network Error] " . $e->getMessage() . PHP_EOL);
+                fwrite(STDERR, "[Network Error] ".$e->getMessage().PHP_EOL);
                 delay(2);
             }
         }
@@ -81,11 +86,17 @@ class LongPoll
 
     private function fetchUpdates(): array
     {
-        $response = $this->api->callAPI('getUpdates', [
-            'offset' => $this->offset,
-            'timeout' => $this->timeout,
-            'allowed_updates' => [], // Получаем всё
-        ]);
+        $clientTimeout = $this->timeout + 15;
+
+        $response = $this->api->callAPI(
+            'getUpdates',
+            [
+                'offset'          => $this->offset,
+                'timeout'         => $this->timeout,
+                'allowed_updates' => [], // Получаем всё
+            ],
+            $clientTimeout,
+        );
 
         return $response['result'] ?? [];
     }
@@ -93,7 +104,9 @@ class LongPoll
     private function dropPendingUpdates(): void
     {
         try {
-            $data = $this->api->callAPI('getUpdates', ['limit' => 1, 'offset' => -1]);
+            $data = $this->api->callAPI(
+                'getUpdates', ['limit' => 1, 'offset' => -1],
+            );
             if (!empty($data['result'])) {
                 $lastUpdate = end($data['result']);
                 $this->offset = $lastUpdate['update_id'] + 1;
