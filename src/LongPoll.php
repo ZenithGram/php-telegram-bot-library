@@ -6,7 +6,6 @@ namespace ZenithGram\ZenithGram;
 
 use Closure;
 use Throwable;
-use ZenithGram\ZenithGram\Contracts\ApiInterface;
 
 /**
  * Класс для получения обновлений от Telegram в режиме Long Polling.
@@ -14,7 +13,7 @@ use ZenithGram\ZenithGram\Contracts\ApiInterface;
  */
 class LongPoll
 {
-    private ApiInterface $api;
+    private ApiClient $api;
     private int $timeout;
     private int $offset = 0;
     private bool $skipOldUpdates = false;
@@ -25,7 +24,7 @@ class LongPoll
      * и нужен для обеспечения гибкости и возможности тестирования.
      * Конечный пользователь обычно использует статический метод create().
      */
-    public function __construct(ApiInterface $api, int $timeout = 20)
+    public function __construct(ApiClient  $api, int $timeout = 20)
     {
         $this->api = $api;
         $this->timeout = $timeout;

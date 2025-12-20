@@ -4,22 +4,29 @@ declare(strict_types=1);
 
 namespace ZenithGram\ZenithGram;
 
-use ZenithGram\ZenithGram\Utils\EnvironmentDetector;
-use ZenithGram\ZenithGram\Contracts\ApiInterface;
-class ApiClient implements ApiInterface
+use Amp\Http\Client\HttpClient;
+use Amp\Http\Client\HttpClientBuilder;
+use Amp\Http\Client\Request;
+use Amp\Http\Client\Form;
+
+class ApiClient
 {
     private const API_BASE_URL = 'https://api.telegram.org';
     private string $apiUrl;
     private string $apiFileUrl;
     private ZG $tgz;
+    private HttpClient $httpClient;
 
     public function __construct(string $token)
     {
-        $this->apiUrl = self::API_BASE_URL  . '/bot' . $token . '/';
-        $this->apiFileUrl = self::API_BASE_URL  . '/file/bot' . $token . '/';
+        $this->apiUrl = self::API_BASE_URL . '/bot' . $token . '/';
+        $this->apiFileUrl = self::API_BASE_URL . '/file/bot' . $token . '/';
+
+        // HttpClientBuilder создает клиент, который умеет работать асинхронно
+        $this->httpClient = HttpClientBuilder::buildDefault();
     }
 
-    public function addZg(ZG $tgz)
+    public function addZg(ZG $tgz): void
     {
         $this->tgz = $tgz;
     }
@@ -27,39 +34,42 @@ class ApiClient implements ApiInterface
     public function callAPI(string $method, ?array $params = []): array
     {
         $url = $this->apiUrl . $method;
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
 
-        if (EnvironmentDetector::isCli()) {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        $body = new Form();
+
+        if ($params) {
+            foreach ($params as $key => $value) {
+                if ($value instanceof \CURLFile) {
+                    // Метод addFile в твоем файле Form.php есть на строке 82
+                    $body->addFile($key, $value->getFilename());
+                } elseif (is_array($value)) {
+                    // Данные кнопок или массивов превращаем в JSON
+                    $body->addField($key, json_encode($value, JSON_THROW_ON_ERROR));
+                } else {
+                    // Обычные текстовые поля (строка 45 в твоем файле)
+                    $body->addField($key, (string)$value);
+                }
+            }
         }
 
-        $responseJson = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $request = new Request($url, 'POST');
+        $request->setBody($body);
 
-        curl_close($ch);
+        // Выполняем запрос
+        $response = $this->httpClient->request($request);
 
-        $response = json_decode($responseJson, true, 512, JSON_THROW_ON_ERROR);
+        // Читаем ответ. В v5 метод read() возвращает строку целиком.
+        $responseJson = $response->getBody()->read();
 
-        if ($httpCode >= 200 && $httpCode < 300 && $response['ok']) {
-            return $response;
+        $responseArray = json_decode($responseJson, true, 512, JSON_THROW_ON_ERROR);
+
+        if ($response->getStatus() === 200 && ($responseArray['ok'] ?? false)) {
+            return $responseArray;
         }
 
-        throw new \RuntimeException($this->tgz->TGAPIErrorMSG($response, $params));
+        throw new \RuntimeException($this->tgz->TGAPIErrorMSG($responseArray, $params));
     }
 
-
-    public function getApiUrl(): string
-    {
-        return $this->apiUrl;
-    }
-
-    public function getApiFileUrl(): string
-    {
-        return $this->apiFileUrl;
-    }
+    public function getApiUrl(): string { return $this->apiUrl; }
+    public function getApiFileUrl(): string { return $this->apiFileUrl; }
 }

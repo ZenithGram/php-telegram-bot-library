@@ -5,7 +5,6 @@ namespace ZenithGram\ZenithGram;
 use CURLFile;
 use Exception;
 use LogicException;
-use ZenithGram\ZenithGram\Contracts\ApiInterface;
 use ZenithGram\ZenithGram\Dto\UserDto;
 use ZenithGram\ZenithGram\Dto\ChatDto;
 use ZenithGram\ZenithGram\Utils\EnvironmentDetector;
@@ -14,11 +13,11 @@ class ZG
 {
     use ErrorHandler;
 
-    public ApiInterface $api;
+    public ApiClient $api;
     public UpdateContext $context;
     public MessageParseMode $parseModeDefault = MessageParseMode::None;
 
-    public function __construct(ApiInterface $api, UpdateContext $context)
+    public function __construct(ApiClient $api, UpdateContext $context)
     {
         $api->addZg($this);
         $this->api = $api;
