@@ -6,171 +6,119 @@ namespace ZenithGram\ZenithGram;
 
 use Closure;
 use Throwable;
+use function Amp\async;
+use function Amp\delay;
 
-/**
- * Класс для получения обновлений от Telegram в режиме Long Polling.
- * Является "генератором" событий, а не их обработчиком.
- */
 class LongPoll
 {
     private ApiClient $api;
     private int $timeout;
     private int $offset = 0;
     private bool $skipOldUpdates = false;
+    private bool $isRunning = false;
 
-
-    /**
-     * Конструктор принимает зависимости. Он используется "под капотом"
-     * и нужен для обеспечения гибкости и возможности тестирования.
-     * Конечный пользователь обычно использует статический метод create().
-     */
-    public function __construct(ApiClient  $api, int $timeout = 20)
+    public function __construct(ApiClient $api, int $timeout = 20)
     {
         $this->api = $api;
         $this->timeout = $timeout;
     }
 
-    /**
-     * Удобный статический метод-фабрика для простого запуска.
-     * Это рекомендуемый способ создания объекта LongPoll.
-     *
-     * @param string $token   Токен вашего бота.
-     * @param int    $timeout Таймаут для long-polling запроса в секундах.
-     *
-     * @return self
-     *
-     * @see https://zenithgram.github.io/classes/longpoll
-     */
     public static function create(string $token, int $timeout = 20): self
     {
-        // Вся сложность создания зависимостей спрятана здесь.
-        // Пользователю не нужно ничего знать про ApiClient.
-        $api = new ApiClient($token);
-
-        return new self($api, $timeout);
+        return new self(new ApiClient($token), $timeout);
     }
 
-    private function get_updates($recursion = false)
-    {
-        $url = $this->api->getApiUrl().'getUpdates?'.http_build_query(
-                [
-                    'offset'          => $this->offset,
-                    'timeout'         => $this->timeout,
-                    'allowed_updates' => [],
-                    // Можно указать, какие типы обновлений получать
-                ],
-            );
-
-        // Подавляем вывод Warning, чтобы обработать его вручную
-        $response = @file_get_contents($url);
-
-        if ($response === false && $recursion === false) {
-
-            return $this->get_updates(true);
-
-        }
-
-        if ($response === false && $recursion === true) {
-            $error = error_get_last();
-            $errorMessage = "Не удалось выполнить запрос к Telegram API.";
-
-            // Если информация об ошибке доступна, формируем детальное сообщение
-            if ($error !== null) {
-                $errorMessage = sprintf(
-                    "Ошибка file_get_contents: %s в файле %s на строке %d",
-                    $error['message'],
-                    $error['file'],
-                    $error['line']
-                );
-            }
-
-            return throw new \RuntimeException($errorMessage);
-        }
-
-        return $response;
-
-    }
-
-    /**
-     * Указывает, следует ли пропускать накопившиеся обновления.
-     * Если вызвать этот метод, бот начнет обработку только с новых сообщений, пришедших после его запуска.
-     *
-     * @return self
-     * @see https://zenithgram.github.io/classes/longpoll
-     */
     public function skipOldUpdates(): self
     {
         $this->skipOldUpdates = true;
         return $this;
     }
 
-    /**
-     * Запускает бесконечный цикл прослушивания обновлений от Telegram.
-     *
-     * @param Closure $handler Анонимная функция, которая будет вызвана для
-     *                         каждого нового обновления. Она должна принимать
-     *                         один аргумент: готовый к работе объект TGZ.
-     *                         Пример: function(TGZ $tg) {ваш код}
-     *
-     * @throws \JsonException
-     * @see https://zenithgram.github.io/classes/longpoll
-     */
     public function listen(Closure $handler): void
     {
+        $this->isRunning = true;
 
+        // 1. Логика пропуска старых обновлений (Drop pending updates)
         if ($this->skipOldUpdates) {
-            $url = $this->api->getApiUrl().'getUpdates?'.http_build_query(
-                    ['limit' => 1, 'offset' => -1]
-                );
+            $this->dropPendingUpdates();
+        }
 
-            $response = @file_get_contents($url);
+        // 2. Основной цикл (Event Loop)
+        while ($this->isRunning) {
+            try {
+                $updates = $this->fetchUpdates();
 
-            if ($response !== false) {
-                try {
-                    $data = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
-                    if (!empty($data['result'])) {
-                        $lastUpdate = end($data['result']);
-                        $this->offset = $lastUpdate['update_id'] + 1;
-                    }
-                } catch (\JsonException $e) {
-                    // Просто начнем с offset = 0, как и раньше.
+                if (empty($updates)) {
+                    continue;
                 }
+
+                foreach ($updates as $updateData) {
+                    // Обновляем offset СРАЗУ, чтобы в следующем запросе не получить это же сообщение,
+                    // даже если текущее еще обрабатывается.
+                    $this->offset = $updateData['update_id'] + 1;
+
+                    // МАГИЯ AMP: async() запускает код в отдельном файбере.
+                    // Мы НЕ ждем завершения handler($tg), мы сразу переходим к следующему обновлению.
+                    async(function () use ($handler, $updateData) {
+                        try {
+                            $this->processUpdate($handler, $updateData);
+                        } catch (Throwable $e) {
+                            // Логируем ошибку конкретного апдейта, но не роняем бота
+                            // Тут можно подключить Logger, пока просто вывод в stderr
+                            fwrite(STDERR, "[Update Error] " . $e->getMessage() . PHP_EOL);
+                        }
+                    });
+                }
+
+            } catch (Throwable $e) {
+                // Ошибка уровня сети или API (например, Telegram упал)
+                // Делаем паузу, чтобы не долбить API в цикле ошибок
+                fwrite(STDERR, "[Network Error] " . $e->getMessage() . PHP_EOL);
+                delay(2);
             }
         }
+    }
 
+    private function fetchUpdates(): array
+    {
+        $response = $this->api->callAPI('getUpdates', [
+            'offset' => $this->offset,
+            'timeout' => $this->timeout,
+            'allowed_updates' => [], // Получаем всё
+        ]);
 
-        while (true) {
+        return $response['result'] ?? [];
+    }
 
-            $response = $this->get_updates();
-
-            $response_array = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
-
-            $updates = $response_array['result'];
-
-            if (empty($updates)) {
-                continue; // Если обновлений нет, просто начинаем следующий запрос
+    private function dropPendingUpdates(): void
+    {
+        try {
+            $data = $this->api->callAPI('getUpdates', ['limit' => 1, 'offset' => -1]);
+            if (!empty($data['result'])) {
+                $lastUpdate = end($data['result']);
+                $this->offset = $lastUpdate['update_id'] + 1;
             }
-
-            // Перебираем все полученные обновления
-            foreach ($updates as $updateData) {
-                // ШАГ 1: Для КАЖДОГО обновления создаем свой собственный,
-                // чистый и независимый объект контекста.
-                $context = new UpdateContext($updateData);
-
-                // ШАГ 2: Создаем новый экземпляр TGZ, "заряженный" этим контекстом.
-                // Мы передаем один и тот же объект $this->api, а не создаем его заново.
-                $tg_instance = new ZG($this->api, $context);
-
-                $this->api->addZg($tg_instance);
-
-                // ШАГ 3: Вызываем обработчик пользователя и явно передаем ему
-                // полностью готовый к работе экземпляр TGZ.
-                $handler($tg_instance);
-
-                // Обновляем offset, чтобы не получать это же обновление снова
-                $this->offset = $updateData['update_id'] + 1;
-            }
-
+        } catch (Throwable $e) {
+            // Игнорируем ошибки при пропуске, просто начинаем работу
         }
+    }
+
+    private function processUpdate(Closure $handler, array $updateData): void
+    {
+        // Создаем ИЗОЛИРОВАННЫЙ контекст для конкретного апдейта
+        $context = new UpdateContext($updateData);
+
+        // ВАЖНО: Создаем новый экземпляр ZG для каждого запроса.
+        // Это предотвращает состояние гонки (Race Condition), когда
+        // данные одного юзера перезаписывают данные другого.
+        $tgInstance = new ZG($this->api, $context);
+
+        // Внедряем зависимость обратно в API (для обработки ошибок)
+        // Примечание: Это место архитектурно слабое в оригинальной библиотеке (stateful service),
+        // но мы его пока сохраняем для совместимости.
+        $this->api->addZg($tgInstance);
+
+        // Запускаем пользовательскую логику
+        $handler($tgInstance);
     }
 }
