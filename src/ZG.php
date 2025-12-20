@@ -19,7 +19,6 @@ class ZG
 
     public function __construct(ApiClient $api, UpdateContext $context)
     {
-        $api->addZg($this);
         $this->api = $api;
         $this->context = $context;
     }

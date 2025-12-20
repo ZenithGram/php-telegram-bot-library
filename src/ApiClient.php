@@ -18,7 +18,6 @@ class ApiClient
 
     private string $apiUrl;
     private string $apiFileUrl;
-    private ZG $tgz;
     private HttpClient $httpClient;
 
     public function __construct(string $token)
@@ -26,11 +25,6 @@ class ApiClient
         $this->apiUrl = self::API_BASE_URL . '/bot' . $token . '/';
         $this->apiFileUrl = self::API_BASE_URL . '/file/bot' . $token . '/';
         $this->httpClient = HttpClientBuilder::buildDefault();
-    }
-
-    public function addZg(ZG $tgz): void
-    {
-        $this->tgz = $tgz;
     }
 
     /**
@@ -73,7 +67,14 @@ class ApiClient
             return $responseArray;
         }
 
-        throw new \RuntimeException($this->tgz->TGAPIErrorMSG($responseArray, $params));
+        $errorMsg = sprintf(
+            "Telegram API Error [%s]: %s",
+            $responseArray['error_code'] ?? 'Unknown',
+            $responseArray['description'] ?? 'No description'
+        );
+
+        // Можно выбрасывать свой класс исключения, если хочешь, но пока хватит Runtime
+        throw new \RuntimeException($errorMsg);
     }
 
     /**
