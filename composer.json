@@ -7,7 +7,8 @@
         "ext-curl": "*",
         "ext-mbstring": "*",
         "amphp/http-client": "^5.3",
-        "revolt/event-loop": "^1.0"
+        "revolt/event-loop": "^1.0",
+        "amphp/file": "^3.2"
     },
     "autoload": {
         "psr-4": {

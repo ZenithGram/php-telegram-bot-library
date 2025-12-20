@@ -8,11 +8,12 @@ use Amp\Http\Client\HttpClient;
 use Amp\Http\Client\HttpClientBuilder;
 use Amp\Http\Client\Request;
 use Amp\Http\Client\Form;
+use Amp\File;
+use function Amp\ByteStream\pipe;
 
 class ApiClient
 {
     private const API_BASE_URL = 'https://api.telegram.org';
-    // Стандартный таймаут для обычных запросов (sendMessage и т.д.)
     private const DEFAULT_TIMEOUT = 10;
 
     private string $apiUrl;
@@ -73,6 +74,37 @@ class ApiClient
         }
 
         throw new \RuntimeException($this->tgz->TGAPIErrorMSG($responseArray, $params));
+    }
+
+    /**
+     * Асинхронно скачивает файл по ссылке и сохраняет его на диск
+     */
+    public function downloadFile(string $url, string $destinationPath): void
+    {
+        // 1. Делаем запрос (GET)
+        $request = new Request($url, 'GET');
+        // Таймаут побольше для скачивания (5 минут)
+        $request->setTransferTimeout(300);
+        $request->setInactivityTimeout(60);
+
+        $response = $this->httpClient->request($request);
+
+        if ($response->getStatus() !== 200) {
+            throw new \RuntimeException("Не удалось скачать файл. HTTP код: " . $response->getStatus());
+        }
+
+        // 2. Открываем файл на диске для записи (асинхронно)
+        // Если папки нет, она должна быть создана ДО вызова этого метода
+        $file = File\openFile($destinationPath, 'w');
+
+        try {
+            // 3. "Труба": переливаем данные из сети (Body) в файл на диске
+            // Это не забивает оперативную память и не блокирует поток
+            pipe($response->getBody(), $file);
+        } finally {
+            // 4. Обязательно закрываем файл
+            $file->close();
+        }
     }
 
     public function getApiUrl(): string { return $this->apiUrl; }

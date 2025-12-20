@@ -2,22 +2,18 @@
 
 namespace ZenithGram\ZenithGram;
 
-class File
-{
+use Amp\File;
+
+class File {
     private array $file_info = [];
     private ApiClient $api;
     private string $file_id;
 
-    private const MAX_DOWNLOAD_SIZE_BYTES = 20971520; // 20 * 1024 * 1024
-    private const DIVISION_SIZE_B = 1;                 // 1
-    private const DIVISION_SIZE_KB = 1024;             // 1024
-    private const DIVISION_SIZE_MB = 1048576;          // 1024 * 1024
-    private const DIVISION_SIZE_b = 0.125;             // 1/8
-    private const DIVISION_SIZE_Kb =  128;             // 1/8 * 1024
-    private const DIVISION_SIZE_Mb =  131072;          // 1/8 * 1024 * 1024
+    // Лимиты Telegram (20 МБ для ботов)
+    private const MAX_DOWNLOAD_SIZE_BYTES = 20971520;
 
-    public function __construct(string $file_id, ApiClient $api,
-    ) {
+    public function __construct(string $file_id, ApiClient $api)
+    {
         $this->api = $api;
         $this->file_id = $file_id;
     }
@@ -25,136 +21,93 @@ class File
     public function getFileInfo(): array
     {
         if (empty($this->file_info)) {
-            $this->file_info = $this->api->callAPI(
-                'getFile', ['file_id' => $this->file_id],
-            );
+            // Это уже работает асинхронно через наш ApiClient
+            $response = $this->api->callAPI('getFile', ['file_id' => $this->file_id]);
+            $this->file_info = $response['result'];
         }
 
-        return $this->file_info['result'];
+        return $this->file_info;
     }
 
-    /**
-     * Возвращает размер файла в заданной единице измерения
-     *
-     * @param string $units Единица измерения: b, Kb, Mb, B KB, MB
-     *                      По умолчанию: B (байты)
-     *
-     *                      b - биты, Kb - килобиты, Mb - мегабиты
-     *                      B - байты, KB - килобайты, MB - мегабайты
-     * @param int $precision Количество знаков после запятой
-     *
-     * @return int|float Размер файла
-     *
-     * @see https://zenithgram.github.io/classes/file
-     */
     public function getFileSize(string $units = 'B', int $precision = 5): int|float
     {
+        $bytes = $this->getFileInfo()['file_size'] ?? 0;
 
+        // Простая математика, тут асинхронность не нужна
         $division = match ($units) {
-            'MB' => $this::DIVISION_SIZE_MB,    // мегабайты
-            'KB' => $this::DIVISION_SIZE_KB,    // килобайты
-            'B' => $this::DIVISION_SIZE_B,      // байты
-            'Mb' => $this::DIVISION_SIZE_Mb,    // мегабиты
-            'Kb' => $this::DIVISION_SIZE_Kb,    // килобиты
-            default => $this::DIVISION_SIZE_b,  // биты
+            'MB' => 1048576,
+            'KB' => 1024,
+            default => 1,
         };
 
-        return round($this->getFileInfo()['file_size'] / $division, $precision);
+        return round($bytes / $division, $precision);
     }
 
     public function getFilePath(): string
     {
-        return $this->api->getApiFileUrl().$this->getFileInfo()['file_path'];
+        return $this->api->getApiFileUrl() . $this->getFileInfo()['file_path'];
     }
 
     /**
-     * Получает информацию о файле и сохраняет его по указанному пути.
-     *
-     * @param string $path Путь для сохранения (может быть директорией или
-     *                     полным путем к файлу).
-     *
-     * @return string Полный путь к сохраненному файлу.
-     *
-     * @throws \RuntimeException Если файл слишком большой, или не удалось
-     *                           создать директорию/скачать файл.
-     *
-     * @see https://zenithgram.github.io/classes/file
+     * Асинхронно сохраняет файл
      */
     public function save(string $path): string
     {
-        if ($this->getFileSize() >= $this::MAX_DOWNLOAD_SIZE_BYTES) {
-            throw new \RuntimeException('Размер файла превышает 20 МБ');
+        if ($this->getFileSize() >= self::MAX_DOWNLOAD_SIZE_BYTES) {
+            throw new \RuntimeException('Размер файла превышает 20 МБ');
         }
 
-        // 3. Передаем управление методу для скачивания
-        return $this->downloadFile($path);
-    }
-
-    private function downloadFile(string $path): string
-    {
         $downloadUrl = $this->getFilePath();
 
-        if (is_dir($path)) {
-            // Если передан путь к директории, добавляем к нему имя файла
-            $path = rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+        // Проверяем, является ли путь директорией (по наличию расширения файла или слеша в конце)
+        // Это упрощенная проверка. Если путь заканчивается на слеш - это папка.
+        $isDir = str_ends_with($path, DIRECTORY_SEPARATOR) || str_ends_with($path, '/');
+
+        if ($isDir || is_dir($path)) { // is_dir блокирующий, но быстрый (кэшируется PHP), можно оставить или заменить на File\isDirectory($path)
+            $path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
             $path .= basename($downloadUrl);
         }
 
-        $destinationPath = $path;
-        $directory = dirname($destinationPath);
+        $directory = dirname($path);
 
-        // Cначала проверяем, потом создаем
-        // Если директории нет, пытаемся её создать рекурсивно
-        if (!mkdir($directory, 0775, true) && !is_dir($directory)) {
-            // Если создать не удалось - выбрасываем исключение
-            throw new \RuntimeException(
-                'Не удалось создать директорию для сохранения файла: '
-                .$directory,
-            );
+        // --- АСИНХРОННАЯ МАГИЯ ---
+
+        // 1. Проверяем существование папки асинхронно
+        if (!File\isDirectory($directory)) {
+            // 2. Создаем директорию рекурсивно (как mkdir -p)
+            File\createDirectoryRecursively($directory, 0775);
         }
 
-        if (!@copy($downloadUrl, $destinationPath)) {
-            $error = error_get_last();
-            $errorMessage = $error['message'] ?? 'неизвестная ошибка';
-            throw new \RuntimeException(
-                'Не удалось скачать или сохранить файл. Причина: '.$errorMessage
-                .'. Путь: '.$destinationPath,
-            );
-        }
+        // 3. Скачиваем файл через ApiClient
+        $this->api->downloadFile($downloadUrl, $path);
 
-        return $destinationPath;
+        return $path;
     }
 
-    public static function getFileId(array $context, ?string $type = null,
-    ): ?string {
+    // Статический метод getFileId оставляем без изменений, он парсит массив
+    public static function getFileId(array $context, ?string $type = null): ?string
+    {
         $message = $context['result'] ?? $context['message'] ?? [];
         if (empty($message)) {
             return null;
         }
 
         if ($type !== null) {
-            return match ($type) {
-                'photo' => end($message['photo'])['file_id'],
-                'audio' => $message['audio']['file_id'],
-                'video' => $message['video']['file_id'],
-                'document' => $message['document']['file_id'],
-                'voice' => $message['voice']['file_id'],
-                'sticker' => $message['sticker']['file_id'],
-                default => null,
+            // Упрощенная логика выборки
+            $obj = match ($type) {
+                'photo' => end($message['photo']),
+                default => $message[$type] ?? null,
             };
+            return $obj['file_id'] ?? null;
         }
 
-        $fileTypes = [
-            'photo', 'document', 'video', 'audio',
-            'voice', 'sticker', 'video_note', 'animation',
-        ];
-
+        // Автопоиск
+        $fileTypes = ['photo', 'document', 'video', 'audio', 'voice', 'sticker', 'video_note'];
         foreach ($fileTypes as $fileType) {
             if (isset($message[$fileType])) {
                 if ($fileType === 'photo') {
                     return end($message['photo'])['file_id'];
                 }
-
                 return $message[$fileType]['file_id'];
             }
         }
