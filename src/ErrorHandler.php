@@ -88,8 +88,8 @@ trait ErrorHandler
         [$userFile, $userLine, $isVendorError] = $this->findUserLocation($e);
 
         // Чистим пути для красоты
-        $cleanUserFile = $this->cleanPath($userFile);
-        $cleanRealFile = $this->cleanPath($e->getFile());
+        $cleanUserFile = $userFile;
+        $cleanRealFile = $e->getFile();
 
         $trace = $this->renderTrace($e);
         // Сниппет берем ИЗ ПОЛЬЗОВАТЕЛЬСКОГО ФАЙЛА
