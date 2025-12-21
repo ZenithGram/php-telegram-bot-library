@@ -289,24 +289,11 @@ trait ErrorHandler
         $trace = "";
         $i = 0;
         foreach ($e->getTrace() as $item) {
-            if ($this->short_trace
-                && str_contains(
-                    $item['file'] ?? '', 'vendor\\',
-                )
-            ) {
-                continue;
-            }
-            $file = isset($item['file']) ? $this->cleanPath($item['file'])
-                : '[internal]';
-            $trace .= "#$i $file(".($item['line'] ?? '?')."): ".($item['class']
+            $trace .= "#$i {$item['file']}(".($item['line'] ?? '?')."): ".($item['class']
                     ?? '').($item['type'] ?? '').$item['function']."()\n";
         }
 
         return htmlspecialchars($trace);
     }
 
-    private function cleanPath(string $path): string
-    {
-        return str_replace(getcwd().DIRECTORY_SEPARATOR, '', $path);
-    }
 }
