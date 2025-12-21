@@ -140,7 +140,7 @@ trait ErrorHandler
         exit(1);
     }
 
-    private function reportException(Throwable $e): void
+    protected function reportException(Throwable $e): void
     {
         $className = (new \ReflectionClass($e))->getShortName();
         $message = $e->getMessage();
