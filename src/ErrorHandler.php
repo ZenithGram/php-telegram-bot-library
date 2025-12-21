@@ -215,7 +215,7 @@ trait ErrorHandler
         $locationInfo
             = "<u>File:</u> <code>" . $this->filteredFile($esc($userFile)) . ":{$userLine}</code>\n";
         if ($userFile !== $realFile) {
-            $locationInfo .= "<i>(Inside:" . $this->filteredFile($esc($realFile)) . ":{$realLine})</i>\n";
+            $locationInfo .= "<i><u>Inside:</u><code>" . $this->filteredFile($esc($realFile)) . ":{$realLine}</code></i>\n";
         }
 
         $codeBlock = "";
