@@ -88,8 +88,8 @@ trait ErrorHandler
         [$userFile, $userLine, $isVendorError] = $this->findUserLocation($e);
 
         // Чистим пути для красоты
-        $cleanUserFile = $userFile;
-        $cleanRealFile = $e->getFile();
+        $cleanUserFile = $this->cleanPath($userFile);
+        $cleanRealFile = $this->cleanPath($e->getFile());
 
         $trace = $this->renderTrace($e);
         // Сниппет берем ИЗ ПОЛЬЗОВАТЕЛЬСКОГО ФАЙЛА
@@ -289,11 +289,17 @@ trait ErrorHandler
         $trace = "";
         $i = 0;
         foreach ($e->getTrace() as $item) {
-            $trace .= "#$i {$item['file']}(".($item['line'] ?? '?')."): ".($item['class']
+            $file = isset($item['file']) ? $this->cleanPath($item['file'])
+                : '[internal]';
+            $trace .= "#$i $file(".($item['line'] ?? '?')."): ".($item['class']
                     ?? '').($item['type'] ?? '').$item['function']."()\n";
         }
 
         return htmlspecialchars($trace);
     }
 
+    private function cleanPath(string $path): string
+    {
+        return str_replace(getcwd().DIRECTORY_SEPARATOR, '', $path);
+    }
 }
