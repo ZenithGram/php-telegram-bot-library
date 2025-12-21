@@ -32,7 +32,7 @@ class ApiClient
      * @param array|null $params Параметры
      * @param int $timeout Клиентский таймаут <br> По умолчанию: 10.
      */
-    public function callAPI(string $method, ?array $params = [], int $timeout = self::DEFAULT_TIMEOUT): array
+    public function callAPI(string $method, array $params = [], int $timeout = self::DEFAULT_TIMEOUT): array
     {
         $url = $this->apiUrl . $method;
         $body = new Form();
@@ -74,7 +74,7 @@ class ApiClient
         );
 
         // Можно выбрасывать свой класс исключения, если хочешь, но пока хватит Runtime
-        throw new \RuntimeException($errorMsg);
+        throw new \RuntimeException($errorMsg . "\n" . $this->formatParamsArray($params));
     }
 
     /**
@@ -110,4 +110,30 @@ class ApiClient
 
     public function getApiUrl(): string { return $this->apiUrl; }
     public function getApiFileUrl(): string { return $this->apiFileUrl; }
+
+    private function formatParamsArray(array $array, int $indent = 0): string
+    {
+        $space = str_repeat(" ", $indent * 2); // символ " " (U+2007, Figure Space)
+        $result = "Array (\n";
+
+        foreach ($array as $key => $value) {
+            if (is_string($value) && ($decoded = json_decode($value, true)) !== null) {
+                // Если значение — JSON, декодируем его в массив
+                $value = $decoded;
+            }
+
+            if (is_object($value)) {
+                $result .= $space . "  [$key] => " . $this->formatParamsArray((array) $value, $indent + 1);
+            }
+
+            if (is_array($value)) {
+                $result .= $space . "  [$key] => " . $this->formatParamsArray($value, $indent + 1);
+            } else {
+                $result .= $space . "  [$key] => " . ($value ?: 'null') . "\n";
+            }
+        }
+        return $result . $space . ")\n";
+    }
+
 }
+

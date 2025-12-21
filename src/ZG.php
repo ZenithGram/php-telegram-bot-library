@@ -713,38 +713,6 @@ class ZG
         return ChatDto::fromArray($chatData);
     }
 
-    public function TGAPIErrorMSG($response, $params): string
-    {
-        $function_params['error_code'] = $response['error_code'];
-        $function_params['description'] = $response['description'];
-        $function_params['request_params'] = $params;
-        return "Telegram API error:\n" . $this->formatArray($function_params);
-    }
-
-    private function formatArray(array $array, int $indent = 0): string
-    {
-        $space = str_repeat(" ", $indent * 2); // символ " " (U+2007, Figure Space)
-        $result = "Array (\n";
-
-        foreach ($array as $key => $value) {
-            if (!is_array($value) && ($decoded = json_decode($value, true)) !== null) {
-                // Если значение — JSON, декодируем его в массив
-                $value = $decoded;
-            }
-
-            if (is_object($value)) {
-                $result .= $space . "  [$key] => " . $this->formatArray((array) $value, $indent + 1);
-            }
-
-            if (is_array($value)) {
-                $result .= $space . "  [$key] => " . $this->formatArray($value, $indent + 1);
-            } else {
-                $result .= $space . "  [$key] => " . ($value ?: 'null') . "\n";
-            }
-        }
-        return $result . $space . ")\n";
-    }
-
     private array $botButtons = [];
 
     public function setBotButtons(array $buttons): void
