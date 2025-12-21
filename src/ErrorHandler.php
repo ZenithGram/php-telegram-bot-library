@@ -98,14 +98,14 @@ trait ErrorHandler
         if (EnvironmentDetector::isCli()) {
             $this->renderCliError(
                 $className, $message, $cleanUserFile, $userLine, $cleanRealFile,
-                $e->getLine(), $snippet, $trace,
+                $e->getLine(), $snippet, $trace['cli'],
             );
         }
 
         if ($this->debug_chat_ids) {
             $this->sendTelegramError(
                 $className, $message, $cleanUserFile, $userLine, $cleanRealFile,
-                $e->getLine(), $snippet, $this->$trace,
+                $e->getLine(), $snippet, $trace['html'],
             );
         }
     }
@@ -284,7 +284,7 @@ trait ErrorHandler
         return $result;
     }
 
-    private function renderTrace(Throwable $e): string
+    private function renderTrace(Throwable $e): array
     {
         $trace = "";
         $i = 0;
@@ -294,7 +294,7 @@ trait ErrorHandler
             $i++;
         }
 
-        return htmlspecialchars($trace);
+        return ['html' => htmlspecialchars($trace), 'cli' => $trace];
     }
 
     private function cleanPath(string $path): string
