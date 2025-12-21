@@ -199,7 +199,7 @@ trait ErrorHandler
             try {
                 $this->api->callAPI('sendMessage', ['chat_id' => $chatId, 'text' => $html, 'parse_mode' => 'HTML']);
                     foreach ($message_chunk as $message) {
-                        $this->api->callAPI('sendMessage', ['chat_id' => $chatId, 'text' => $message, 'parse_mode' => 'HTML']);
+                        $this->api->callAPI('sendMessage', ['chat_id' => $chatId, 'text' => "<pre>" . $message . "</pre>", 'parse_mode' => 'HTML']);
                     }
             } catch (Throwable $t) { fwrite(STDERR, "Log send fail: " . $t->getMessage()); }
         }
