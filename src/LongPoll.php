@@ -17,7 +17,6 @@ class LongPoll
     private int $offset = 0;
     private bool $skipOldUpdates = false;
     private bool $isRunning = false;
-    private array|null $debugChatIds = null;
     private bool $shortTrace = false;
     private string $pathFiler = '';
     private array|null $debug_chat_ids = null;
@@ -129,12 +128,10 @@ class LongPoll
     {
         $this->isRunning = true;
 
-        // 1. Логика пропуска старых обновлений (Drop pending updates)
         if ($this->skipOldUpdates) {
             $this->dropPendingUpdates();
         }
 
-        // 2. Основной цикл (Event Loop)
         while ($this->isRunning) {
             try {
                 $updates = $this->fetchUpdates();
@@ -144,12 +141,8 @@ class LongPoll
                 }
 
                 foreach ($updates as $updateData) {
-                    // Обновляем offset СРАЗУ, чтобы в следующем запросе не получить это же сообщение,
-                    // даже если текущее еще обрабатывается.
                     $this->offset = $updateData['update_id'] + 1;
 
-                    // МАГИЯ AMP: async() запускает код в отдельном файбере.
-                    // Мы НЕ ждем завершения handler($tg), мы сразу переходим к следующему обновлению.
                     async(function() use ($handler, $updateData) {
                         try {
                             $this->processUpdate($handler, $updateData);
@@ -165,8 +158,6 @@ class LongPoll
                 }
 
             } catch (Throwable $e) {
-                // Ошибка уровня сети или API (например, Telegram упал)
-                // Делаем паузу, чтобы не долбить API в цикле ошибок
                 fwrite(STDERR, "[Network Error] ".$e->getMessage().PHP_EOL);
                 delay(2);
             }
@@ -201,18 +192,13 @@ class LongPoll
                 $this->offset = $lastUpdate['update_id'] + 1;
             }
         } catch (Throwable $e) {
-            // Игнорируем ошибки при пропуске, просто начинаем работу
         }
     }
 
     private function processUpdate(Closure $handler, array $updateData): void
     {
-        // Создаем ИЗОЛИРОВАННЫЙ контекст для конкретного апдейта
         $context = new UpdateContext($updateData);
 
-        // ВАЖНО: Создаем новый экземпляр ZG для каждого запроса.
-        // Это предотвращает состояние гонки (Race Condition), когда
-        // данные одного юзера перезаписывают данные другого.
         $tgInstance = new ZG($this->api, $context);
         if ($this->debug) {
             $tgInstance
@@ -226,11 +212,9 @@ class LongPoll
                 $tgInstance->setSendIds($this->debug_chat_ids);
             }
         }
-        // Запускаем пользовательскую логику
         try {
             $handler($tgInstance);
         } catch (Throwable $e) {
-            // 3. Красиво репортим ошибку, НЕ убивая цикл
             $tgInstance->reportException($e);
         }
     }
