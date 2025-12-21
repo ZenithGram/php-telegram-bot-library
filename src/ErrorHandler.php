@@ -249,7 +249,7 @@ trait ErrorHandler
 
 
         } else {
-            $html .= "<pre>{$trace}</pre>";
+            $html .= "<pre><code class=\"language-bash\">{$trace}</code></pre>";
         }
 
         foreach ($this->debug_chat_ids as $chatId) {
@@ -262,8 +262,8 @@ trait ErrorHandler
                     foreach ($mergedArray as $message) {
                         $this->api->callAPI(
                             'sendMessage', ['chat_id'    => $chatId,
-                                            'text'       => "<pre>"
-                                                .$message."</pre>",
+                                            'text'       => "<pre><code class=\"language-bash\">"
+                                                .$message."</code></pre>",
                                             'parse_mode' => 'HTML'],
                         );
                     }
