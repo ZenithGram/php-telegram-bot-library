@@ -19,6 +19,7 @@ class LongPoll
     private bool $isRunning = false;
     private array|null $debugChatIds = null;
     private bool $shortTrace = false;
+    private string $pathFiler = '';
 
     public function __construct(ApiClient $api, int $timeout = 20)
     {
@@ -51,6 +52,14 @@ class LongPoll
 
         return $this;
     }
+
+    public function setTracePathFilter(string $filter): self
+    {
+        $this->pathFiler = $filter;
+
+        return $this;
+    }
+
 
     public function listen(Closure $handler): void
     {
@@ -144,7 +153,8 @@ class LongPoll
         if ($this->debugChatIds) {
             $tgInstance
                 ->enableDebug($this->debugChatIds)
-                ->shortTrace($this->shortTrace);
+                ->shortTrace($this->shortTrace)
+                ->setTracePathFilter($this->pathFiler);
         }
         // Запускаем пользовательскую логику
         try {
