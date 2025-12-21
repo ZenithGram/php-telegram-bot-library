@@ -30,6 +30,7 @@
 - [Poll](https://zenithgram.github.io/classes/poll.md): Класс для создания опросов.
 - [Pagination](https://zenithgram.github.io/classes/pagination.md): Класс для пагинации страниц.
 - [Inline](https://zenithgram.github.io/classes/inline.md): Класс для создания инлайн-ответов.
+- [Обработка Ошибок (Error Handling)](https://zenithgram.github.io/classes/errorHandler.md)
 - [DTO](https://zenithgram.github.io/classes/dto.md): Объекты данных UserDto и ChatDto.
 - [Enum](https://zenithgram.github.io/classes/enum.md): Все Enum и их значения
 
@@ -43,7 +44,6 @@
 - [initVars](https://zenithgram.github.io/classes/zenithMethods/initVars.md): Инициализирует основные переменные (chat_id, user_id, text) из входящего обновления.
 - [get](https://zenithgram.github.io/classes/zenithMethods/get.md): Методы получения данных из обновления (getChatId, getText и др.).
 - [defaultParseMode](https://zenithgram.github.io/classes/zenithMethods/defaultParseMode.md): Устанавливает режим разметки по умолчанию для всех сообщений.
-- [errors](https://zenithgram.github.io/classes/zenithMethods/errors.md): Настройка обработки и логирования ошибок (ErrorHandler).
 - [sendMessage](https://zenithgram.github.io/classes/zenithMethods/sendMessage.md): Отправляет текстовое сообщение в указанный чат (прямой метод).
 - [reply](https://zenithgram.github.io/classes/zenithMethods/reply.md): Отправляет ответ на текущее сообщение (сокращенный метод).
 - [copyMsg](https://zenithgram.github.io/classes/zenithMethods/copyMsg.md): Копирует сообщение из одного чата в другой.
