@@ -1707,7 +1707,7 @@ description: Все Enum и их значения
 ---
 
 ---
-url: 'https://zenithgram.github.io/classes/errorHandler.md'
+url: 'https://zenithgram.github.io/classes/errorhandler.md'
 description: Настройка обработки и логирования ошибок (ErrorHandler).
 ---
 
