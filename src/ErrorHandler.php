@@ -232,10 +232,14 @@ trait ErrorHandler
             $codeBlock .= "$marker$num: ".$esc($codeLine);
         }
 
+        $token = $this->api->getToken();
+        $first_chars_token = substr($token, 0, 3) . '...';
+
+
         $html = "<b>🔥 Fatal Error: {$esc($type)}</b>\n\n".
             "<u>Message:</u> <b>{$esc($msg)}</b>\n".
             $locationInfo."\n".
-            "<pre><code class=\"language-php\">{$codeBlock}</code></pre>\n\n".
+            "<pre><code class=\"language-php\">" . str_replace($token, $first_chars_token, $codeBlock) . "</code></pre>\n\n".
             "<b>Stack Trace:</b>\n";
 
         if (mb_strlen($trace) > 2000) {

@@ -19,12 +19,14 @@ class ApiClient
     private string $apiUrl;
     private string $apiFileUrl;
     private HttpClient $httpClient;
+    private string $token;
 
     public function __construct(string $token)
     {
         $this->apiUrl = self::API_BASE_URL . '/bot' . $token . '/';
         $this->apiFileUrl = self::API_BASE_URL . '/file/bot' . $token . '/';
         $this->httpClient = HttpClientBuilder::buildDefault();
+        $this->token = $token;
     }
 
     /**
@@ -110,6 +112,7 @@ class ApiClient
 
     public function getApiUrl(): string { return $this->apiUrl; }
     public function getApiFileUrl(): string { return $this->apiFileUrl; }
+    public function getToken(): string { return $this->token; }
 
     private function formatParamsArray(array $array, int $indent = 0): string
     {
