@@ -289,7 +289,7 @@ trait ErrorHandler
         $trace = "";
         $i = 0;
         foreach ($e->getTrace() as $item) {
-            $trace .= "#$i {$item['file']}(".($item['line'] ?? '?')."): ".($item['class']
+            $trace .= "#$i {}(".($item['line'] ?? '?')."): ".($item['class']
                     ?? '').($item['type'] ?? '').$item['function']."()\n";
         }
 
