@@ -18,6 +18,7 @@ class LongPoll
     private bool $skipOldUpdates = false;
     private bool $isRunning = false;
     private array|null $debugChatIds = null;
+    private bool $shortTrace = false;
 
     public function __construct(ApiClient $api, int $timeout = 20)
     {
@@ -40,6 +41,13 @@ class LongPoll
     public function enableDebug(int|array $adminIds): self
     {
         $this->debugChatIds = is_array($adminIds) ? $adminIds : [$adminIds];
+
+        return $this;
+    }
+
+    public function shortTrace(bool $short = true): self
+    {
+        $this->shortTrace = $short;
 
         return $this;
     }
@@ -134,7 +142,9 @@ class LongPoll
         // данные одного юзера перезаписывают данные другого.
         $tgInstance = new ZG($this->api, $context);
         if ($this->debugChatIds) {
-            $tgInstance->setDebugIds($this->debugChatIds);
+            $tgInstance
+                ->enableDebug($this->debugChatIds)
+                ->shortTrace($this->shortTrace);
         }
         // Запускаем пользовательскую логику
         try {
