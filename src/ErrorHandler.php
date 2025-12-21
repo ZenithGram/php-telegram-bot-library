@@ -73,15 +73,15 @@ trait ErrorHandler
     /**
      * Устанавливает ID, куда будут отправлены возникшие ошибки
      *
-     * @param int|array $adminIds ID пользователя или чата
+     * @param int|string|array $ids ID пользователя или чата
      *
      * @return ZG
      *
      * @see https://zenithgram.github.io/classes/errorhandler#setSendIds
      */
-    public function setSendIds(int|array $adminIds): self
+    public function setSendIds(int|string|array $ids): self
     {
-        $this->debug_chat_ids = is_array($adminIds) ? $adminIds : [$adminIds];
+        $this->debug_chat_ids = is_array($ids) ? $ids : [$ids];
 
         return $this;
     }
@@ -96,7 +96,7 @@ trait ErrorHandler
      *
      * @see https://zenithgram.github.io/classes/errorhandler#setHandler
      */
-    public function setHandler(callable $handler)
+    public function setHandler(callable $handler): self
     {
         $this->handler = $handler(...);
 

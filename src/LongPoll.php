@@ -42,6 +42,16 @@ class LongPoll
         return $this;
     }
 
+    /**
+     * Активирует дебаг режим
+     *
+     * Чтобы он работал, нужно задать обработчик, либо перечислить id, куда
+     * будет отправлены ошибки
+     *
+     * @return LongPoll
+     *
+     * @see https://zenithgram.github.io/classes/errorhandler#enableDebug
+     */
     public function enableDebug(): self
     {
         $this->debug = true;
@@ -49,20 +59,48 @@ class LongPoll
         return $this;
     }
 
-    public function setSendIds(int|array $adminIds): self
+    /**
+     * Устанавливает ID, куда будут отправлены возникшие ошибки
+     *
+     * @param int|string|array $ids ID пользователя или чата
+     *
+     * @return LongPoll
+     *
+     * @see https://zenithgram.github.io/classes/errorhandler#setSendIds
+     */
+    public function setSendIds(int|string|array $ids): self
     {
-        $this->debug_chat_ids = is_array($adminIds) ? $adminIds : [$adminIds];
+        $this->debug_chat_ids = is_array($ids) ? $ids : [$ids];
 
         return $this;
     }
 
-    public function setHandler(callable $handler)
+    /**
+     * Устанавливает обработчик, который срабатывает при возникновении ошибки
+     *
+     * @param callable $handler Обработчик. Пример: function (ZG $tg, Throwable
+     *                          $e)
+     *
+     * @return LongPoll
+     *
+     * @see https://zenithgram.github.io/classes/errorhandler#setHandler
+     */
+    public function setHandler(callable $handler): self
     {
         $this->handler = $handler(...);
 
         return $this;
     }
 
+    /**
+     * Отображать полный трейт или сокращенный
+     *
+     * @param bool $short
+     *
+     * @return LongPoll
+     *
+     * @see https://zenithgram.github.io/classes/errorhandler#shortTrace
+     */
     public function shortTrace(bool $short = true): self
     {
         $this->shortTrace = $short;
@@ -70,6 +108,15 @@ class LongPoll
         return $this;
     }
 
+    /**
+     * Устанавливает фильтр на путь к файлу, чтобы не отображать его
+     *
+     * @param string $filter "/path/to/your/project"
+     *
+     * @return LongPoll
+     *
+     * @see https://zenithgram.github.io/classes/errorhandler#setTracePathFilter
+     */
     public function setTracePathFilter(string $filter): self
     {
         $this->pathFiler = $filter;
