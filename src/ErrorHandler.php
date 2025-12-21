@@ -291,7 +291,7 @@ trait ErrorHandler
         foreach ($e->getTrace() as $item) {
             if ($this->short_trace
                 && str_contains(
-                    $item['file'] ?? '', '/vendor/',
+                    $item['file'] ?? '', 'vendor\\',
                 )
             ) {
                 continue;
