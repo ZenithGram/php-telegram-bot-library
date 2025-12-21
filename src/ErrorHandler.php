@@ -191,6 +191,20 @@ trait ErrorHandler
             $html .= "<pre>{$message_chunk[0]}</pre>";
             unset($message_chunk[0]);
 
+            $chunks = array_chunk($message_chunk, 2);
+
+            $mergedArray = [];
+            foreach ($chunks as $chunk) {
+                // Если часть состоит из 2 элементов, объединяем их
+                if (count($chunk) == 2) {
+                    $mergedArray[] = $chunk[0] . ' ' . $chunk[1];
+                } else {
+                    // Иначе, добавляем оставшийся элемент
+                    $mergedArray[] = $chunk[0];
+                }
+            }
+
+
         } else {
             $html .= "<pre>{$trace}</pre>";
         }
@@ -198,9 +212,12 @@ trait ErrorHandler
         foreach ($this->debug_chat_ids as $chatId) {
             try {
                 $this->api->callAPI('sendMessage', ['chat_id' => $chatId, 'text' => $html, 'parse_mode' => 'HTML']);
-                    foreach ($message_chunk as $message) {
+                if (!empty($mergedArray)) {
+
+                    foreach ($mergedArray as $message) {
                         $this->api->callAPI('sendMessage', ['chat_id' => $chatId, 'text' => "<pre>" . $message . "</pre>", 'parse_mode' => 'HTML']);
                     }
+                }
             } catch (Throwable $t) { fwrite(STDERR, "Log send fail: " . $t->getMessage()); }
         }
     }
