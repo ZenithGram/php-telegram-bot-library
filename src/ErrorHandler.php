@@ -213,7 +213,6 @@ trait ErrorHandler
             if ($this->short_trace && str_contains($item['file'] ?? '', '/vendor/')) continue;
             $file = isset($item['file']) ? $this->cleanPath($item['file']) : '[internal]';
             $trace .= "#$i $file(" . ($item['line'] ?? '?') . "): " . ($item['class'] ?? '') . ($item['type'] ?? '') . $item['function'] . "()\n";
-            if (++$i > 10) { $trace .= "..."; break; }
         }
         return htmlspecialchars($trace);
     }
