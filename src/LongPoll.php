@@ -42,7 +42,7 @@ class LongPoll
         return $this;
     }
 
-    public function enableDebug(int|array $adminIds): self
+    public function enableDebug(): self
     {
         $this->debug = true;
 
