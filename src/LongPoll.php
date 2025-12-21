@@ -20,6 +20,9 @@ class LongPoll
     private array|null $debugChatIds = null;
     private bool $shortTrace = false;
     private string $pathFiler = '';
+    private array|null $debug_chat_ids = null;
+    private bool $debug = false;
+    private Closure|null $handler = null;
 
     public function __construct(ApiClient $api, int $timeout = 20)
     {
@@ -41,7 +44,21 @@ class LongPoll
 
     public function enableDebug(int|array $adminIds): self
     {
-        $this->debugChatIds = is_array($adminIds) ? $adminIds : [$adminIds];
+        $this->debug = true;
+
+        return $this;
+    }
+
+    public function setSendIds(int|array $adminIds): self
+    {
+        $this->debug_chat_ids = is_array($adminIds) ? $adminIds : [$adminIds];
+
+        return $this;
+    }
+
+    public function setHandler(callable $handler)
+    {
+        $this->handler = $handler(...);
 
         return $this;
     }
@@ -150,11 +167,17 @@ class LongPoll
         // Это предотвращает состояние гонки (Race Condition), когда
         // данные одного юзера перезаписывают данные другого.
         $tgInstance = new ZG($this->api, $context);
-        if ($this->debugChatIds) {
+        if ($this->debug) {
             $tgInstance
-                ->enableDebug($this->debugChatIds)
+                ->enableDebug()
                 ->shortTrace($this->shortTrace)
                 ->setTracePathFilter($this->pathFiler);
+            if ($this->handler !== null) {
+                $tgInstance->setHandler($this->handler);
+            }
+            if ($this->debug_chat_ids !== null) {
+                $tgInstance->setSendIds($this->debug_chat_ids);
+            }
         }
         // Запускаем пользовательскую логику
         try {

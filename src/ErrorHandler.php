@@ -9,7 +9,7 @@ use ZenithGram\ZenithGram\Utils\EnvironmentDetector;
 
 trait ErrorHandler
 {
-    private Closure $handler;
+    private Closure|null $handler = null;
     private array|null $debug_chat_ids = null;
     private bool $short_trace = true;
     private string $pathFiler = '';
