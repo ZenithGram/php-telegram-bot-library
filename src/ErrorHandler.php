@@ -302,14 +302,40 @@ trait ErrorHandler
                 continue;
             }
 
-            $item['file'] = $item['file'] ?? '';
-            $file = $this->pathFiler !== '' ? $this->filteredFile($item['file'])
-                : $item['file'];
+            $fileRaw = $item['file'] ?? null;
+            if ($fileRaw === null) {
+                $file = '[internal]'; // Вместо '?'
+                $lineStr = '';        // У внутренних функций нет строки
+            } else {
+                // Фильтруем путь, если задан фильтр
+                $file = $this->pathFiler !== '' ? $this->filteredFile($fileRaw) : $fileRaw;
+                $lineStr = "(" . ($item['line'] ?? '?') . ")";
+            }
 
-            $trace .= "#".$i.' '.$file." (".($item['line'] ?? '?')."): "
-                .($item['class']
-                    ?? '').($item['type'] ?? '').$item['function']."()\n";
+            // Сборка имени класса и метода
+            $class = $item['class'] ?? '';
+            $type = $item['type'] ?? '';
+            $function = $item['function'];
+
+            // Красивое форматирование для замыканий (Closure)
+            // Превращает {closure:Revolt...:565} в просто {closure}
+            if (str_contains($function, '{closure')) {
+                $function = '{closure}';
+            }
+
+            // Формируем строку: #0 [internal]: Class->Method()
+            // ИЛИ #0 file.php(10): Class->Method()
+            $separator = $lineStr ? " " : ": "; // Если нет строки, ставим двоеточие красивее
+
+            $trace .= "#" . $i . ' ' . $file . $lineStr . $separator
+                . $class . $type . $function . "()\n";
+
             $i++;
+        }
+
+        // Если трейс получился пустым (всё отфильтровалось), добавляем заглушку
+        if (empty($trace) && $this->short_trace) {
+            $trace = "All stack frames were inside /vendor/ (Internal framework error). \nSet ->shortTrace(false) to see full details.";
         }
 
         return ['html' => htmlspecialchars($trace), 'cli' => $trace];
@@ -322,8 +348,21 @@ trait ErrorHandler
         }
 
         $file = $item['file'] ?? '';
+        $class = $item['class'] ?? '';
 
-        return stripos($file, 'vendor\\') !== false;
+        if ($file !== '' && (stripos($file, 'vendor/') !== false || stripos($file, 'vendor\\') !== false)) {
+            return true;
+        }
+
+        if (str_starts_with($class, 'Revolt\\') || str_starts_with($class, 'Amp\\') || str_contains($class, 'Fiber')) {
+            return true;
+        }
+
+        if (str_ends_with($class, 'ErrorHandler')) {
+            return true;
+        }
+
+        return false;
     }
 
     private function filteredFile(string|null $file): string
