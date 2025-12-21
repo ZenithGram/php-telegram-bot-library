@@ -354,7 +354,7 @@ trait ErrorHandler
             return true;
         }
 
-        if (str_starts_with($class, 'Revolt\\') || str_starts_with($class, 'Amp\\') || str_contains($class, 'Fiber')) {
+        if (str_starts_with($class, 'Revolt\\') || str_starts_with($class, 'ZenithGram\ZenithGram\\') || str_starts_with($class, 'Amp\\') || str_contains($class, 'Fiber')) {
             return true;
         }
 
