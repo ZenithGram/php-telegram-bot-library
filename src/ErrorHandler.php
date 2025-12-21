@@ -213,9 +213,9 @@ trait ErrorHandler
         $esc = fn($s) => htmlspecialchars($s, ENT_QUOTES | ENT_SUBSTITUTE);
 
         $locationInfo
-            = "<u>File:</u> <code>{$esc($userFile)}:{$userLine}</code>\n";
+            = "<u>File:</u> <code>" . $this->filteredFile($esc($userFile)) . ":{$userLine}</code>\n";
         if ($userFile !== $realFile) {
-            $locationInfo .= "<i>(Inside: {$esc($realFile)}:{$realLine})</i>\n";
+            $locationInfo .= "<i>(Inside:" . $this->filteredFile($esc($realFile)) . ":{$realLine})</i>\n";
         }
 
         $codeBlock = "";
@@ -240,11 +240,9 @@ trait ErrorHandler
 
             $mergedArray = [];
             foreach ($chunks as $chunk) {
-                // Если часть состоит из 2 элементов, объединяем их
-                if (count($chunk) == 2) {
+                if (count($chunk) === 2) {
                     $mergedArray[] = $chunk[0].' '.$chunk[1];
                 } else {
-                    // Иначе, добавляем оставшийся элемент
                     $mergedArray[] = $chunk[0];
                 }
             }
@@ -304,28 +302,23 @@ trait ErrorHandler
 
             $fileRaw = $item['file'] ?? null;
             if ($fileRaw === null) {
-                $file = '[internal]'; // Вместо '?'
-                $lineStr = '';        // У внутренних функций нет строки
+                $file = '[internal]';
+                $lineStr = '';
             } else {
                 // Фильтруем путь, если задан фильтр
                 $file = $this->pathFiler !== '' ? $this->filteredFile($fileRaw) : $fileRaw;
                 $lineStr = "(" . ($item['line'] ?? '?') . ")";
             }
 
-            // Сборка имени класса и метода
             $class = $item['class'] ?? '';
             $type = $item['type'] ?? '';
             $function = $item['function'];
 
-            // Красивое форматирование для замыканий (Closure)
-            // Превращает {closure:Revolt...:565} в просто {closure}
             if (str_contains($function, '{closure')) {
                 $function = '{closure}';
             }
 
-            // Формируем строку: #0 [internal]: Class->Method()
-            // ИЛИ #0 file.php(10): Class->Method()
-            $separator = $lineStr ? " " : ": "; // Если нет строки, ставим двоеточие красивее
+            $separator = $lineStr ? " " : ": ";
 
             $trace .= "#" . $i . ' ' . $file . $lineStr . $separator
                 . $class . $type . $function . "()\n";
