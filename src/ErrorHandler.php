@@ -10,11 +10,19 @@ trait ErrorHandler
 {
     private array|null $debug_chat_ids = null;
     private bool $short_trace = true;
+    private string $pathFiler = '';
     private bool $isAlreadyExiting = false;
 
-    public function shortTrace($short_trace)
+    public function shortTrace(bool $short_trace)
     {
         $this->short_trace = $short_trace;
+
+        return $this;
+    }
+
+    public function setTracePathFilter(string $filter)
+    {
+        $this->pathFiler = $filter;
 
         return $this;
     }
@@ -255,10 +263,10 @@ trait ErrorHandler
                 if (!empty($mergedArray)) {
                     foreach ($mergedArray as $message) {
                         $this->api->callAPI(
-                            'sendMessage', ['chat_id'                   => $chatId,
-                                            'text'                      => "<pre>"
+                            'sendMessage', ['chat_id'    => $chatId,
+                                            'text'       => "<pre>"
                                                 .$message."</pre>",
-                                            'parse_mode'                => 'HTML'],
+                                            'parse_mode' => 'HTML'],
                         );
                     }
                 }
@@ -289,16 +297,25 @@ trait ErrorHandler
         $trace = "";
         $i = 0;
         foreach ($e->getTrace() as $item) {
-            $trace .= "#" . $i . ' ' . ($item['file'] ?? 'что блять') . " (" . ($item['line'] ?? '?') . "): " . ($item['class']
-                    ?? '') . ($item['type'] ?? '') . $item['function'] . "()\n";
+            $file = $this->pathFiler !== '' ? $this->filteredFile($item['file'])
+                : $item['file'];
+
+            $trace .= "#".$i.' '.$file." (".($item['line'] ?? '?')."): "
+                .($item['class']
+                    ?? '').($item['type'] ?? '').$item['function']."()\n";
             $i++;
         }
 
         return ['html' => htmlspecialchars($trace), 'cli' => $trace];
     }
 
-    private function cleanPath(string $path): string
+    private function filteredFile(string|null $file): string
     {
-        return str_replace(getcwd().DIRECTORY_SEPARATOR, '', $path);
+        if ($file === null) {
+            return '?';
+        }
+
+        return str_replace($this->pathFiler, '...', $file);
     }
+
 }
