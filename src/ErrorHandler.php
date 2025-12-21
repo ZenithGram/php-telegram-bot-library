@@ -297,6 +297,11 @@ trait ErrorHandler
         $trace = "";
         $i = 0;
         foreach ($e->getTrace() as $item) {
+
+            if ($this->checkTraceForCleaning($item) === true) {
+                continue;
+            }
+
             $item['file'] = $item['file'] ?? '';
             $file = $this->pathFiler !== '' ? $this->filteredFile($item['file'])
                 : $item['file'];
@@ -308,6 +313,17 @@ trait ErrorHandler
         }
 
         return ['html' => htmlspecialchars($trace), 'cli' => $trace];
+    }
+
+    private function checkTraceForCleaning(array $item): bool
+    {
+        if ($this->short_trace === false) {
+            return false;
+        }
+
+        $file = $item['file'] ?? '';
+
+        return stripos($file, 'vendor\\') !== false;
     }
 
     private function filteredFile(string|null $file): string
