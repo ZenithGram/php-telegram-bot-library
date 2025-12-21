@@ -297,6 +297,7 @@ trait ErrorHandler
         $trace = "";
         $i = 0;
         foreach ($e->getTrace() as $item) {
+            $item['file'] = $item['file'] ?? '';
             $file = $this->pathFiler !== '' ? $this->filteredFile($item['file'])
                 : $item['file'];
 
