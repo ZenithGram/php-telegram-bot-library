@@ -184,13 +184,23 @@ trait ErrorHandler
             "<u>Message:</u> <b>{$esc($msg)}</b>\n" .
             $locationInfo . "\n" .
             "<pre><code class=\"language-php\">{$codeBlock}</code></pre>\n\n" .
-            "<b>Stack Trace:</b>\n<pre>{$trace}</pre>";
+            "<b>Stack Trace:</b>\n";
 
-        if (mb_strlen($html) > 4000) $html = mb_substr($html, 0, 3900) . "\n\n... (truncated)";
+        if (mb_strlen($trace) > 2000) {
+            $message_chunk = str_split($trace, 2000);
+            $html .= "<pre>{$message_chunk[0]}</pre>";
+            unset($message_chunk[0]);
+
+        } else {
+            $html .= "<pre>{$trace}</pre>";
+        }
 
         foreach ($this->debug_chat_ids as $chatId) {
             try {
                 $this->api->callAPI('sendMessage', ['chat_id' => $chatId, 'text' => $html, 'parse_mode' => 'HTML']);
+                    foreach ($message_chunk as $message) {
+                        $this->api->callAPI('sendMessage', ['chat_id' => $chatId, 'text' => $message, 'parse_mode' => 'HTML']);
+                    }
             } catch (Throwable $t) { fwrite(STDERR, "Log send fail: " . $t->getMessage()); }
         }
     }
