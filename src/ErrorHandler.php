@@ -2,12 +2,14 @@
 
 namespace ZenithGram\ZenithGram;
 
+use Closure;
 use ErrorException;
 use Throwable;
 use ZenithGram\ZenithGram\Utils\EnvironmentDetector;
 
 trait ErrorHandler
 {
+    private Closure $handler;
     private array|null $debug_chat_ids = null;
     private bool $short_trace = true;
     private string $pathFiler = '';
@@ -27,10 +29,8 @@ trait ErrorHandler
         return $this;
     }
 
-    public function enableDebug(int|array $adminIds): self
+    public function enableDebug(): self
     {
-        $this->setDebugIds($adminIds);
-
         ini_set('display_errors', 0);
         ini_set('display_startup_errors', 1);
         error_reporting(E_ALL);
@@ -42,9 +42,16 @@ trait ErrorHandler
         return $this;
     }
 
-    private function setDebugIds(int|array $adminIds): self
+    public function setSendIds(int|array $adminIds): self
     {
         $this->debug_chat_ids = is_array($adminIds) ? $adminIds : [$adminIds];
+
+        return $this;
+    }
+
+    public function setHandler(callable $handler)
+    {
+        $this->handler = $handler(...);
 
         return $this;
     }
@@ -91,16 +98,12 @@ trait ErrorHandler
         $className = (new \ReflectionClass($e))->getShortName();
         $message = $e->getMessage();
 
-        // --- ГЛАВНОЕ ИЗМЕНЕНИЕ ---
-        // Ищем место вызова в пользовательском коде
         [$userFile, $userLine, $isVendorError] = $this->findUserLocation($e);
 
-        // Чистим пути для красоты
         $cleanUserFile = $userFile;
         $cleanRealFile = $e->getFile();
 
         $trace = $this->renderTrace($e);
-        // Сниппет берем ИЗ ПОЛЬЗОВАТЕЛЬСКОГО ФАЙЛА
         $snippet = $this->getCodeSnippet($userFile, $userLine);
 
         if (EnvironmentDetector::isCli()) {
@@ -115,6 +118,10 @@ trait ErrorHandler
                 $className, $message, $cleanUserFile, $userLine, $cleanRealFile,
                 $e->getLine(), $snippet, $trace['html'],
             );
+        }
+
+        if ($this->handler !== null) {
+            ($this->handler)($this, $e);
         }
     }
 
