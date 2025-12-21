@@ -81,7 +81,7 @@ trait ErrorHandler
         }
 
         if ($this->debug_chat_ids) {
-            $this->sendTelegramError($className, $message, $cleanUserFile, $userLine, $cleanRealFile, $e->getLine(), $snippet, $trace);
+            $this->sendTelegramError($className, $message, $cleanUserFile, $userLine, $cleanRealFile, $e->getLine(), $snippet, $e->getTraceAsString());
         }
     }
 
