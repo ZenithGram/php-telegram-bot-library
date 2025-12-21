@@ -15,20 +15,48 @@ trait ErrorHandler
     private string $pathFiler = '';
     private bool $isAlreadyExiting = false;
 
-    public function shortTrace(bool $short_trace)
+    /**
+     * Отображать полный трейт или сокращенный
+     *
+     * @param bool $short_trace
+     *
+     * @return ZG
+     *
+     * @see https://zenithgram.github.io/classes/errorhandler#shortTrace
+     */
+    public function shortTrace(bool $short_trace): self
     {
         $this->short_trace = $short_trace;
 
         return $this;
     }
 
-    public function setTracePathFilter(string $filter)
+    /**
+     * Устанавливает фильтр на путь к файлу, чтобы не отображать его
+     *
+     * @param string $filter "/path/to/your/project"
+     *
+     * @return ZG
+     *
+     * @see https://zenithgram.github.io/classes/errorhandler#setTracePathFilter
+     */
+    public function setTracePathFilter(string $filter): self
     {
         $this->pathFiler = $filter;
 
         return $this;
     }
 
+    /**
+     * Активирует дебаг режим
+     *
+     * Чтобы он работал, нужно задать обработчик, либо перечислить id, куда
+     * будет отправлены ошибки
+     *
+     * @return ZG
+     *
+     * @see https://zenithgram.github.io/classes/errorhandler#enableDebug
+     */
     public function enableDebug(): self
     {
         ini_set('display_errors', 0);
@@ -42,6 +70,15 @@ trait ErrorHandler
         return $this;
     }
 
+    /**
+     * Устанавливает ID, куда будут отправлены возникшие ошибки
+     *
+     * @param int|array $adminIds ID пользователя или чата
+     *
+     * @return ZG
+     *
+     * @see https://zenithgram.github.io/classes/errorhandler#setSendIds
+     */
     public function setSendIds(int|array $adminIds): self
     {
         $this->debug_chat_ids = is_array($adminIds) ? $adminIds : [$adminIds];
@@ -49,6 +86,16 @@ trait ErrorHandler
         return $this;
     }
 
+    /**
+     * Устанавливает обработчик, который срабатывает при возникновении ошибки
+     *
+     * @param callable $handler Обработчик. Пример: function (ZG $tg, Throwable
+     *                          $e)
+     *
+     * @return ZG
+     *
+     * @see https://zenithgram.github.io/classes/errorhandler#setHandler
+     */
     public function setHandler(callable $handler)
     {
         $this->handler = $handler(...);
@@ -56,7 +103,7 @@ trait ErrorHandler
         return $this;
     }
 
-    public function handleError(int $severity, string $message, string $file,
+    private function handleError(int $severity, string $message, string $file,
         int $line,
     ): bool {
         if (!(error_reporting() & $severity)) {
@@ -65,7 +112,7 @@ trait ErrorHandler
         throw new ErrorException($message, 0, $severity, $file, $line);
     }
 
-    public function handleShutdown(): void
+    private function handleShutdown(): void
     {
         if ($this->isAlreadyExiting) {
             return;
@@ -86,14 +133,14 @@ trait ErrorHandler
         }
     }
 
-    public function handleExceptionFatal(Throwable $e): void
+    private function handleExceptionFatal(Throwable $e): void
     {
         $this->isAlreadyExiting = true;
         $this->reportException($e);
         exit(1);
     }
 
-    public function reportException(Throwable $e): void
+    private function reportException(Throwable $e): void
     {
         $className = (new \ReflectionClass($e))->getShortName();
         $message = $e->getMessage();
@@ -125,28 +172,21 @@ trait ErrorHandler
         }
     }
 
-    /**
-     * Ищет первый файл в трейсе, который НЕ находится в папке vendor.
-     * Возвращает [файл, строка, ошибка_ли_в_вендоре]
-     */
     private function findUserLocation(Throwable $e): array
     {
         $realFile = $e->getFile();
         $realLine = $e->getLine();
 
-        // Если сама ошибка произошла НЕ в vendor, возвращаем её как есть
         if (!$this->isVendorPath($realFile)) {
             return [$realFile, $realLine, false];
         }
 
-        // Если ошибка внутри vendor, ищем, кто её вызвал из нашего кода
         foreach ($e->getTrace() as $frame) {
             if (isset($frame['file']) && !$this->isVendorPath($frame['file'])) {
                 return [$frame['file'], $frame['line'], true];
             }
         }
 
-        // Если не нашли (например, ошибка глубоко в vendor и вызвана фреймворком), возвращаем оригинал
         return [$realFile, $realLine, true];
     }
 
@@ -163,46 +203,34 @@ trait ErrorHandler
         int $userLine, string $realFile, int $realLine, array $snippet,
         string $fullTrace,
     ): void {
-        // ЦВЕТОВАЯ ПАЛИТРА
         $reset = "\033[0m";
-        // Красный фон + Жирный белый текст (максимальный контраст)
         $bgRed = "\033[41;1;37m";
-        // Ярко-желтый
         $yellow = "\033[1;33m";
-        // Голубой
         $cyan = "\033[36m";
-        // Темно-серый (для неактивного кода)
         $gray = "\033[90m";
-        // Жирный белый (для текста ошибки)
         $boldWhite = "\033[1;37m";
 
         echo PHP_EOL;
-        // Заголовок ошибки: Красный фон с белым текстом
+
         echo " $bgRed$type $reset$boldWhite$msg$reset".PHP_EOL;
 
-        // Файл и строка
         echo " $cyan$userFile:$userLine$reset".PHP_EOL;
 
-        // Если ошибка реально произошла в библиотеке
         if ($userFile !== $realFile) {
             echo " $gray(Inside: $realFile:$realLine)$reset".PHP_EOL;
         }
 
         echo PHP_EOL;
 
-        // Вывод кода
         foreach ($snippet as $num => $codeLine) {
-            // Убираем переносы строк из самого кода
             $cleanCode = str_replace(["\r", "\n"], '', $codeLine);
 
             if ($num === $userLine) {
-                // АКТИВНАЯ СТРОКА: Красный фон, жирный белый текст
                 echo sprintf(
                         " %s > %s %s %-80s %s", $bgRed, $num, $reset,
                         $cleanCode, $reset,
                     ).PHP_EOL;
             } else {
-                // ОБЫЧНАЯ СТРОКА: Серый номер, обычный код
                 echo sprintf(" $gray   %s %s %s", $num, $reset, $cleanCode)
                     .PHP_EOL;
             }
@@ -220,9 +248,12 @@ trait ErrorHandler
         $esc = fn($s) => htmlspecialchars($s, ENT_QUOTES | ENT_SUBSTITUTE);
 
         $locationInfo
-            = "<u>File:</u> <code>" . $this->filteredFile($esc($userFile)) . ":{$userLine}</code>\n";
+            = "<u>File:</u> <code>".$this->filteredFile($esc($userFile))
+            .":{$userLine}</code>\n";
         if ($userFile !== $realFile) {
-            $locationInfo .= "<i><u>Inside:</u><code>" . $this->filteredFile($esc($realFile)) . ":{$realLine}</code></i>\n";
+            $locationInfo .= "<i><u>Inside:</u><code>".$this->filteredFile(
+                    $esc($realFile),
+                ).":{$realLine}</code></i>\n";
         }
 
         $codeBlock = "";
@@ -233,13 +264,15 @@ trait ErrorHandler
         }
 
         $token = $this->api->getToken();
-        $first_chars_token = substr($token, 0, 3) . '...';
+        $first_chars_token = substr($token, 0, 3).'...';
 
 
         $html = "<b>🔥 Fatal Error: {$esc($type)}</b>\n\n".
             "<u>Message:</u> <b>{$esc($msg)}</b>\n".
             $locationInfo."\n".
-            "<pre><code class=\"language-php\">" . str_replace($token, $first_chars_token, $codeBlock) . "</code></pre>\n\n".
+            "<pre><code class=\"language-php\">".str_replace(
+                $token, $first_chars_token, $codeBlock,
+            )."</code></pre>\n\n".
             "<b>Stack Trace:</b>\n";
 
         if (mb_strlen($trace) > 2000) {
@@ -306,7 +339,6 @@ trait ErrorHandler
         $trace = "";
         $i = 0;
         foreach ($e->getTrace() as $item) {
-
             if ($this->checkTraceForCleaning($item) === true) {
                 continue;
             }
@@ -316,9 +348,9 @@ trait ErrorHandler
                 $file = '[internal]';
                 $lineStr = '';
             } else {
-                // Фильтруем путь, если задан фильтр
-                $file = $this->pathFiler !== '' ? $this->filteredFile($fileRaw) : $fileRaw;
-                $lineStr = "(" . ($item['line'] ?? '?') . ")";
+                $file = $this->pathFiler !== '' ? $this->filteredFile($fileRaw)
+                    : $fileRaw;
+                $lineStr = "(".($item['line'] ?? '?').")";
             }
 
             $class = $item['class'] ?? '';
@@ -331,15 +363,15 @@ trait ErrorHandler
 
             $separator = $lineStr ? " " : ": ";
 
-            $trace .= "#" . $i . ' ' . $file . $lineStr . $separator
-                . $class . $type . $function . "()\n";
+            $trace .= "#".$i.' '.$file.$lineStr.$separator
+                .$class.$type.$function."()\n";
 
             $i++;
         }
 
-        // Если трейс получился пустым (всё отфильтровалось), добавляем заглушку
         if (empty($trace) && $this->short_trace) {
-            $trace = "All stack frames were inside /vendor/ (Internal framework error). \nSet ->shortTrace(false) to see full details.";
+            $trace
+                = "All stack frames were inside /vendor/ (Internal framework error). \nSet ->shortTrace(false) to see full details.";
         }
 
         return ['html' => htmlspecialchars($trace), 'cli' => $trace];
@@ -354,11 +386,23 @@ trait ErrorHandler
         $file = $item['file'] ?? '';
         $class = $item['class'] ?? '';
 
-        if ($file !== '' && (stripos($file, 'vendor/') !== false || stripos($file, 'vendor\\') !== false)) {
+        if ($file !== ''
+            && (stripos($file, 'vendor/') !== false
+                || stripos(
+                    $file, 'vendor\\',
+                ) !== false)
+        ) {
             return true;
         }
 
-        if (str_starts_with($class, 'Revolt\\')  || (str_starts_with($class, 'ZenithGram\ZenithGram\\') && $file === '') || str_starts_with($class, 'Amp\\') || str_contains($class, 'Fiber')) {
+        if (str_starts_with($class, 'Revolt\\')
+            || (str_starts_with(
+                    $class, 'ZenithGram\ZenithGram\\',
+                )
+                && $file === '')
+            || str_starts_with($class, 'Amp\\')
+            || str_contains($class, 'Fiber')
+        ) {
             return true;
         }
 
