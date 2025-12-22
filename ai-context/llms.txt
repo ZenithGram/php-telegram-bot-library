@@ -83,30 +83,12 @@
 
 #### Action
 
-- [func](https://zenithgram.github.io/classes/actionMethods/func.md): Выполняет пользовательскую функцию-обработчик.
+- [MessageBuilder](https://zenithgram.github.io/classes/actionMethods/messageBuilder.md): Стек методов, собирающих сообщение с fluent-interface
 - [access](https://zenithgram.github.io/classes/actionMethods/access.md): Ограничивает доступ к маршруту по ID пользователя (белый список).
 - [noAccess](https://zenithgram.github.io/classes/actionMethods/noAccess.md): Запрещает доступ к маршруту по ID пользователя (черный список).
 - [middleware](https://zenithgram.github.io/classes/actionMethods/middleware.md): Регистрирует Middleware для конкретного маршрута.
 - [redirect](https://zenithgram.github.io/classes/actionMethods/redirect.md): Перенаправляет на другой маршрут (например, 'Назад').
-- [text](https://zenithgram.github.io/classes/actionMethods/text.md): Отправляет текстовое сообщение в ответ на событие.
-- [parseMode](https://zenithgram.github.io/classes/actionMethods/parseMode.md): Устанавливает режим разметки для ответа.
 - [query](https://zenithgram.github.io/classes/actionMethods/query.md): Показывает всплывающее уведомление (alert) на callback-запрос.
-- [img](https://zenithgram.github.io/classes/actionMethods/img.md): Прикрепляет изображение к ответу.
-- [video](https://zenithgram.github.io/classes/actionMethods/video.md): Прикрепляет видео к ответу.
-- [audio](https://zenithgram.github.io/classes/actionMethods/audio.md): Прикрепляет аудио к ответу.
-- [voice](https://zenithgram.github.io/classes/actionMethods/voice.md): Отправляет голосовое сообщение.
-- [doc](https://zenithgram.github.io/classes/actionMethods/doc.md): Прикрепляет документ к ответу.
-- [gif](https://zenithgram.github.io/classes/actionMethods/gif.md): Прикрепляет GIF к ответу.
-- [sticker](https://zenithgram.github.io/classes/actionMethods/sticker.md): Отправляет стикер.
-- [dice](https://zenithgram.github.io/classes/actionMethods/dice.md): Отправляет анимированный эмодзи.
-- [kbd](https://zenithgram.github.io/classes/actionMethods/kbd.md): Добавляет Reply-клавиатуру к сообщению.
-- [inlineKbd](https://zenithgram.github.io/classes/actionMethods/inlineKbd.md): Добавляет Inline-клавиатуру к сообщению.
-- [removeKbd](https://zenithgram.github.io/classes/actionMethods/removeKbd.md): Удаляет Reply-клавиатуру у пользователя.
-- [forceReply](https://zenithgram.github.io/classes/actionMethods/forceReply.md): Открывает интерфейс ответа.
-- [reply](https://zenithgram.github.io/classes/actionMethods/reply.md): Делает сообщение ответом (reply) на входящее.
-- [params](https://zenithgram.github.io/classes/actionMethods/params.md): Добавляет дополнительные параметры API к запросу.
-- [editText](https://zenithgram.github.io/classes/actionMethods/editText.md): Редактирует текст исходного сообщения (для callback).
-- [editCaption](https://zenithgram.github.io/classes/actionMethods/editCaption.md): Редактирует подпись к медиа (для callback).
 
 #### Message
 
