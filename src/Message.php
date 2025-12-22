@@ -89,8 +89,7 @@ final class Message
     }
 
     public function editText(string|int|null $message_id = null, string|int|null $chat_id = null): array
-    {
-        $params = $this->getIdentifier($message_id, $chat_id);
+    {        $params = $this->getIdentifier($message_id, $chat_id);
 
         if ($this->reply_markup_raw !== []) {
             $this->buildReplyMarkup();
@@ -99,7 +98,26 @@ final class Message
         $commonParams = array_merge($params, $this->additionally_params);
         $commonParams += $this->messageData;
 
+
         return $this->api->callAPI('editMessageText', $commonParams);
+    }
+
+    public function editCaption(string|int|null $message_id = null, string|int|null $chat_id = null): array
+    {
+        $params = $this->getIdentifier($message_id, $chat_id);
+
+        if ($this->reply_markup_raw !== []) {
+            $this->buildReplyMarkup();
+        }
+
+        $this->messageData['caption'] = $this->messageData['text'];
+        $this->messageData['caption_entities'] = $this->messageData['entities'];
+        unset($this->messageData['text'], $this->messageData['entities']);
+
+        $commonParams = array_merge($params, $this->additionally_params);
+        $commonParams += $this->messageData;
+
+        return $this->api->callAPI('editMessageCaption', $commonParams);
     }
 
     private function getIdentifier(string|int|null $message_id, string|int|null $chat_id,
