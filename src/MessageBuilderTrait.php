@@ -8,21 +8,23 @@ use function Amp\File\exists;
 
 trait MessageBuilderTrait
 {
-
     protected array $mediaQueue = [];
     protected bool $sendDice = false;
     protected bool $sendSticker = false;
+    protected string $mediaPreviewUrl = '';
     protected array $messageData
         = [
             'text'                => '',
             'reply_markup'        => '',
-            'reply_markup_raw'    => [],
-            'params'              => [],
-            'parseMode'           => MessageParseMode::None,
+            'parse_mode'          => MessageParseMode::None->value,
             'reply_to_message_id' => '',
+            'entities'            => '',
             'emoji'               => '',
-
+            'sticker'             => '',
         ];
+
+    protected array $reply_markup_raw = [];
+    protected array $additionally_params = [];
 
     /**
      * Задает текст сообщения, которое будет отправлено в ответ
@@ -51,8 +53,8 @@ trait MessageBuilderTrait
      */
     public function params(array $params): self
     {
-        $this->messageData['params'] = array_merge(
-            $this->messageData['params'], $params,
+        $this->additionally_params = array_merge(
+            $this->additionally_params, $params,
         );
 
         return $this;
@@ -69,7 +71,7 @@ trait MessageBuilderTrait
      */
     public function parseMode(MessageParseMode $parseMode): self
     {
-        $this->messageData['parseMode'] = $parseMode;
+        $this->messageData['parse_mode'] = $parseMode->value;
 
         return $this;
     }
@@ -137,7 +139,7 @@ trait MessageBuilderTrait
             'one_time_keyboard' => $one_time,
         ];
 
-        $this->messageData['reply_markup_raw'] = $reply_markup;
+        $this->reply_markup_raw = $reply_markup;
 
         return $this;
     }
@@ -157,7 +159,7 @@ trait MessageBuilderTrait
             'inline_keyboard' => $buttons,
         ];
 
-        $this->messageData['reply_markup_raw'] = $reply_markup;
+        $this->reply_markup_raw = $reply_markup;
 
         return $this;
     }
@@ -192,7 +194,8 @@ trait MessageBuilderTrait
      * @throws \JsonException
      * @see https://zenithgram.github.io/classes/actionMethods/forceReply
      */
-    public function forceReply(string $placeholder = '', bool $selective = false,
+    public function forceReply(string $placeholder = '',
+        bool $selective = false,
     ): self {
         $reply_markup = [
             'force_reply'             => true,
@@ -349,21 +352,21 @@ trait MessageBuilderTrait
         return $this;
     }
 
-//    /**
-//     * Добавляет превью к сообщению с помощью ссылки.
-//     *
-//     * @param string $url
-//     *
-//     * @return self
-//     *
-//     * @see https://zenithgram.github.io/classes/messageMethods/mediaPreview
-//     */
-//    public function mediaPreview(string $url): self
-//    {
-//        $this->media_preview_url = $url;
-//
-//        return $this;
-//    }
+    /**
+     * Добавляет превью к сообщению с помощью ссылки.
+     *
+     * @param string $url
+     *
+     * @return self
+     *
+     * @see https://zenithgram.github.io/classes/messageMethods/mediaPreview
+     */
+    public function mediaPreview(string $url): self
+    {
+        $this->mediaPreviewUrl = $url;
+
+        return $this;
+    }
 
     /**
      * Отправляет стикер
@@ -381,6 +384,10 @@ trait MessageBuilderTrait
 
         return $this;
     }
+
+
+    /* Вспомогательные методы */
+
 
     public function getMessageData(): array
     {
