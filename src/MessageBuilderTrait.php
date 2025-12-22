@@ -455,7 +455,7 @@ trait MessageBuilderTrait
         return $this->mediaPreviewUrl;
     }
 
-    public function setMediaPreviewUrl(array $params): self
+    public function setMediaPreviewUrl(string $params): self
     {
         $this->mediaPreviewUrl = $params;
 

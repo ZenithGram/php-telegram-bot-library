@@ -876,12 +876,11 @@ class Bot
         if ($type === 'bot_command' || $type === 'text'
             || $type === 'text_button'
         ) {
-            $messageData = $route->getMessageData();
-            if (empty($messageData)) {
+            if (empty($route->getMessageData())) {
                 return null;
             }
 
-            $this->constructMessage($messageData);
+            $this->constructMessage($route);
 
             return null;
         }
@@ -892,9 +891,7 @@ class Bot
                 $query_id, ['text' => $route->getQueryText()],
             );
 
-            $messageData = $route->getMessageData();
-
-            if (empty($messageData)) {
+            if (empty($route->getMessageData())) {
                 $callback_data = $this->context->getCallbackData();
 
                 foreach ($this->routes['callback_query'] as $route2) {
@@ -908,7 +905,7 @@ class Bot
                 return null;
             }
 
-            $this->constructMessage($messageData);
+            $this->constructMessage($route);
 
             return null;
 
@@ -921,13 +918,11 @@ class Bot
                 $query_id, ['text' => $route->getQueryText()],
             );
 
-            $messageData = $route->getMessageData();
-
-            if (empty($messageData)) {
+            if (empty($route->getMessageData())) {
                 return null;
             }
 
-            $this->constructMessage($messageData);
+            $this->constructMessage($route);
 
             return null;
 
@@ -940,121 +935,29 @@ class Bot
      * @throws \JsonException
      * @throws \Exception
      */
-    private function constructMessage($messageData): array
+    private function constructMessage(Action $action): array
     {
-        $text = $messageData['text'] ?? '';
-        $msg = new Message($text, $this->tg);
+        $msg = new Message('', $this->tg);
 
-        $methodMap = [
-            'parseMode' => 'parseMode',
-            'img'       => 'img',
-            'gif'       => 'gif',
-            'video'     => 'video',
-            'voice'     => 'voice',
-            'audio'     => 'audio',
-            'doc'       => 'doc',
-            'sticker'   => 'sticker',
-            'dice'      => 'dice',
-            'params'    => 'params',
-        ];
+        $msg->setAdditionallyParams($action->getAdditionallyParams());
+        $msg->setMediaPreviewUrl($action->getMediaPreviewUrl());
+        $msg->setMediaQueue($action->getMediaQueue());
+        $msg->setMessageData($action->getMessageData());
+        $msg->setReplyMarkupRaw($action->getReplyMarkupRaw());
+        $msg->setSendType(...$action->getSendType());
 
-        foreach ($methodMap as $dataKey => $methodName) {
-            if (isset($messageData[$dataKey])) {
-                $msg->{$methodName}($messageData[$dataKey]);
-            }
+        // 0 - send, 1 - editText, 2 - editCaption, 3 - editMedia
+        $messageAction = $action->getMessageDataAction();
+        if ($messageAction === 0) {
+            return $msg->send();
         }
-
-        if (isset($messageData['reply'])) {
-            if ($messageData['reply'] === true) {
-                $msg->reply();
-            } else {
-                $msg->reply($messageData['reply']);
-            }
-        }
-
-        if (isset($messageData['kbd'])) {
-            $msg = $this->constructKbd(
-                $msg, $messageData['kbd'], $messageData['inline'],
-                $messageData['oneTime'], $messageData['resize'],
-            );
-        }
-
-        if (isset($messageData['forceReply'])) {
-            $msg->forceReply($messageData['forceReply']['placeholder'], $messageData['forceReply']['selective']);
-        }
-
-        if (isset($messageData['remove_keyboard'])) {
-            $msg->removeKbd();
-        }
-
-        if (isset($messageData['editText'])
-            && $messageData['editText'] === true
-        ) {
+        if ($messageAction === 1) {
             return $msg->editText();
         }
-
-        if (isset($messageData['editCaption'])
-            && $messageData['editCaption'] === true
-        ) {
+        if ($messageAction === 2) {
             return $msg->editCaption();
         }
-
-        return $msg->send();
-
-    }
-
-    private function constructKbd(Message $msg, array $kbd, bool $inline,
-        bool $oneTime, bool $resize,
-    ): Message {
-        $keyboardLayout = [];
-        $definedButtons = $this->buttons['btn'];
-
-        foreach ($kbd as $row) {
-            $keyboardRow = [];
-
-            foreach ($row as $button) {
-                if (is_string($button)) {
-                    $buttonId = $button;
-                    if (isset($definedButtons[$buttonId])) {
-                        if ($inline) {
-                            $keyboardRow[] = [
-                                'text'          => $definedButtons[$buttonId],
-                                'callback_data' => $buttonId,
-                            ];
-                        } else {
-                            $keyboardRow[] = [
-                                'text' => $definedButtons[$buttonId],
-                            ];
-                        }
-                    }
-                } elseif (is_array($button)) {
-                    // ИСПРАВЛЕННАЯ ЛОГИКА
-                    if ($inline && (isset($button['callback_data']) || isset($button['url']))) {
-                        $keyboardRow[] = $button;
-                    } elseif (!$inline && isset($button['text'])) {
-                        // Разрешаем массивы для обычной клавиатуры, если есть поле text
-                        $keyboardRow[] = $button;
-                    }
-                }
-
-            }
-
-            if (!empty($keyboardRow)) {
-                $keyboardLayout[] = $keyboardRow;
-            }
-
-        }
-
-        if (!empty($keyboardLayout)) {
-            if ($inline) {
-                $msg->inlineKbd($keyboardLayout);
-            } else {
-                $msg->kbd($keyboardLayout, $oneTime, $resize);
-            }
-        }
-
-        return $msg;
-
+        return $msg->editMedia();
     }
 
     /**
@@ -1117,9 +1020,8 @@ class Bot
             return $handler($this->tg, ...$other_files);
         }
 
-        $messageData = $action->getMessageData();
-        if (!empty($messageData)) {
-            return $this->constructMessage($messageData);
+        if (!empty($action->getMessageData())) {
+            return $this->constructMessage($action);
         }
 
         return null;

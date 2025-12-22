@@ -226,7 +226,7 @@ class Action
         return $this;
     }
 
-    protected function getMessageDataAction(): int
+    public function getMessageDataAction(): int
     {
         return $this->messageDataAction;
     }
