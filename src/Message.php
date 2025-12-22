@@ -23,13 +23,16 @@ final class Message
 
     /**
      * Отправляет сообщение.
-     * Автоматически выбирает метод API (sendMessage, sendPhoto, sendMediaGroup и т.д.)
+     * Автоматически выбирает метод API (sendMessage, sendPhoto, sendMediaGroup
+     * и т.д.)
      *
      * @param int|string|null $chat_id
      *
-     * @return array Результат запроса (или последнего запроса при последовательной отправке)
+     * @return array Результат запроса (или последнего запроса при
+     *               последовательной отправке)
      *
      * @throws \JsonException
+     * @throws \Amp\Http\Client\HttpException
      * @see https://zenithgram.github.io/classes/messageMethods/send
      */
     public function send(int|string|null $chat_id = null): array
@@ -38,18 +41,14 @@ final class Message
             $this->applyMediaPreview();
         }
 
-        $chat_id = $chat_id ?? $this->context->getChatId();
-        $params = ['chat_id' => $chat_id];
+        $params = ['chat_id' => $chat_id ?: $this->context->getChatId()];
 
-        // 1. Клавиатура
         if ($this->reply_markup_raw !== []) {
             $this->buildReplyMarkup();
         }
 
-        // 2. Доп. параметры
         $commonParams = array_merge($params, $this->additionally_params);
 
-        // --- Спец. типы: Dice, Sticker ---
         if ($this->sendDice) {
             return $this->api->callAPI('sendDice', array_merge($commonParams, $this->messageData));
         }
@@ -57,44 +56,66 @@ final class Message
         if ($this->sendSticker) {
             $stickerParams = [
                 'sticker' => $this->messageData['sticker'],
-                'reply_markup' => $this->messageData['reply_markup'] ?? ''
+                'reply_markup' => $this->messageData['reply_markup'] ?? '',
             ];
             return $this->api->callAPI('sendSticker', array_merge($commonParams, $stickerParams));
         }
 
         $mediaCount = count($this->mediaQueue);
 
-        // --- Просто текст ---
         if ($mediaCount === 0) {
             return $this->api->callAPI('sendMessage', array_merge($commonParams, $this->messageData));
         }
 
-        // Подготовка данных для медиа (caption вместо text)
         $captionData = $this->messageData;
         $captionData['caption'] = $captionData['text'] ?? '';
         unset($captionData['text']);
 
-        // --- Одиночное медиа ---
         if ($mediaCount === 1) {
             return $this->sendSingleMedia($this->mediaQueue[0], $commonParams, $captionData);
         }
 
-        // --- Несколько медиа ---
-
-        // Проверяем, можно ли это отправить группой (sendMediaGroup)
         if ($this->canBeGrouped($this->mediaQueue)) {
             $mediaGroupParams = $this->buildMediaGroupParams($this->mediaQueue, $captionData);
 
-            // reply_markup не поддерживается в sendMediaGroup, но передаем params на случай reply_to_message_id
             return $this->api->callAPI('sendMediaGroup', array_merge(
                 $commonParams,
-                $mediaGroupParams
+                $mediaGroupParams,
             ));
         }
 
         throw new \LogicException( "Вы добавили несовместимые типы медиа. Пример: нельзя отправлять одновременно несколько голосовых");
 
     }
+
+    public function editText(string|int|null $message_id = null, string|int|null $chat_id = null): array
+    {
+        $params = $this->getIdentifier($message_id, $chat_id);
+
+        if ($this->reply_markup_raw !== []) {
+            $this->buildReplyMarkup();
+        }
+
+        $commonParams = array_merge($params, $this->additionally_params);
+        $commonParams += $this->messageData;
+
+        return $this->api->callAPI('editMessageText', $commonParams);
+    }
+
+    private function getIdentifier(string|int|null $message_id, string|int|null $chat_id,
+    ): array {
+        $updateData = $this->context->getUpdateData();
+
+        if (isset($updateData['callback_query']['inline_message_id'])) {
+            return ['inline_message_id' => $updateData['callback_query']['inline_message_id']];
+        }
+
+        return [
+            'chat_id'    => $chat_id ?: $this->context->getChatId(),
+            'message_id' => $message_id ?: $this->context->getMessageId(),
+        ];
+    }
+
 
     /**
      * Отправляет один медиа-файл соответствующим методом
