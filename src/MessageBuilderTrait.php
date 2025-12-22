@@ -400,4 +400,65 @@ trait MessageBuilderTrait
 
         return $this;
     }
+
+    public function getReplyMarkupRaw(): array
+    {
+        return $this->reply_markup_raw;
+    }
+
+    public function setReplyMarkupRaw(array $reply_markup): self
+    {
+        $this->reply_markup_raw = $reply_markup;
+
+        return $this;
+    }
+
+    public function getAdditionallyParams(): array
+    {
+        return $this->additionally_params;
+    }
+
+    public function setAdditionallyParams(array $params): self
+    {
+        $this->additionally_params = $params;
+
+        return $this;
+    }
+
+    public function getMediaQueue(): array
+    {
+        return $this->mediaQueue;
+    }
+
+    public function setMediaQueue(array $params): self
+    {
+        $this->mediaQueue = $params;
+
+        return $this;
+    }
+
+    public function getSendType(): array
+    {
+        return [$this->sendDice, $this->sendSticker];
+    }
+
+    public function setSendType(bool $sendDice, bool $sendSticker): self
+    {
+        $this->sendSticker = $sendSticker;
+        $this->sendDice = $sendDice;
+
+        return $this;
+    }
+
+    public function getMediaPreviewUrl(): string
+    {
+        return $this->mediaPreviewUrl;
+    }
+
+    public function setMediaPreviewUrl(array $params): self
+    {
+        $this->mediaPreviewUrl = $params;
+
+        return $this;
+    }
 }
