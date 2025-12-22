@@ -3,23 +3,26 @@
 namespace ZenithGram\ZenithGram;
 
 use ZenithGram\ZenithGram\Utils\LocalFile;
+
 use function Amp\File\exists;
 
-trait MessageBuilderTrait {
+trait MessageBuilderTrait
+{
 
     protected array $mediaQueue = [];
     protected bool $sendDice = false;
     protected bool $sendSticker = false;
-    protected array $messageData = [
-        'text' => '',
-        'reply_markup' => '',
-        'reply_markup_raw' => [],
-        'params' => [],
-        'parseMode' => MessageParseMode::None,
-        'reply_to_message_id' => '',
-        'emoji' => '',
+    protected array $messageData
+        = [
+            'text'                => '',
+            'reply_markup'        => '',
+            'reply_markup_raw'    => [],
+            'params'              => [],
+            'parseMode'           => MessageParseMode::None,
+            'reply_to_message_id' => '',
+            'emoji'               => '',
 
-    ];
+        ];
 
     /**
      * Задает текст сообщения, которое будет отправлено в ответ
@@ -48,7 +51,9 @@ trait MessageBuilderTrait {
      */
     public function params(array $params): self
     {
-        $this->messageData['params'] = array_merge($this->messageData['params'], $params);
+        $this->messageData['params'] = array_merge(
+            $this->messageData['params'], $params,
+        );
 
         return $this;
     }
@@ -100,7 +105,6 @@ trait MessageBuilderTrait {
      */
     public function reply(int|null $message_id = null): self
     {
-
         if ($message_id === null) {
             $message_id = $this->context->getMessageId();
         }
@@ -127,7 +131,6 @@ trait MessageBuilderTrait {
     public function kbd(array $buttons, bool $one_time = false,
         bool $resize = true,
     ): self {
-
         $reply_markup = [
             'keyboard'          => $buttons,
             'resize_keyboard'   => $resize,
@@ -171,7 +174,9 @@ trait MessageBuilderTrait {
     {
         $reply_markup = ['remove_keyboard' => true];
 
-        $this->messageData['reply_markup'] = json_encode($reply_markup, JSON_THROW_ON_ERROR);
+        $this->messageData['reply_markup'] = json_encode(
+            $reply_markup, JSON_THROW_ON_ERROR,
+        );
 
         return $this;
     }
@@ -187,15 +192,17 @@ trait MessageBuilderTrait {
      * @throws \JsonException
      * @see https://zenithgram.github.io/classes/actionMethods/forceReply
      */
-    public function forceReply(string $placeholder = '', bool $selective = false): self
-    {
+    public function forceReply(string $placeholder = '', bool $selective = false,
+    ): self {
         $reply_markup = [
-            'force_reply' => true,
+            'force_reply'             => true,
             'input_field_placeholder' => $placeholder,
-            'selective' => $selective,
+            'selective'               => $selective,
         ];
 
-        $this->messageData['reply_markup'] = json_encode($reply_markup, JSON_THROW_ON_ERROR);
+        $this->messageData['reply_markup'] = json_encode(
+            $reply_markup, JSON_THROW_ON_ERROR,
+        );
 
         return $this;
     }
@@ -221,10 +228,11 @@ trait MessageBuilderTrait {
 
         foreach ($inputs as $item) {
             $this->mediaQueue[] = [
-                'type' => $type,
-                'payload' => $this->detectInput($item)
+                'type'    => $type,
+                'payload' => $this->detectInput($item),
             ];
         }
+
         return $this;
     }
 
@@ -374,4 +382,15 @@ trait MessageBuilderTrait {
         return $this;
     }
 
+    public function getMessageData(): array
+    {
+        return $this->messageData;
+    }
+
+    public function setMessageData(array $messageData): self
+    {
+        $this->messageData = $messageData;
+
+        return $this;
+    }
 }

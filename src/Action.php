@@ -2,14 +2,13 @@
 
 namespace ZenithGram\ZenithGram;
 
-use ZenithGram\ZenithGram\Inline;
-
 class Action
 {
+    use MessageBuilderTrait;
+
     private string $id;
     private mixed $condition;
     private $handler;
-    public array $messageData = [];
     public string $queryText = '';
     public string $redirect_to = '';
     public \Closure|null $middleware_handler = null;
@@ -36,7 +35,7 @@ class Action
      */
     public function middleware(callable $handler): self
     {
-        $this->middleware_handler = \Closure::fromCallable($handler);
+        $this->middleware_handler = $handler(...);
 
         return $this;
     }
@@ -52,7 +51,7 @@ class Action
      */
     public function func(callable $handler): self
     {
-        $this->handler = \Closure::fromCallable($handler);
+        $this->handler = $handler(...);
 
         return $this;
     }
@@ -101,9 +100,7 @@ class Action
     public function access(int|array $ids, ?callable $handler = null): self
     {
         $this->access_ids = is_numeric($ids) ? [$ids] : $ids;
-        $this->access_handler = ($handler !== null) ? \Closure::fromCallable(
-            $handler,
-        ) : null;
+        $this->access_handler = ($handler !== null) ? $handler(...) : null;
 
         return $this;
     }
@@ -122,9 +119,7 @@ class Action
     {
         $this->no_access_ids = is_numeric($ids) ? [$ids] : $ids;
 
-        $this->no_access_handler = ($handler !== null) ? \Closure::fromCallable(
-            $handler,
-        ) : null;
+        $this->no_access_handler = ($handler !== null) ? $handler(...) : null;
 
         return $this;
     }
@@ -132,11 +127,6 @@ class Action
     public function getQueryText(): string
     {
         return $this->queryText;
-    }
-
-    public function getMessageData(): array
-    {
-        return $this->messageData;
     }
 
     public function getId(): string
@@ -177,13 +167,6 @@ class Action
     public function setHandler(?callable $handler): self
     {
         $this->handler = $handler;
-
-        return $this;
-    }
-
-    public function setMessageData(array $messageData): self
-    {
-        $this->messageData = $messageData;
 
         return $this;
     }
