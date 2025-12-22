@@ -120,6 +120,33 @@ final class Message
         return $this->api->callAPI('editMessageCaption', $commonParams);
     }
 
+    public function editMedia(string|int|null $message_id = null, string|int|null $chat_id = null): array
+    {
+        $params = $this->getIdentifier($message_id, $chat_id);
+
+        if (count($this->mediaQueue) !== 1) {
+            throw new \LogicException("Для редактирования медиа (editMedia) нужно добавить новые файлы");
+        }
+
+        if ($this->reply_markup_raw !== []) {
+            $this->buildReplyMarkup();
+        }
+
+        $item = $this->mediaQueue[0];
+        $inputMediaData = $this->prepareInputMediaForEdit($item);
+
+        $params['media'] = $inputMediaData['media'];
+
+        if (!empty($inputMediaData['attachments'])) {
+            $params = array_merge($params, $inputMediaData['attachments']);
+        }
+
+        $finalParams = array_merge($params, $this->additionally_params);
+        $finalParams += $this->messageData;
+
+        return $this->api->callAPI('editMessageMedia', $finalParams);
+    }
+
     private function getIdentifier(string|int|null $message_id, string|int|null $chat_id,
     ): array {
         $updateData = $this->context->getUpdateData();
@@ -195,6 +222,43 @@ final class Message
             'document', 'doc' => 'document',
             default => 'unknown',
         };
+    }
+
+    private function prepareInputMediaForEdit(array $item): array
+    {
+        $originalType = $item['type'];
+
+        // Для editMessageMedia поддерживаются: photo, video, animation, audio, document
+        $type = match ($originalType) {
+            'img' => 'photo',
+            'doc' => 'document',
+            default => $originalType,
+        };
+
+        $inputMedia = ['type' => $type];
+        $attachments = [];
+
+        if ($item['payload'] instanceof LocalFile) {
+            // Генерируем уникальное имя поля
+            $attachKey = 'media_file_upload';
+            $attachments[$attachKey] = $item['payload'];
+            $inputMedia['media'] = 'attach://' . $attachKey;
+        } else {
+            $inputMedia['media'] = $item['payload'];
+        }
+
+        // Добавляем caption из текущего состояния объекта Message
+        if (!empty($this->messageData['text'])) {
+            $inputMedia['caption'] = $this->messageData['text'];
+        }
+        if (!empty($this->messageData['parse_mode'])) {
+            $inputMedia['parse_mode'] = $this->messageData['parse_mode'];
+        }
+        if (!empty($this->messageData['entities'])) {
+            $inputMedia['caption_entities'] = $this->messageData['entities'];
+        }
+
+        return ['media' => $inputMedia, 'attachments' => $attachments];
     }
 
     /**
