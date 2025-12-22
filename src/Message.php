@@ -50,21 +50,28 @@ final class Message
         $commonParams = array_merge($params, $this->additionally_params);
 
         if ($this->sendDice) {
-            return $this->api->callAPI('sendDice', array_merge($commonParams, $this->messageData));
+            return $this->api->callAPI(
+                'sendDice', array_merge($commonParams, $this->messageData),
+            );
         }
 
         if ($this->sendSticker) {
             $stickerParams = [
-                'sticker' => $this->messageData['sticker'],
+                'sticker'      => $this->messageData['sticker'],
                 'reply_markup' => $this->messageData['reply_markup'] ?? '',
             ];
-            return $this->api->callAPI('sendSticker', array_merge($commonParams, $stickerParams));
+
+            return $this->api->callAPI(
+                'sendSticker', array_merge($commonParams, $stickerParams),
+            );
         }
 
         $mediaCount = count($this->mediaQueue);
 
         if ($mediaCount === 0) {
-            return $this->api->callAPI('sendMessage', array_merge($commonParams, $this->messageData));
+            return $this->api->callAPI(
+                'sendMessage', array_merge($commonParams, $this->messageData),
+            );
         }
 
         $captionData = $this->messageData;
@@ -72,24 +79,47 @@ final class Message
         unset($captionData['text']);
 
         if ($mediaCount === 1) {
-            return $this->sendSingleMedia($this->mediaQueue[0], $commonParams, $captionData);
+            return $this->sendSingleMedia(
+                $this->mediaQueue[0], $commonParams, $captionData,
+            );
         }
 
         if ($this->canBeGrouped($this->mediaQueue)) {
-            $mediaGroupParams = $this->buildMediaGroupParams($this->mediaQueue, $captionData);
+            $mediaGroupParams = $this->buildMediaGroupParams(
+                $this->mediaQueue, $captionData,
+            );
 
-            return $this->api->callAPI('sendMediaGroup', array_merge(
+            return $this->api->callAPI(
+                'sendMediaGroup', array_merge(
                 $commonParams,
                 $mediaGroupParams,
-            ));
+            ),
+            );
         }
 
-        throw new \LogicException( "Вы добавили несовместимые типы медиа. Пример: нельзя отправлять одновременно несколько голосовых");
+        throw new \LogicException(
+            "Вы добавили несовместимые типы медиа. Пример: нельзя отправлять одновременно несколько голосовых",
+        );
 
     }
 
-    public function editText(string|int|null $message_id = null, string|int|null $chat_id = null): array
-    {        $params = $this->getIdentifier($message_id, $chat_id);
+    /**
+     * Редактирует текст существующего сообщения
+     *
+     * @param string|int|null $message_id
+     * @param string|int|null $chat_id
+     *
+     * @return array
+     *
+     * @throws \Exception
+     *
+     * @see https://zenithgram.github.io/classes/messageMethods/editText
+     */
+
+    public function editText(string|int|null $message_id = null,
+        string|int|null $chat_id = null,
+    ): array {
+        $params = $this->getIdentifier($message_id, $chat_id);
 
         if ($this->reply_markup_raw !== []) {
             $this->buildReplyMarkup();
@@ -102,8 +132,22 @@ final class Message
         return $this->api->callAPI('editMessageText', $commonParams);
     }
 
-    public function editCaption(string|int|null $message_id = null, string|int|null $chat_id = null): array
-    {
+    /**
+     * Редактирует описание существующего сообщения (обязательное наличие медиа
+     * в сообщении)
+     *
+     * @param string|int|null $message_id
+     * @param string|int|null $chat_id
+     *
+     * @return array
+     *
+     * @throws \Exception
+     *
+     * @see https://zenithgram.github.io/classes/messageMethods/editCaption
+     */
+    public function editCaption(string|int|null $message_id = null,
+        string|int|null $chat_id = null,
+    ): array {
         $params = $this->getIdentifier($message_id, $chat_id);
 
         if ($this->reply_markup_raw !== []) {
@@ -120,12 +164,27 @@ final class Message
         return $this->api->callAPI('editMessageCaption', $commonParams);
     }
 
-    public function editMedia(string|int|null $message_id = null, string|int|null $chat_id = null): array
-    {
+    /**
+     * Редактирует медиа существующего сообщения
+     *
+     * @param string|int|null $message_id
+     * @param string|int|null $chat_id
+     *
+     * @return array
+     *
+     * @throws \Exception
+     *
+     * @see https://zenithgram.github.io/classes/messageMethods/editCaption
+     */
+    public function editMedia(string|int|null $message_id = null,
+        string|int|null $chat_id = null,
+    ): array {
         $params = $this->getIdentifier($message_id, $chat_id);
 
         if (count($this->mediaQueue) !== 1) {
-            throw new \LogicException("Для редактирования медиа (editMedia) нужно добавить новые файлы");
+            throw new \LogicException(
+                "Для редактирования медиа (editMedia) нужно добавить новые файлы",
+            );
         }
 
         if ($this->reply_markup_raw !== []) {
@@ -147,7 +206,8 @@ final class Message
         return $this->api->callAPI('editMessageMedia', $finalParams);
     }
 
-    private function getIdentifier(string|int|null $message_id, string|int|null $chat_id,
+    private function getIdentifier(string|int|null $message_id,
+        string|int|null $chat_id,
     ): array {
         $updateData = $this->context->getUpdateData();
 
@@ -161,16 +221,13 @@ final class Message
         ];
     }
 
-
-    /**
-     * Отправляет один медиа-файл соответствующим методом
-     */
-    private function sendSingleMedia(array $item, array $commonParams, array $captionData): array
-    {
+    private function sendSingleMedia(array $item, array $commonParams,
+        array $captionData,
+    ): array {
         $type = $item['type'];
         $payload = $item['payload'];
 
-        $method = 'send' . $this->mapTypeToApiMethod($type);
+        $method = 'send'.$this->mapTypeToApiMethod($type);
         $fieldName = $this->mapTypeToField($type);
 
         $params = array_merge($commonParams, $captionData);
@@ -179,27 +236,20 @@ final class Message
         return $this->api->callAPI($method, $params);
     }
 
-    /**
-     * Проверяет валидность группировки медиа.
-     * Voice нельзя группировать. Нельзя смешивать Audio с Photo и т.д.
-     */
     private function canBeGrouped(array $queue): bool
     {
         if (empty($queue)) {
             return false;
         }
 
-        // Voice категорически нельзя в группу
         foreach ($queue as $item) {
             if ($item['type'] === 'voice') {
                 return false;
             }
         }
 
-        // Определяем категорию первого элемента
         $firstGroup = $this->getMediaTypeGroup($queue[0]['type']);
 
-        // Все остальные элементы должны быть той же категории
         foreach ($queue as $item) {
             if ($this->getMediaTypeGroup($item['type']) !== $firstGroup) {
                 return false;
@@ -209,14 +259,9 @@ final class Message
         return true;
     }
 
-    /**
-     * Определяет группу совместимости типов для sendMediaGroup
-     */
     private function getMediaTypeGroup(string $type): string
     {
         return match ($type) {
-            // Визуальные медиа (можно смешивать фото и видео)
-            // GIF ('animation') в группе отправляется как 'video'
             'img', 'photo', 'video', 'animation' => 'visual',
             'audio' => 'audio',
             'document', 'doc' => 'document',
@@ -228,7 +273,6 @@ final class Message
     {
         $originalType = $item['type'];
 
-        // Для editMessageMedia поддерживаются: photo, video, animation, audio, document
         $type = match ($originalType) {
             'img' => 'photo',
             'doc' => 'document',
@@ -239,10 +283,9 @@ final class Message
         $attachments = [];
 
         if ($item['payload'] instanceof LocalFile) {
-            // Генерируем уникальное имя поля
             $attachKey = 'media_file_upload';
             $attachments[$attachKey] = $item['payload'];
-            $inputMedia['media'] = 'attach://' . $attachKey;
+            $inputMedia['media'] = 'attach://'.$attachKey;
         } else {
             $inputMedia['media'] = $item['payload'];
         }
@@ -261,35 +304,30 @@ final class Message
         return ['media' => $inputMedia, 'attachments' => $attachments];
     }
 
-    /**
-     * Собирает параметры для sendMediaGroup
-     */
-    private function buildMediaGroupParams(array $queue, array $commonData): array
-    {
+    private function buildMediaGroupParams(array $queue, array $commonData,
+    ): array {
         $mediaArray = [];
         $attachments = [];
 
         foreach ($queue as $index => $item) {
             $originalType = $item['type'];
 
-            // Корректировка типа для группы
             $type = match ($originalType) {
                 'img' => 'photo',
-                'animation' => 'video', // GIF в группе должен быть video
+                'animation' => 'video',
                 default => $originalType,
             };
 
             $inputMedia = ['type' => $type];
 
             if ($item['payload'] instanceof LocalFile) {
-                $attachKey = 'media_attach_' . $index;
+                $attachKey = 'media_attach_'.$index;
                 $attachments[$attachKey] = $item['payload'];
-                $inputMedia['media'] = 'attach://' . $attachKey;
+                $inputMedia['media'] = 'attach://'.$attachKey;
             } else {
                 $inputMedia['media'] = $item['payload'];
             }
 
-            // Caption только к первому элементу
             if ($index === 0) {
                 if (!empty($commonData['caption'])) {
                     $inputMedia['caption'] = $commonData['caption'];
@@ -312,12 +350,12 @@ final class Message
     {
         return match ($type) {
             'img', 'photo' => 'Photo',
-            'animation'    => 'Animation', // Для одиночной отправки используем sendAnimation
-            'voice'        => 'Voice',
-            'audio'        => 'Audio',
-            'video'        => 'Video',
+            'animation' => 'Animation',
+            'voice' => 'Voice',
+            'audio' => 'Audio',
+            'video' => 'Video',
             'document', 'doc' => 'Document',
-            default        => 'Document',
+            default => 'Document',
         };
     }
 
@@ -325,19 +363,20 @@ final class Message
     {
         return match ($type) {
             'img', 'photo' => 'photo',
-            'animation'    => 'animation',
-            'voice'        => 'voice',
-            'audio'        => 'audio',
-            'video'        => 'video',
+            'animation' => 'animation',
+            'voice' => 'voice',
+            'audio' => 'audio',
+            'video' => 'video',
             'document', 'doc' => 'document',
-            default        => 'document',
+            default => 'document',
         };
     }
 
     private function buildReplyMarkup(): void
     {
         $is_inline = isset($this->reply_markup_raw['inline_keyboard']);
-        $buttons = $is_inline ? $this->reply_markup_raw['inline_keyboard'] : $this->reply_markup_raw['keyboard'];
+        $buttons = $is_inline ? $this->reply_markup_raw['inline_keyboard']
+            : $this->reply_markup_raw['keyboard'];
 
         $searchBotButtons = false;
         foreach ($buttons as $row) {
@@ -361,7 +400,9 @@ final class Message
             }
         }
 
-        $this->messageData['reply_markup'] = json_encode($this->reply_markup_raw, JSON_THROW_ON_ERROR);
+        $this->messageData['reply_markup'] = json_encode(
+            $this->reply_markup_raw, JSON_THROW_ON_ERROR,
+        );
     }
 
     private function findBotButtons(array $gettingButtons, bool $inline): array
@@ -373,16 +414,23 @@ final class Message
                 if (is_string($button)) {
                     if (isset($botButtons[$button])) {
                         if ($inline) {
-                            $gettingButtons[$key][$key_2] = $this->ZG->buttonCallback($botButtons[$button], $button);
+                            $gettingButtons[$key][$key_2]
+                                = $this->ZG->buttonCallback(
+                                $botButtons[$button], $button,
+                            );
                         } else {
-                            $gettingButtons[$key][$key_2] = $this->ZG->buttonText($botButtons[$button]);
+                            $gettingButtons[$key][$key_2]
+                                = $this->ZG->buttonText($botButtons[$button]);
                         }
                     } else {
-                        throw new \RuntimeException("Не удалось найти кнопку $button");
+                        throw new \RuntimeException(
+                            "Не удалось найти кнопку $button",
+                        );
                     }
                 }
             }
         }
+
         return $gettingButtons;
     }
 
@@ -391,17 +439,28 @@ final class Message
         $url = $this->mediaPreviewUrl;
         $invisibleCharacter = '​'; // U+200B
 
-        if (($this->messageData['parse_mode'] ?? '') === MessageParseMode::MarkdownV2->value
-            || ($this->messageData['parse_mode'] ?? '') === MessageParseMode::Markdown->value
+        if (($this->messageData['parse_mode'] ?? '')
+            === MessageParseMode::MarkdownV2->value
+            || ($this->messageData['parse_mode'] ?? '')
+            === MessageParseMode::Markdown->value
         ) {
-            $this->messageData['text'] = "[$invisibleCharacter](".$url.")".($this->messageData['text'] ?? '');
-        } elseif (($this->messageData['parse_mode'] ?? '') === MessageParseMode::HTML->value) {
-            $this->messageData['text'] = "<a href=\"".$url."\">".$invisibleCharacter."</a>"
+            $this->messageData['text'] = "[$invisibleCharacter](".$url.")"
+                .($this->messageData['text'] ?? '');
+        } elseif (($this->messageData['parse_mode'] ?? '')
+            === MessageParseMode::HTML->value
+        ) {
+            $this->messageData['text'] = "<a href=\"".$url."\">"
+                .$invisibleCharacter."</a>"
                 .($this->messageData['text'] ?? '');
         } else {
-            $this->messageData['text'] = $invisibleCharacter.($this->messageData['text'] ?? '');
+            $this->messageData['text'] = $invisibleCharacter
+                .($this->messageData['text'] ?? '');
 
-            $lengthInUtf16 = strlen(mb_convert_encoding($invisibleCharacter, 'UTF-16LE', 'UTF-8')) / 2;
+            $lengthInUtf16 = strlen(
+                    mb_convert_encoding(
+                        $invisibleCharacter, 'UTF-16LE', 'UTF-8',
+                    ),
+                ) / 2;
 
             $entity = [
                 'type'   => 'text_link',
@@ -410,10 +469,15 @@ final class Message
                 'url'    => $url,
             ];
 
-
             $currentEntities = [];
-            if (isset($this->messageData['entities']) && is_string($this->messageData['entities'])) {
-                $currentEntities = json_decode($this->messageData['entities'], true) ?? [];
+            if (isset($this->messageData['entities'])
+                && is_string(
+                    $this->messageData['entities'],
+                )
+            ) {
+                $currentEntities = json_decode(
+                    $this->messageData['entities'], true,
+                ) ?? [];
             }
 
             array_unshift($currentEntities, $entity);
