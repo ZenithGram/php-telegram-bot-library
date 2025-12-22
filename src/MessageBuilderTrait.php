@@ -33,7 +33,7 @@ trait MessageBuilderTrait
      *
      * @return self
      *
-     * @see https://zenithgram.github.io/classes/actionMethods/text
+     * @see https://zenithgram.github.io/classes/messageMethods/text
      */
     public function text(string $text = ''): self
     {
@@ -49,7 +49,7 @@ trait MessageBuilderTrait
      *
      * @return self
      *
-     * @see https://zenithgram.github.io/classes/actionMethods/params
+     * @see https://zenithgram.github.io/classes/messageMethods/params
      */
     public function params(array $params): self
     {
@@ -67,7 +67,7 @@ trait MessageBuilderTrait
      *
      * @return self
      *
-     * @see https://zenithgram.github.io/classes/actionMethods/params
+     * @see https://zenithgram.github.io/classes/messageMethods/parseMode
      */
     public function parseMode(MessageParseMode $parseMode): self
     {
@@ -84,7 +84,7 @@ trait MessageBuilderTrait
      * @return self
      *
      * @throws \JsonException
-     * @see https://zenithgram.github.io/classes/messageMethods/entity
+     * @see https://zenithgram.github.io/classes/messageMethods/entities
      */
     public function entities(array $entities): self
     {
@@ -103,7 +103,7 @@ trait MessageBuilderTrait
      *
      * @return self
      *
-     * @see https://zenithgram.github.io/classes/actionMethods/reply
+     * @see https://zenithgram.github.io/classes/messageMethods/reply
      */
     public function reply(int|null $message_id = null): self
     {
@@ -128,7 +128,7 @@ trait MessageBuilderTrait
      *
      * @return self
      *
-     * @see https://zenithgram.github.io/classes/actionMethods/kbd
+     * @see https://zenithgram.github.io/classes/messageMethods/kbd
      */
     public function kbd(array $buttons, bool $one_time = false,
         bool $resize = true,
@@ -151,7 +151,7 @@ trait MessageBuilderTrait
      *
      * @return self
      *
-     * @see https://zenithgram.github.io/classes/actionMethods/inlineKbd
+     * @see https://zenithgram.github.io/classes/messageMethods/inlineKbd
      */
     public function inlineKbd(array $buttons): self
     {
@@ -170,7 +170,7 @@ trait MessageBuilderTrait
      * @return self
      *
      * @throws \JsonException
-     * @see https://zenithgram.github.io/classes/actionMethods/removeKbd
+     * @see https://zenithgram.github.io/classes/messageMethods/removeKbd
      */
     public function removeKbd(): self
     {
@@ -192,7 +192,7 @@ trait MessageBuilderTrait
      * @return self
      *
      * @throws \JsonException
-     * @see https://zenithgram.github.io/classes/actionMethods/forceReply
+     * @see https://zenithgram.github.io/classes/messageMethods/forceReply
      */
     public function forceReply(string $placeholder = '',
         bool $selective = false,
