@@ -84,6 +84,7 @@
 #### Action
 
 - [MessageBuilder](https://zenithgram.github.io/classes/actionMethods/messageBuilder.md): Стек методов, собирающих сообщение с fluent-interface
+- [func](https://zenithgram.github.io/classes/actionMethods/func.md): Выполняет пользовательскую функцию-обработчик.
 - [access](https://zenithgram.github.io/classes/actionMethods/access.md): Ограничивает доступ к маршруту по ID пользователя (белый список).
 - [noAccess](https://zenithgram.github.io/classes/actionMethods/noAccess.md): Запрещает доступ к маршруту по ID пользователя (черный список).
 - [middleware](https://zenithgram.github.io/classes/actionMethods/middleware.md): Регистрирует Middleware для конкретного маршрута.
