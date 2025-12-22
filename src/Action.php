@@ -225,4 +225,9 @@ class Action
 
         return $this;
     }
+
+    protected function getMessageDataAction(): int
+    {
+        return $this->messageDataAction;
+    }
 }
