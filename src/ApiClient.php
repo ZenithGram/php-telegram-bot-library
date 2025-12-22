@@ -9,6 +9,8 @@ use Amp\Http\Client\HttpClientBuilder;
 use Amp\Http\Client\Request;
 use Amp\Http\Client\Form;
 use Amp\File;
+use ZenithGram\ZenithGram\Utils\LocalFile;
+
 use function Amp\ByteStream\pipe;
 
 class ApiClient
@@ -30,9 +32,11 @@ class ApiClient
     }
 
     /**
-     * @param string $method Метод API
-     * @param array|null $params Параметры
-     * @param int $timeout Клиентский таймаут <br> По умолчанию: 10.
+     * @param string     $method  Метод API
+     * @param array      $params  Параметры
+     * @param int        $timeout Клиентский таймаут <br> По умолчанию: 10.
+     *
+     * @throws \Amp\Http\Client\HttpException
      */
     public function callAPI(string $method, array $params = [], int $timeout = self::DEFAULT_TIMEOUT): array
     {
@@ -41,8 +45,8 @@ class ApiClient
 
         if ($params) {
             foreach ($params as $key => $value) {
-                if ($value instanceof \CURLFile) {
-                    $body->addFile($key, $value->getFilename());
+                if ($value instanceof LocalFile) {
+                    $body->addFile($key, $value->getPath());
                 } elseif (is_array($value)) {
                     $body->addField($key, json_encode($value, JSON_THROW_ON_ERROR));
                 } else {

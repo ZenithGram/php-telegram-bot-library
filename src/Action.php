@@ -17,6 +17,7 @@ class Action
     private array $no_access_ids = [];
     private \Closure|null $access_handler = null;
     private \Closure|null $no_access_handler = null;
+    private int $messageDataAction = 0; // 0 - send, 1 - editText, 2 - editCaption, 3 - editMedia
 
     public function __construct(string $id, mixed $condition)
     {
@@ -39,7 +40,6 @@ class Action
 
         return $this;
     }
-
 
     /**
      * Устанавливает обработчик для маршрута.
@@ -75,253 +75,6 @@ class Action
     }
 
     /**
-     * Задает текст сообщения, которое будет отправлено в ответ
-     *
-     * @param string $text Текст сообщения
-     *
-     * @return Action
-     *
-     * @see https://zenithgram.github.io/classes/actionMethods/text
-     */
-    public function text(string $text = ''): self
-    {
-        $this->messageData['text'] = $text;
-
-        return $this;
-    }
-
-    /**
-     * Включает режим ForceReply
-     *
-     * @param string $placeholder По умолчанию - ''
-     * @param bool $selective По умолчанию - false
-     *
-     * @return Action
-     *
-     * @see https://zenithgram.github.io/classes/actionMethods/forceReply
-     */
-    public function forceReply(string $placeholder = '', bool $selective = false): self
-    {
-        $this->messageData['forceReply'] = ['placeholder' => $placeholder, 'selective' => $selective];
-
-        return $this;
-    }
-
-    /**
-     * Изменяет текст сообщения
-     *
-     * @param string $text Новый текст
-     *
-     * @return Action
-     *
-     * @see https://zenithgram.github.io/classes/actionMethods/editText
-     */
-    public function editText(string $text = ''): self
-    {
-        $this->messageData['text'] = $text;
-        $this->messageData['editText'] = true;
-
-        return $this;
-    }
-
-    /**
-     * Изменяет текст описания
-     *
-     * @param string $text Новый текст
-     *
-     * @return Action
-     *
-     * @see https://zenithgram.github.io/classes/actionMethods/editCaption
-     */
-    public function editCaption(string $text = ''): self
-    {
-        $this->messageData['text'] = $text;
-        $this->messageData['editCaption'] = true;
-
-        return $this;
-    }
-
-    /**
-     * Добавляет изображение к сообщению
-     *
-     * @param string|array $img Ссылка или массив ссылок (ID) изображений
-     *
-     * @return Action
-     *
-     * @see https://zenithgram.github.io/classes/actionMethods/img
-     */
-    public function img(string|array $img): self
-    {
-        $this->messageData['img'] = $img;
-
-        return $this;
-    }
-
-    /**
-     * Добавляет gif к сообщению
-     *
-     * @param string|array $gif Ссылка или массив ссылок (ID) gif-файлов
-     *
-     * @return Action
-     *
-     * @see https://zenithgram.github.io/classes/actionMethods/gif
-     */
-    public function gif(string|array $gif): self
-    {
-        $this->messageData['gif'] = $gif;
-
-        return $this;
-    }
-
-    /**
-     * Добавляет дополнительные параметры к сообщению.
-     *
-     * @param array $params Массив с дополнительными параметрами
-     *
-     * @return Action
-     *
-     * @see https://zenithgram.github.io/classes/actionMethods/params
-     */
-    public function params(array $params): self
-    {
-        // Используем array_merge для добавления, а не перезаписи
-        $this->messageData['params'] = array_merge($this->messageData['params'] ?? [], $params);
-
-        return $this;
-    }
-
-    /**
-     * Устанавливает режим парсинга сообщения
-     *
-     * @param MessageParseMode $parseMode
-     *
-     * @return Action
-     *
-     * @see https://zenithgram.github.io/classes/actionMethods/params
-     */
-    public function parseMode(MessageParseMode $parseMode): self
-    {
-        $this->messageData['parseMode'] = $parseMode;
-
-        return $this;
-    }
-
-    /**
-     * Устанавливает режим ответа на сообщение.
-     *
-     * @param int|null $message_id ID сообщения для ответа. Если null, отвечает
-     *                             на текущее сообщение из контекста.
-     *
-     * @return Action
-     *
-     * @see https://zenithgram.github.io/classes/actionMethods/reply
-     */
-    public function reply(?int $message_id = null): self
-    {
-        // Сохраняем ID или true как флаг для ответа на текущее сообщение
-        $this->messageData['reply'] = $message_id ?? true;
-
-        return $this;
-    }
-
-    /**
-     * Отправляет анимированный эмодзи (кубик).
-     *
-     * @param string $emoji Эмодзи для отправки: '🎲', '🎯', '🏀', '⚽', '🎳',
-     *                      '🎰'
-     *
-     * @return Action
-     *
-     * @see https://zenithgram.github.io/classes/actionMethods/dice
-     */
-    public function dice(string $emoji): self
-    {
-        $this->messageData['dice'] = $emoji;
-
-        return $this;
-    }
-
-    /**
-     * Добавляет голосовое сообщение.
-     *
-     * @param string $voice Ссылка или ID голосового сообщения
-     *
-     * @return Action
-     *
-     * @see https://zenithgram.github.io/classes/actionMethods/voice
-     */
-    public function voice(string $voice): self
-    {
-        $this->messageData['voice'] = $voice;
-
-        return $this;
-    }
-
-    /**
-     * Добавляет аудио-файл к сообщению.
-     *
-     * @param string|array $audio Ссылка или массив ссылок (ID) аудио-файлов
-     *
-     * @return Action
-     *
-     * @see https://zenithgram.github.io/classes/actionMethods/audio
-     */
-    public function audio(string|array $audio): self
-    {
-        $this->messageData['audio'] = $audio;
-
-        return $this;
-    }
-
-    /**
-     * Добавляет документ к сообщению.
-     *
-     * @param string|array $doc Ссылка или массив ссылок (ID) документов
-     *
-     * @return Action
-     *
-     * @see https://zenithgram.github.io/classes/actionMethods/doc
-     */
-    public function doc(string|array $doc): self
-    {
-        $this->messageData['doc'] = $doc;
-
-        return $this;
-    }
-
-    /**
-     * Отправляет стикер.
-     *
-     * @param string $file_id ID стикера для отправки
-     *
-     * @return Action
-     *
-     * @see https://zenithgram.github.io/classes/actionMethods/sticker
-     */
-    public function sticker(string $file_id): self
-    {
-        $this->messageData['sticker'] = $file_id;
-
-        return $this;
-    }
-
-    /**
-     * Добавляет видео к сообщению
-     *
-     * @param string|array $video Ссылка или массив ссылок (ID) видео-файлов
-     *
-     * @return Action
-     *
-     * @see https://zenithgram.github.io/classes/actionMethods/video
-     */
-    public function video(string|array $video): self
-    {
-        $this->messageData['video'] = $video;
-
-        return $this;
-    }
-
-    /**
      * Задает всплывающий текст при нажатии на кнопку
      *
      * @param string $query Всплывающий текст
@@ -333,62 +86,6 @@ class Action
     public function query(string $query): self
     {
         return $this->setQueryText($query);
-    }
-
-
-    /**
-     * Добавляет клавиатуру к сообщению
-     *
-     * @param array $buttons  Кнопки клавиатуры
-     * @param bool  $one_time Показывать клавиатуру однократно?
-     * @param bool  $resize   Растягивать клавиатуру?
-     *
-     * @return Action
-     *
-     * @see https://zenithgram.github.io/classes/actionMethods/kbd
-     */
-    public function kbd(array $buttons, bool $one_time = false,
-        bool $resize = true,
-    ): self {
-        $this->messageData['kbd'] = $buttons;
-        $this->messageData['inline'] = false;
-        $this->messageData['oneTime'] = $one_time;
-        $this->messageData['resize'] = $resize;
-
-        return $this;
-    }
-
-    /**
-     * Добавляет inline-клавиатуру к сообщению
-     *
-     * @param array $buttons Кнопки клавиатуры
-     *
-     * @return Action
-     *
-     * @see https://zenithgram.github.io/classes/actionMethods/inlineKbd
-     */
-    public function inlineKbd(array $buttons): self
-    {
-        $this->messageData['kbd'] = $buttons;
-        $this->messageData['inline'] = true;
-        $this->messageData['oneTime'] = false;
-        $this->messageData['resize'] = false;
-
-        return $this;
-    }
-
-    /**
-     * Удаляет клавиатуру
-     *
-     * @return Action
-     *
-     * @see https://zenithgram.github.io/classes/actionMethods/removeKbd
-     */
-    public function removeKbd(): self
-    {
-        $this->messageData['remove_keyboard'] = true;
-
-        return $this;
     }
 
     /**
@@ -436,7 +133,6 @@ class Action
     {
         return $this->queryText;
     }
-
 
     public function getMessageData(): array
     {
@@ -495,6 +191,54 @@ class Action
     public function setQueryText(?string $queryText): self
     {
         $this->queryText = $queryText;
+
+        return $this;
+    }
+
+    /**
+     * Изменяет текст сообщения
+     *
+     * @param string $text Новый текст
+     *
+     * @return Action
+     *
+     * @see https://zenithgram.github.io/classes/actionMethods/editText
+     */
+    public function editText(string $text = ''): self
+    {
+        $this->messageData['text'] = $text;
+        $this->messageDataAction = 1;
+
+        return $this;
+    }
+
+    /**
+     * Изменяет текст описания
+     *
+     * @param string $text Новый текст
+     *
+     * @return Action
+     *
+     * @see https://zenithgram.github.io/classes/actionMethods/editCaption
+     */
+    public function editCaption(string $text = ''): self
+    {
+        $this->messageData['text'] = $text;
+        $this->messageDataAction = 2;
+
+        return $this;
+    }
+
+    /**
+     * Изменяет медиа в сообщении
+     *
+     * @return Action
+     *
+     * @see https://zenithgram.github.io/classes/actionMethods/editMedia
+     */
+    public function editMedia(): self
+    {
+        $this->messageDataAction = 3;
 
         return $this;
     }
