@@ -17,6 +17,7 @@
 - [Обработчики событий (Маршрутизация)](https://zenithgram.github.io/using/handlers.md)
 - [Middleware](https://zenithgram.github.io/using/middleware.md): Промежуточное ПО для фильтрации запросов, логирования и проверки прав доступа.
 - [Пагинация (Pagination)](https://zenithgram.github.io/using/pagination.md)
+- [Обработка ошибок (Error Handling)](https://zenithgram.github.io/using/errorHandler.md): Руководство по настройке и использованию встроенного обработчика ошибок (ErrorHandler).
 
 ### Классы
 
