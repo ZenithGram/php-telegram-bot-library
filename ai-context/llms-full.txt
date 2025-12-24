@@ -911,7 +911,7 @@ description: Устанавливает режим разметки по умо�
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
-use ZenithGram\ZenithGram\Enum\MessageParseMode;
+use ZenithGram\ZenithGram\Enums\MessageParseMode;
 
 $tg = ZG::create('ТОКЕН_БОТА');
 $tg->defaultParseMode(MessageParseMode::MarkdownV2);
@@ -4324,7 +4324,7 @@ $bot = new Bot($tg);
 // Отреагирует на вышедшего/исключенного пользователя
 $bot->onLeftChatMember()
     ->func(function (ZG $tg, UserDto $user) {
-        $tgz->msg("Из чата вышел . " $user->firstName)->send();
+        $tg->msg("Из чата вышел . " $user->firstName)->send();
     });
 
 $bot->run();
@@ -5108,7 +5108,7 @@ description: Устанавливает режим разметки.
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
-use ZenithGram\ZenithGram\Enum\MessageParseMode;
+use ZenithGram\ZenithGram\Enums\MessageParseMode;
 
 $tg = ZG::create('ТОКЕН_БОТА');
 
@@ -5155,7 +5155,7 @@ description: Устанавливает режим разметки.
 require_once __DIR__ . '/vendor/autoload.php'; 
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
-use ZenithGram\ZenithGram\Enum\MessageParseMode;
+use ZenithGram\ZenithGram\Enums\MessageParseMode;
 
 $tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
@@ -5208,7 +5208,7 @@ description: Устанавливает разметку для объяснен
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
 use ZenithGram\ZenithGram\ZG;
-use ZenithGram\ZenithGram\Enum\MessageParseMode;
+use ZenithGram\ZenithGram\Enums\MessageParseMode;
 
 $tg = ZG::create(BOT_TOKEN);
 
@@ -5229,7 +5229,7 @@ $tg->poll('regular')
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
 use ZenithGram\ZenithGram\ZG;
-use ZenithGram\ZenithGram\Enum\MessageParseMode;
+use ZenithGram\ZenithGram\Enums\MessageParseMode;
 
 $tg = ZG::create(BOT_TOKEN);
 
@@ -5250,7 +5250,7 @@ $tg->poll('regular')
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
 use ZenithGram\ZenithGram\ZG;
-use ZenithGram\ZenithGram\Enum\MessageParseMode;
+use ZenithGram\ZenithGram\Enums\MessageParseMode;
 
 $tg = ZG::create(BOT_TOKEN);
 
@@ -6133,7 +6133,7 @@ PaginationMode — перечисление `(Enum)`. Содержит 2 кон�
 ## Пример использования
 
 ```php
-use ZenithGram\ZenithGram\Enum\PaginationMode;
+use ZenithGram\ZenithGram\Enums\PaginationMode;
 // Пример 1: Кнопки-стрелки
 $tg->pagination()->setMode(PaginationMode::ARROWS);
 
@@ -6174,7 +6174,7 @@ PaginationLayout — перечисление `(Enum)`. Содержит 3 ко�
 ## Пример использования
 
 ```php
-use ZenithGram\ZenithGram\Enum\PaginationLayout;
+use ZenithGram\ZenithGram\Enums\PaginationLayout;
 
 // Пример 1: Разделить на две строки
 $tg->pagination()->setNavigationLayout(PaginationLayout::SPLIT);
@@ -6218,7 +6218,7 @@ Callable — функция, принимающая номер страницы 
 ## Пример использования
 
 ```php
-use ZenithGram\ZenithGram\Enum\PaginationNumberStyle;
+use ZenithGram\ZenithGram\Enums\PaginationNumberStyle;
 // Цифры
 $tg->pagination()->setNumberStyle(PaginationNumberStyle::CLASSIC);
 
@@ -7881,9 +7881,9 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 use ZenithGram\ZenithGram\Button;
-use ZenithGram\ZenithGram\Enum\PaginationMode;
-use ZenithGram\ZenithGram\Enum\PaginationNumberStyle;
-use ZenithGram\ZenithGram\Enum\PaginationLayout;
+use ZenithGram\ZenithGram\Enums\PaginationMode;
+use ZenithGram\ZenithGram\Enums\PaginationNumberStyle;
+use ZenithGram\ZenithGram\Enums\PaginationLayout;
 
 $tg = ZG::create('ТОКЕН_БОТА');
 $bot = new Bot($tg);
