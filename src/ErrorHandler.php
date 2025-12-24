@@ -214,10 +214,10 @@ trait ErrorHandler
 
         echo "$bgRed$type $reset$boldWhite$msg$reset".PHP_EOL;
 
-        echo "$cyan$this->filteredFile($userFile):$userLine$reset".PHP_EOL;
+        echo "$cyan" . $this->filteredFile($userFile) . ":$userLine$reset".PHP_EOL;
 
         if ($userFile !== $realFile) {
-            echo " $gray(Inside: $this->filteredFile($realFile):$realLine)$reset".PHP_EOL;
+            echo " $gray(Inside: " . $this->filteredFile($realFile) . ":$realLine)$reset".PHP_EOL;
         }
 
         echo PHP_EOL;
