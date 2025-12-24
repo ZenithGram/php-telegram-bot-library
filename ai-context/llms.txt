@@ -14,10 +14,10 @@
 - [Получение обновлений](https://zenithgram.github.io/using/getting-updates.md): Настройка методов получения обновлений: Long Polling для разработки и Webhook для продакшена.
 - [Конструктор сообщений](https://zenithgram.github.io/using/messages.md): Работа с Fluent Interface для создания, форматирования и отправки сообщений.
 - [Конструктор опросов](https://zenithgram.github.io/using/poll.md): Создание и отправка опросов и викторин.
-- [Обработчики событий (Маршрутизация)](https://zenithgram.github.io/using/handlers.md)
+- [Обработчики событий](https://zenithgram.github.io/using/handlers.md): Описание обработчиков из класса Bot
 - [Middleware](https://zenithgram.github.io/using/middleware.md): Промежуточное ПО для фильтрации запросов, логирования и проверки прав доступа.
 - [Пагинация (Pagination)](https://zenithgram.github.io/using/pagination.md)
-- [Обработка ошибок (Error Handling)](https://zenithgram.github.io/using/errorHandler.md): Руководство по настройке и использованию встроенного обработчика ошибок (ErrorHandler).
+- [Обработка ошибок](https://zenithgram.github.io/using/errorHandler.md): Руководство по настройке и использованию встроенного обработчика ошибок (ErrorHandler).
 
 ### Классы
 
