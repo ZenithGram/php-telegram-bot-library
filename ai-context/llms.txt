@@ -79,7 +79,7 @@
 - [onDefault](https://zenithgram.github.io/classes/botMethods/onDefault.md): Глобальный fallback-обработчик для любых необработанных событий.
 - [redirect](https://zenithgram.github.io/classes/botMethods/redirect.md): Перенаправляет выполнение на другой маршрут.
 - [middleware](https://zenithgram.github.io/classes/botMethods/middleware.md): Регистрирует глобальное Middleware для бота.
-- [tgz](https://zenithgram.github.io/classes/botMethods/zg.md): Передает экземпляр TGZ в конструктор Bot.
+- [ZG](https://zenithgram.github.io/classes/botMethods/zg.md): Передает экземпляр ZG в конструктор Bot.
 - [run](https://zenithgram.github.io/classes/botMethods/run.md): Запускает обработку обновлений и маршрутизацию.
 
 #### Action
