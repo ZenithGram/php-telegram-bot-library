@@ -1,0 +1,17 @@
+<?php
+
+namespace ZenithGram\ZenithGram\Enum;
+
+enum PaginationMode: int
+{
+    /**
+     * Стандартные стрелки навигации "Предыдущая страница" и "Следующая
+     * страница"
+     */
+    case ARROWS = 0;    // < >
+
+    /**
+     * Несколько номеров страниц на строке
+     */
+    case NUMBERS = 1;   // 1 2 3
+}

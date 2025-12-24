@@ -1,6 +1,6 @@
 <?php
 
-namespace ZenithGram\ZenithGram;
+namespace ZenithGram\ZenithGram\Enum;
 
 enum MessageParseMode: string
 {

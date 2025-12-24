@@ -5,8 +5,9 @@ namespace ZenithGram\ZenithGram;
 use CURLFile;
 use Exception;
 use LogicException;
-use ZenithGram\ZenithGram\Dto\UserDto;
 use ZenithGram\ZenithGram\Dto\ChatDto;
+use ZenithGram\ZenithGram\Dto\UserDto;
+use ZenithGram\ZenithGram\Enum\MessageParseMode;
 use ZenithGram\ZenithGram\Utils\EnvironmentDetector;
 
 class ZG

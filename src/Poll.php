@@ -2,6 +2,8 @@
 
 namespace ZenithGram\ZenithGram;
 
+use ZenithGram\ZenithGram\Enum\MessageParseMode;
+
 class Poll
 {
 

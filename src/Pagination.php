@@ -2,6 +2,10 @@
 
 namespace ZenithGram\ZenithGram;
 
+use ZenithGram\ZenithGram\Enum\PaginationLayout;
+use ZenithGram\ZenithGram\Enum\PaginationMode;
+use ZenithGram\ZenithGram\Enum\PaginationNumberStyle;
+
 class Pagination
 {
     private array $items;               // Кнопки
@@ -580,69 +584,6 @@ class Pagination
             array_keys($map), array_values($map), (string)$number,
         );
     }
-
-
-}
-
-enum PaginationMode: int
-{
-    /**
-     * Стандартные стрелки навигации "Предыдущая страница" и "Следующая
-     * страница"
-     */
-    case ARROWS = 0;    // < >
-
-    /**
-     * Несколько номеров страниц на строке
-     */
-    case NUMBERS = 1;   // 1 2 3
-}
-
-enum PaginationNumberStyle: int
-{
-    /**
-     * 1, 2, 3, ...
-     */
-    case CLASSIC = 0;
-
-    /**
-     * 1️⃣, 2️⃣, 3️⃣, ...
-     */
-    case EMOJI = 1;
-}
-
-enum PaginationLayout: int
-{
-    /**
-     * Все 4 кнопки будут находиться на одной строке
-     *
-     * @see https://zenithgram.github.io/classes/paginationMethods/setNavigationLayout#возможные-значения-константы
-     *
-     */
-    case ROW = 0;
-
-    /**
-     * Кнопки "Предыдущая страница" и "Следующая страница" будут находиться на
-     * одной строке
-     *
-     * Кнопки "Первая страница" и "Последняя страница" будут находиться на
-     * второй строке
-     *
-     * @see https://zenithgram.github.io/classes/paginationMethods/setNavigationLayout#возможные-значения-константы
-     *
-     */
-    case SPLIT = 1;
-
-    /**
-     * Кнопки разных типов будут находиться на одной строке только при условии,
-     * что их 2
-     *
-     * Иначе будут на разных
-     *
-     * @see https://zenithgram.github.io/classes/paginationMethods/setNavigationLayout#возможные-значения-константы
-     *
-     */
-    case SMART = 2;
 }
 
 
