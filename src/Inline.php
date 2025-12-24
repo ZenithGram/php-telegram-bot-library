@@ -2,7 +2,7 @@
 
 namespace ZenithGram\ZenithGram;
 
-use ZenithGram\ZenithGram\Enum\MessageParseMode;
+use ZenithGram\ZenithGram\Enums\MessageParseMode;
 
 class Inline
 {

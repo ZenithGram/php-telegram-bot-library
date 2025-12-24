@@ -1,6 +1,6 @@
 <?php
 
-namespace ZenithGram\ZenithGram\Enum;
+namespace ZenithGram\ZenithGram\Enums;
 
 enum PaginationLayout: int
 {
