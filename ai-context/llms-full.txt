@@ -911,7 +911,7 @@ description: Устанавливает режим разметки по умо�
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
-use ZenithGram\ZenithGram\MessageParseMode;
+use ZenithGram\ZenithGram\Enum\MessageParseMode;
 
 $tg = ZG::create('ТОКЕН_БОТА');
 $tg->defaultParseMode(MessageParseMode::MarkdownV2);
@@ -3437,7 +3437,7 @@ description: Регистрирует глобальное Middleware для б�
 
 ## Аргументы обработчика
 
-* `TGZ $tg` - экземпляр класса TGZ.
+* `ZG $tg` - экземпляр класса ZG.
 * `callable $next` - ссылка на следующий обработчик в цепочке.
 
 ## Пример использования
@@ -3451,7 +3451,7 @@ use ZenithGram\ZenithGram\Bot;
 $tg = ZG::create('ТОКЕН_БОТА');
 $bot = new Bot($tg);
 
-$bot->middleware(function(ZG, callable $next) {
+$bot->middleware(function(ZG $tg, callable $next) {
     $user_id = $tg->getUserId();
     if ($user_id === 123456) {
         $next();        
@@ -3508,9 +3508,9 @@ public function middleware(callable $handler): void
 
 ```php
 <?php
-require 'vendor/autoload.php';
-
+require __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
+use ZenithGram\ZenithGram\Bot;
 
 // Предположим, у нас есть функция для проверки пользователя в БД
 function isUserRegistered(int $user_id): bool {
@@ -3519,11 +3519,14 @@ function isUserRegistered(int $user_id): bool {
     return $user_id === 12345;
 }
 
-$bot = new TGZ('YOUR_BOT_TOKEN');
+const ADMIN_IDS = [12345, 54321]; // Список ID администраторов
+
+$tg = ZG::create('ТОКЕН_БОТА');
+$bot = new Bot($tg);
 
 // Устанавливаем глобальное Middleware
 $bot->middleware(function (ZG $tg, Closure $next) {
-    $user_id = $tg->getUserID();
+    $user_id = $tg->getUserId();
 
     if ($user_id && !isUserRegistered($user_id)) {
         // Если пользователь не зарегистрирован, отправляем ему сообщение
@@ -3565,20 +3568,21 @@ public function middleware(callable $handler): Action
 
 ```php
 <?php
-require 'vendor/autoload.php';
-
+require __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
+use ZenithGram\ZenithGram\Bot;
 
 const ADMIN_IDS = [12345, 54321]; // Список ID администраторов
 
-$bot = new TGZ('YOUR_BOT_TOKEN');
+$tg = ZG::create('ТОКЕН_БОТА');
+$bot = new Bot($tg);
 
 $bot->onBotCommand('/start')->text('Добро пожаловать!');
 
 // Создаем маршрут для админ-панели и добавляем к нему Middleware
 $bot->onBotCommand('/admin')
     ->middleware(function (ZG $tg, Closure $next) {
-        $user_id = $tg->getUserID();
+        $user_id = $tg->getUserId();
 
         if (!in_array($user_id, ADMIN_IDS)) {
             // Если пользователь не админ, отправляем сообщение
@@ -3590,11 +3594,7 @@ $bot->onBotCommand('/admin')
         // Пользователь - админ, продолжаем выполнение
         $next();
     })
-    ->func(function (ZG $tg) {
-        // Этот код выполнится только если Middleware вызовет $next()
-        $tg->msg('Добро пожаловать в панель администратора!')->send();
-    });
-
+    ->text('Добро пожаловать в панель администратора!');
 
 $bot->run();
 ```
@@ -4308,7 +4308,7 @@ $bot->run();
 
 ### Аргументы обработчика
 
-* `TGZ $tg` - экземпляр класса TGZ.
+* `ZG $tg` - экземпляр класса `ZG`.
 * `UserDto $user` - данные пользователя в формате UserDto.
 
 ```php
@@ -4316,6 +4316,7 @@ $bot->run();
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
+use ZenithGram\ZenithGram\Dto\UserDto;
 
 $tg = ZG::create('ТОКЕН_БОТА');
 $bot = new Bot($tg);
@@ -5107,7 +5108,7 @@ description: Устанавливает режим разметки.
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
-use ZenithGram\ZenithGram\MessageParseMode;
+use ZenithGram\ZenithGram\Enum\MessageParseMode;
 
 $tg = ZG::create('ТОКЕН_БОТА');
 
@@ -5152,10 +5153,9 @@ description: Устанавливает режим разметки.
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
-
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
-use ZenithGram\ZenithGram\MessageParseMode;
+use ZenithGram\ZenithGram\Enum\MessageParseMode;
 
 $tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
@@ -5208,7 +5208,7 @@ description: Устанавливает разметку для объяснен
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
 use ZenithGram\ZenithGram\ZG;
-use ZenithGram\ZenithGram\MessageParseMode;
+use ZenithGram\ZenithGram\Enum\MessageParseMode;
 
 $tg = ZG::create(BOT_TOKEN);
 
@@ -5229,7 +5229,7 @@ $tg->poll('regular')
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
 use ZenithGram\ZenithGram\ZG;
-use ZenithGram\ZenithGram\MessageParseMode;
+use ZenithGram\ZenithGram\Enum\MessageParseMode;
 
 $tg = ZG::create(BOT_TOKEN);
 
@@ -5250,7 +5250,7 @@ $tg->poll('regular')
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
 use ZenithGram\ZenithGram\ZG;
-use ZenithGram\ZenithGram\MessageParseMode;
+use ZenithGram\ZenithGram\Enum\MessageParseMode;
 
 $tg = ZG::create(BOT_TOKEN);
 
@@ -6133,8 +6133,7 @@ PaginationMode — перечисление `(Enum)`. Содержит 2 кон�
 ## Пример использования
 
 ```php
-use ZenithGram\ZenithGram\Pagination;
-
+use ZenithGram\ZenithGram\Enum\PaginationMode;
 // Пример 1: Кнопки-стрелки
 $tg->pagination()->setMode(PaginationMode::ARROWS);
 
@@ -6175,7 +6174,7 @@ PaginationLayout — перечисление `(Enum)`. Содержит 3 ко�
 ## Пример использования
 
 ```php
-use ZenithGram\ZenithGram\Pagination;
+use ZenithGram\ZenithGram\Enum\PaginationLayout;
 
 // Пример 1: Разделить на две строки
 $tg->pagination()->setNavigationLayout(PaginationLayout::SPLIT);
@@ -6219,6 +6218,7 @@ Callable — функция, принимающая номер страницы 
 ## Пример использования
 
 ```php
+use ZenithGram\ZenithGram\Enum\PaginationNumberStyle;
 // Цифры
 $tg->pagination()->setNumberStyle(PaginationNumberStyle::CLASSIC);
 
@@ -7878,15 +7878,14 @@ $tg->pagination()->setActivePageFormat('- %s -');
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 use ZenithGram\ZenithGram\Button;
-use ZenithGram\ZenithGram\Enums\PaginationMode;
-use ZenithGram\ZenithGram\Enums\PaginationNumberStyle;
-use ZenithGram\ZenithGram\Enums\PaginationLayout;
+use ZenithGram\ZenithGram\Enum\PaginationMode;
+use ZenithGram\ZenithGram\Enum\PaginationNumberStyle;
+use ZenithGram\ZenithGram\Enum\PaginationLayout;
 
-$tg = ZG::create('ТОКЕН');
+$tg = ZG::create('ТОКЕН_БОТА');
 $bot = new Bot($tg);
 
 // Функция-помощник для создания клавиатуры
@@ -7979,7 +7978,6 @@ description: >-
 ```php
 <?php
 require __DIR__ . '/vendor/autoload.php'; // Убедитесь, что подключили автозагрузчик Composer
-
 use ZenithGram\ZenithGram\LongPoll;
 use ZenithGram\ZenithGram\Bot;
 use ZenithGram\ZenithGram\ZG;
@@ -7991,12 +7989,12 @@ $bot = new Bot();
 
 // Создаём простые команды
 $bot->onStart()->text('Привет! Я бот, работающий на TGZ через Long Polling.');
-$bot->onBotCommand('/time')->text('Точное время: ' . date('H:i:s'))
+$bot->onBotCommand('/time')->text('Точное время: ' . date('H:i:s'));
 
 // Добавляем вывод в консоль, чтобы знать, что всё запушено
 echo "Long Poll запущен... Нажмите Ctrl+C для остановки.";
 // Запускаем прослушивание. Вся магия происходит внутри анонимной функции.
-$lp->listen(function (ZG $tg) {
+$lp->listen(function (ZG $tg) use ($bot) {
     // Для каждого обновления библиотека автоматически создает и передает вам 
     // полностью готовый к работе объект ZG.
 
@@ -8047,7 +8045,7 @@ $lp->listen(function (ZG $tg) {
 ```php
 <?php
 
-require 'vendor/autoload.php'; // Подключаем автозагрузчик
+require __DIR__ . '/vendor/autoload.php'; // Подключаем автозагрузчик
 
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
@@ -8055,7 +8053,7 @@ use ZenithGram\ZenithGram\Bot;
 // Эта одна строка делает всё:
 // 1. Принимает входящий запрос от Telegram.
 // 2. Декодирует JSON-данные.
-// 3. Создает и настраивает объект TGZ, готовый к работе.
+// 3. Создает и настраивает объект ZG, готовый к работе.
 // 4. Автоматически отправляет ответ "ok" и HTTP-код 200, чтобы Telegram знал, что обновление получено.
 $tg = ZG::create('ТОКЕН_БОТА');
 // Создаем экземпляр класса-конструктора. В отличие от предыдущего примера, сразу передаем готовый класс ZG
@@ -8063,7 +8061,7 @@ $bot = new Bot($tg);
 
 // Дальнейшая логика обработки точно такая же, как и в Long Poll
 $bot->onStart()->text('Привет! Я бот, работающий на ZenithGram через Webhook.');
-$bot->onBotCommand('/time')->text('Точное время: ' . date('H:i:s'))
+$bot->onBotCommand('/time')->text('Точное время: ' . date('H:i:s'));
 
 // Запускаем бота
 $bot->run();
@@ -8208,6 +8206,7 @@ $bot = new Bot($tg); // Создаем экземпляр бота
 $bot->onMessage()->func(function(ZG $tg) {
     $tg->copyMsg();
 });
+
 $bot->run(); // Запускаем обработку события
 ```
 
@@ -8334,7 +8333,7 @@ $bot->btn('fish', 'Рыбка')->text('Вы выбрали Рыбку!')->img('f
 $bot->btn('cat', 'Котик')->text('Вы выбрали Котика!')->img('cat.jpg');
 
 // Создаем кнопки вручную с помощью класса Button
-$bot->onBotCommand('/help')->
+$bot->onBotCommand('/help')
     ->text('Выбери, чья помощь тебе нужна')
     ->kbd([[
         Button::text('Человека'),
@@ -8435,7 +8434,7 @@ $bot->onCallbackPreg('shop_nav', '/^catalog_page_(\d+)$/')
 $bot->onCallbackPreg('buy_item', '/^buy_item_(\d+)$/')
     ->func(function(ZG $tg, $itemId) {
         $tg->answerCallbackQuery(
-            $tg->getQueryId, 
+            $tg->getQueryId(), 
             ['text' => "Товар #$itemId добавлен в корзину! ✅"]
         )
     });
