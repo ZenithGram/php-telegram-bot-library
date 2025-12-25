@@ -501,11 +501,11 @@ class ZG
     /**
      * Возвращает переменную callback_data
      *
-     * @return ?string
+     * @return string|null
      *
      * @see https://zenithgram.github.io/classes/zenithMethods/get#getcallbackdata
      */
-    public function getCallbackData(): ?string
+    public function getCallbackData(): string|null
     {
         return $this->context->getCallbackData();
     }
@@ -513,11 +513,11 @@ class ZG
     /**
      * Возвращает переменную query_id
      *
-     * @return ?string
+     * @return string|null
      *
      * @see https://zenithgram.github.io/classes/zenithMethods/get#getqueryid
      */
-    public function getQueryId(): ?string
+    public function getQueryId(): string|null
     {
         return $this->context->getQueryId();
     }
@@ -525,11 +525,11 @@ class ZG
     /**
      * Возвращает переменную type
      *
-     * @return ?string
+     * @return string|null
      *
      * @see https://zenithgram.github.io/classes/zenithMethods/get#gettype
      */
-    public function getType(): ?string
+    public function getType(): string|null
     {
         return $this->context->getType();
     }
@@ -537,11 +537,11 @@ class ZG
     /**
      * Возвращает переменную msg_id
      *
-     * @return ?string
+     * @return int|string|null
      *
      * @see https://zenithgram.github.io/classes/zenithMethods/get#getmsgid
      */
-    public function getMsgId(): ?string
+    public function getMsgId(): int|string|null
     {
         return $this->context->getMessageId();
     }
@@ -549,11 +549,11 @@ class ZG
     /**
      * Возвращает переменную msg_id из отвеченного сообщения
      *
-     * @return ?string
+     * @return int|string|null
      *
      * @see https://zenithgram.github.io/classes/zenithMethods/get#getreplymsgid
      */
-    public function getReplyMsgId(): ?string
+    public function getReplyMsgId(): int|string|null
     {
         return $this->context->getReplyMessageId();
     }
@@ -561,11 +561,11 @@ class ZG
     /**
      * Возвращает переменную text
      *
-     * @return ?string
+     * @return string|null
      *
      * @see https://zenithgram.github.io/classes/zenithMethods/get#gettext
      */
-    public function getText(): ?string
+    public function getText(): string|null
     {
         return $this->context->getText();
     }
@@ -573,11 +573,11 @@ class ZG
     /**
      * Возвращает переменную text из отвеченного сообщения
      *
-     * @return ?string
+     * @return string|null
      *
      * @see https://zenithgram.github.io/classes/zenithMethods/get#getreplytext
      */
-    public function getReplyText(): ?string
+    public function getReplyText(): string|null
     {
         return $this->context->getReplyText();
     }
@@ -585,11 +585,11 @@ class ZG
     /**
      * Возвращает переменную user_id
      *
-     * @return ?int user_id
+     * @return int|string|null user_id
      *
      * @see https://zenithgram.github.io/classes/zenithMethods/get#getuserid
      */
-    public function getUserId(): ?int
+    public function getUserId(): int|string|null
     {
         return $this->context->getUserId();
     }
@@ -597,11 +597,11 @@ class ZG
     /**
      * Возвращает переменную user_id из отвеченного сообщения
      *
-     * @return ?int user_id
+     * @return int|string|null user_id
      *
      * @see https://zenithgram.github.io/classes/zenithMethods/get#getreplyuserid
      */
-    public function getReplyUserId(): ?int
+    public function getReplyUserId(): int|string|null
     {
         return $this->context->getReplyUserId();
     }
@@ -609,11 +609,11 @@ class ZG
     /**
      * Возвращает переменную chat_id
      *
-     * @return ?string
+     * @return int|string|null
      *
      * @see https://zenithgram.github.io/classes/zenithMethods/get#getchatid
      */
-    public function getChatId(): ?string
+    public function getChatId(): int|string|null
     {
         return $this->context->getChatId();
     }
@@ -714,9 +714,9 @@ class ZG
     }
 
     /**
-     * Извлекает данные чата из любого подходящего поля в текущем событии.
+     * Извлекает данные сообщения из любого подходящего поля в текущем событии.
      *
-     * Этот метод универсален и ищет данные чата ('chat') в таких событиях,
+     * Этот метод универсален и ищет данные сообщения ('message') в таких событиях,
      * как message, callback_query, channel_post, my_chat_member и других,
      * корректно обрабатывая вложенные структуры.
      *
@@ -725,7 +725,7 @@ class ZG
      *
      * @see https://zenithgram.github.io/classes/zenithMethods/get#getmessage
      */
-    public function getMessage(): ?MessageDto
+    public function getMessage(): MessageDto
     {
         $update = $this->context->getUpdateData();
 
@@ -740,7 +740,7 @@ class ZG
             return MessageDto::fromArray($messageData);
         }
 
-        return null;
+        throw new LogicException("Не удалось найти данные сообщения ('Message') в текущем событии.");
     }
 
     private array $botButtons = [];
