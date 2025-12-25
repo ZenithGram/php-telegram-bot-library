@@ -480,7 +480,7 @@ class Bot
         $userId = $this->context->getUserId();
 
         if ($type === 'bot_command'
-            || ($type === 'text'
+            || ($type === "text"
                 && str_starts_with(
                     $text, '/',
                 ))
@@ -506,6 +506,25 @@ class Bot
 
                 return;
             }
+
+            // Проверяем команды бота (onBotCommand)
+            $words = explode(' ', $text);
+            $command = $words[0];
+            unset($words[0]);
+            $final_text = implode(' ', $words);
+
+            foreach ($this->routes['bot_command'] as $route) {
+                $conditions = (array)$route->getCondition();
+                foreach ($conditions as $condition) {
+                    if ($condition === $command) {
+                        $this->dispatchAnswer(
+                            $route, $type, [$final_text],
+                        );
+
+                        return;
+                    }
+                }
+            }
         }
 
         if ($this->storage && $userId) {
@@ -524,27 +543,6 @@ class Bot
 
         if (($type === 'text' || $type === 'bot_command')) {
             if (!empty($text)) {
-                if ($type === 'bot_command') {
-                    // Проверяем команды бота (onBotCommand)
-                    $words = explode(' ', $text);
-                    $command = $words[0];
-                    unset($words[0]);
-                    $final_text = implode(' ', $words);
-
-                    foreach ($this->routes['bot_command'] as $route) {
-                        $conditions = (array)$route->getCondition();
-                        foreach ($conditions as $condition) {
-                            if ($condition === $command) {
-                                $this->dispatchAnswer(
-                                    $route, $type, [$final_text],
-                                );
-
-                                return;
-                            }
-                        }
-                    }
-                }
-
                 // Проверяем текстовые команды (onCommand)
                 foreach ($this->routes['command'] as $route) {
                     $conditions = (array)$route->getCondition();
