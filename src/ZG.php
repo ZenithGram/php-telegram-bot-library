@@ -214,9 +214,8 @@ class ZG
         }
         $user_id = $this->getUserId();
         if ($user_id) {
-            $this->storage->clearState($user_id);
-            // Опционально можно чистить и данные
-            // $this->storage->clearSessionData($user_id);
+             $this->storage->clearState($user_id);
+             $this->storage->clearSessionData($user_id);
         }
     }
 

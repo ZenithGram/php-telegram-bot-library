@@ -485,10 +485,9 @@ class Bot
                     $text, '/',
                 ))
         ) {
-            $userText = strtolower(mb_convert_encoding($text, 'UTF-8'));
+            $text = strtolower(mb_convert_encoding($text, 'UTF-8'));
 
-            // Реферальная система
-            if (str_starts_with($userText, '/start ')
+            if (str_starts_with($text, '/start ')
                 && $this->routes['referral_command'] !== null
             ) {
                 $route = $this->routes['referral_command'];
@@ -499,8 +498,7 @@ class Bot
                 return;
             }
 
-            // Команда /start (Сброс всего)
-            if ($userText === '/start'
+            if ($text === '/start'
                 && $this->routes['start_command'] !== null
             ) {
                 $route = $this->routes['start_command'];
@@ -510,17 +508,15 @@ class Bot
             }
         }
 
-        // 2. FSM (Диалоги): Проверяем состояние пользователя
         if ($this->storage && $userId) {
             $currentState = $this->storage->getState($userId);
 
             if ($currentState && isset($this->routes['state'][$currentState])) {
-                // Если состояние найдено и для него есть маршрут - вызываем его.
-                // Мы НЕ идем дальше к обычным командам. Состояние "захватывает" фокус.
                 $route = $this->routes['state'][$currentState];
 
-                // Отправляем тип 'state_answer', но по сути это тот же текст
-                $this->dispatchAnswer($route, 'state', [$text  ?? $callback_data]);
+                $this->dispatchAnswer(
+                    $route, 'state', [$text ?? $callback_data],
+                );
 
                 return;
             }
@@ -530,7 +526,7 @@ class Bot
             if (!empty($text)) {
                 if ($type === 'bot_command') {
                     // Проверяем команды бота (onBotCommand)
-                    $words = explode(' ', $userText);
+                    $words = explode(' ', $text);
                     $command = $words[0];
                     unset($words[0]);
                     $final_text = implode(' ', $words);
@@ -557,7 +553,7 @@ class Bot
                             $regex = $this->convertCommandPatternToRegex(
                                 $commandPattern,
                             );
-                            if (preg_match($regex, $userText, $matches)) {
+                            if (preg_match($regex, $text, $matches)) {
                                 $args = array_slice($matches, 1);
                                 $this->dispatchAnswer($route, $type, $args);
 
@@ -567,14 +563,14 @@ class Bot
                             $commandFromRoute = mb_convert_encoding(
                                 $commandPattern, 'UTF-8',
                             );
-                            if (str_starts_with($userText, $commandFromRoute)) {
+                            if (str_starts_with($text, $commandFromRoute)) {
                                 $commandLength = strlen($commandFromRoute);
-                                if (!isset($userText[$commandLength])
-                                    || $userText[$commandLength] === ' '
-                                    || $userText[$commandLength] === "\n"
+                                if (!isset($text[$commandLength])
+                                    || $text[$commandLength] === ' '
+                                    || $text[$commandLength] === "\n"
                                 ) {
                                     $argsString = trim(
-                                        substr($userText, $commandLength),
+                                        substr($text, $commandLength),
                                     );
                                     $args = ($argsString === '')
                                         ? []
