@@ -2,6 +2,7 @@
 
 namespace ZenithGram\ZenithGram;
 
+use ZenithGram\ZenithGram\Enums\MessageDice;
 use ZenithGram\ZenithGram\Enums\MessageParseMode;
 use ZenithGram\ZenithGram\Utils\LocalFile;
 
@@ -259,16 +260,17 @@ trait MessageBuilderTrait
     /**
      * Отправляет анимированные эмодзи
      *
-     * @param string $dice '🎲', '🎯', '🏀', '⚽', '🎳', '🎰'
+     * @param MessageDice $dice Эмодзи, который отправит бот   \
+     *                          **Пр: MessageDice::Dice**
      *
      * @return self
      *
      * @see https://zenithgram.github.io/classes/messageMethods/dice
      */
-    public function dice(string $dice): self
+    public function dice(MessageDice $dice): self
     {
         $this->sendDice = true;
-        $this->messageData['emoji'] = $dice;
+        $this->messageData['emoji'] = $dice->value;
 
         return $this;
     }

@@ -6,6 +6,7 @@ use CURLFile;
 use Exception;
 use LogicException;
 use ZenithGram\ZenithGram\Dto\ChatDto;
+use ZenithGram\ZenithGram\Dto\MessageDto;
 use ZenithGram\ZenithGram\Dto\UserDto;
 use ZenithGram\ZenithGram\Enums\MessageParseMode;
 use ZenithGram\ZenithGram\Utils\EnvironmentDetector;
@@ -628,9 +629,9 @@ class ZG
      * @return UserDto Объект пользователя.
      * @throws LogicException Если данные пользователя не найдены в событии.
      *
-     * @see https://zenithgram.github.io/classes/zenithMethods/get#getuserdto
+     * @see https://zenithgram.github.io/classes/zenithMethods/get#getuser
      */
-    public function getUserDto(): UserDto
+    public function getUser(): UserDto
     {
         $update = $this->context->getUpdateData();
         $user = null;
@@ -669,14 +670,13 @@ class ZG
      * @return ChatDto Объект чата.
      * @throws LogicException Если данные чата не найдены в событии.
      *
-     * @see https://zenithgram.github.io/classes/zenithMethods/get#getchatdto
+     * @see https://zenithgram.github.io/classes/zenithMethods/get#getchat
      */
-    public function getChatDto(): ChatDto
+    public function getChat(): ChatDto
     {
         $update = $this->context->getUpdateData();
         $chatData = null;
 
-        // Определяем возможные пути к объекту 'chat'
         $paths = [
             ['message', 'chat'],
             ['edited_message', 'chat'],
@@ -685,25 +685,24 @@ class ZG
             ['my_chat_member', 'chat'],
             ['chat_member', 'chat'],
             ['chat_join_request', 'chat'],
-            ['callback_query', 'message', 'chat'], // Вложенный путь
+            ['callback_query', 'message', 'chat'],
         ];
 
         foreach ($paths as $path) {
             $temp = $update;
             $found = true;
 
-            // Проходим по каждому ключу в пути
             foreach ($path as $key) {
                 if (!isset($temp[$key])) {
                     $found = false;
-                    break; // Если ключ не найден, этот путь не подходит
+                    break;
                 }
-                $temp = $temp[$key]; // Спускаемся на уровень глубже
+                $temp = $temp[$key];
             }
 
             if ($found) {
                 $chatData = $temp;
-                break; // Нашли данные, выходим из основного цикла
+                break;
             }
         }
 
@@ -712,6 +711,36 @@ class ZG
         }
 
         return ChatDto::fromArray($chatData);
+    }
+
+    /**
+     * Извлекает данные чата из любого подходящего поля в текущем событии.
+     *
+     * Этот метод универсален и ищет данные чата ('chat') в таких событиях,
+     * как message, callback_query, channel_post, my_chat_member и других,
+     * корректно обрабатывая вложенные структуры.
+     *
+     * @return MessageDto Объект чата.
+     * @throws LogicException Если данные чата не найдены в событии.
+     *
+     * @see https://zenithgram.github.io/classes/zenithMethods/get#getmessage
+     */
+    public function getMessage(): ?MessageDto
+    {
+        $update = $this->context->getUpdateData();
+
+        $messageData = $update['message']
+            ?? $update['callback_query']['message']
+            ?? $update['edited_message']
+            ?? $update['channel_post']
+            ?? $update['edited_channel_post']
+            ?? null;
+
+        if ($messageData !== null) {
+            return MessageDto::fromArray($messageData);
+        }
+
+        return null;
     }
 
     private array $botButtons = [];
