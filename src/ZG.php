@@ -10,6 +10,7 @@ use ZenithGram\ZenithGram\Dto\MessageDto;
 use ZenithGram\ZenithGram\Dto\UserDto;
 use ZenithGram\ZenithGram\Enums\MessageParseMode;
 use ZenithGram\ZenithGram\Utils\EnvironmentDetector;
+use ZenithGram\ZenithGram\Storage\StorageInterface;
 
 class ZG
 {
@@ -18,6 +19,7 @@ class ZG
     public ApiClient $api;
     public UpdateContext $context;
     public MessageParseMode $parseModeDefault = MessageParseMode::None;
+    private ?StorageInterface $storage = null;
 
     public function __construct(ApiClient $api, UpdateContext $context)
     {
@@ -145,6 +147,110 @@ class ZG
     public function file(string $file_id): File
     {
         return new File($file_id, $this->api);
+    }
+
+    /**
+     * Устанавливает активное хранилище состояний (FSM)
+     *
+     * @param StorageInterface $storage Объект хранилища
+     *
+     * @return ZG
+     *
+     * @see https://zenithgram.github.io/classes/zenithMethods/setStorage
+     */
+    public function setStorage(StorageInterface $storage): self
+    {
+        $this->storage = $storage;
+        return $this;
+    }
+
+    /**
+     * Возвращает экземпляр текущего хранилища для прямых манипуляций
+     *
+     * @return StorageInterface|null
+     *
+     * @see https://zenithgram.github.io/classes/zenithMethods/storage
+     */
+    public function storage(): ?StorageInterface
+    {
+        return $this->storage;
+    }
+
+    /**
+     * Переводит пользователя на следующий шаг (состояние)
+     *
+     * @param string $state Название следующего состояния
+     *
+     * @return void
+     *
+     * @throws LogicException|\JsonException Если хранилище не подключено
+     *
+     * @see https://zenithgram.github.io/classes/zenithMethods/step
+     */
+    public function step(string $state): void
+    {
+        if (!$this->storage) {
+            throw new LogicException('Storage is not configured. Use Bot->setStorage().');
+        }
+        $userId = $this->getUserId();
+        if ($userId) {
+            $this->storage->setState($userId, $state);
+        }
+    }
+
+    /**
+     * Завершает текущий шаг (сбрасывает состояние)
+     *
+     * @return void
+     *
+     * @throws LogicException|\JsonException Если хранилище не подключено
+     *
+     * @see https://zenithgram.github.io/classes/zenithMethods/endStep
+     */
+    public function endStep(): void
+    {
+        if (!$this->storage) {
+            throw new LogicException('Storage is not configured.');
+        }
+        $user_id = $this->getUserId();
+        if ($user_id) {
+            $this->storage->clearState($user_id);
+            // Опционально можно чистить и данные
+            // $this->storage->clearSessionData($user_id);
+        }
+    }
+
+    /**
+     * Универсальный метод для работы с данными сессии
+     *
+     * Если передан массив $data — сохраняет (мержит) данные.
+     * Если $data не передан — возвращает текущие накопленные данные.
+     *
+     * @param array|null $data Данные для сохранения (опционально)
+     *
+     * @return array Текущие данные сессии
+     *
+     * @throws LogicException Если хранилище не подключено
+     *
+     * @see https://zenithgram.github.io/classes/zenithMethods/session
+     */
+    public function session(?array $data = null): array
+    {
+        if (!$this->storage) {
+            throw new LogicException('Storage is not configured.');
+        }
+
+        $user_id = $this->getUserId();
+        if (!$user_id) {
+            return [];
+        }
+
+        if ($data !== null) {
+            $this->storage->setSessionData($user_id, $data);
+            return $this->storage->getSessionData($user_id);
+        }
+
+        return $this->storage->getSessionData($user_id);
     }
 
     /**

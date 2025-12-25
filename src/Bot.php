@@ -3,6 +3,7 @@
 namespace ZenithGram\ZenithGram;
 
 use ZenithGram\ZenithGram\Dto\UserDto;
+use ZenithGram\ZenithGram\Storage\StorageInterface;
 
 class Bot
 {
@@ -10,6 +11,7 @@ class Bot
     private ZG|null $tg;
     private UpdateContext|null $context;
     private array $ctx = [];
+    private ?StorageInterface $storage = null;
 
     private array $routes
         = [
@@ -19,6 +21,7 @@ class Bot
             'text_preg'           => [],
             'callback_query'      => [],
             'callback_query_preg' => [],
+            'state'               => [],
             'inline_fallback'     => null,
             'start_command'       => null,
             'referral_command'    => null,
@@ -50,6 +53,41 @@ class Bot
     {
         $this->tg = $tg;
         $this->context = $tg?->context;
+    }
+
+    /**
+     * Подключает хранилище состояний к боту (файлы, БД, Redis)
+     *
+     * @param StorageInterface $storage Объект реализации хранилища
+     *
+     * @return Bot
+     *
+     * @see https://zenithgram.github.io/classes/botMethods/setStorage
+     */
+    public function setStorage(StorageInterface $storage): self
+    {
+        $this->storage = $storage;
+        // Прокидываем хранилище в основной класс ZG, чтобы методы step() работали
+        $this->tg?->setStorage($storage);
+
+        return $this;
+    }
+
+    /**
+     * Создает маршрут для обработки конкретного состояния (шага диалога)
+     *
+     * @param string $stateName Название состояния (например, 'ask_age')
+     *
+     * @return Action
+     *
+     * @see https://zenithgram.github.io/classes/botMethods/onState
+     */
+    public function onState(string $stateName): Action
+    {
+        $route = new Action("state_{$stateName}", $stateName);
+        $this->routes['state'][$stateName] = $route;
+
+        return $route;
     }
 
     /**
@@ -224,14 +262,15 @@ class Bot
     /**
      * Создает маршрут для callback-запроса по регулярному выражению.
      *
-     * @param string            $id   Уникальный идентификатор.
+     * @param string            $id      Уникальный идентификатор.
      * @param array|string|null $pattern Регулярное выражение для CallbackData.
      *
      * @return Action
      *
      * @see https://zenithgram.github.io/classes/botMethods/onCallbackPreg
      */
-    public function onCallbackPreg(string $id, array|string|null $pattern = null,
+    public function onCallbackPreg(string $id,
+        array|string|null $pattern = null,
     ): Action {
         $route = new Action($id, $pattern ?? $id);
         $this->routes['callback_query_preg'][$id] = $route;
@@ -438,35 +477,58 @@ class Bot
         $type = $this->context->getType();
         $text = $this->context->getText();
         $callback_data = $this->context->getCallbackData();
+        $userId = $this->context->getUserId();
 
-        if ($type === 'text' || $type === 'bot_command') {
+        if ($type === 'bot_command'
+            || ($type === 'text'
+                && str_starts_with(
+                    $text, '/',
+                ))
+        ) {
+            $userText = strtolower(mb_convert_encoding($text, 'UTF-8'));
+
+            // Реферальная система
+            if (str_starts_with($userText, '/start ')
+                && $this->routes['referral_command'] !== null
+            ) {
+                $route = $this->routes['referral_command'];
+                $this->dispatchAnswer(
+                    $route, $type, [trim(mb_substr($text, 6))],
+                );
+
+                return;
+            }
+
+            // Команда /start (Сброс всего)
+            if ($userText === '/start'
+                && $this->routes['start_command'] !== null
+            ) {
+                $route = $this->routes['start_command'];
+                $this->dispatchAnswer($route, $type);
+
+                return;
+            }
+        }
+
+        // 2. FSM (Диалоги): Проверяем состояние пользователя
+        if ($this->storage && $userId) {
+            $currentState = $this->storage->getState($userId);
+
+            if ($currentState && isset($this->routes['state'][$currentState])) {
+                // Если состояние найдено и для него есть маршрут - вызываем его.
+                // Мы НЕ идем дальше к обычным командам. Состояние "захватывает" фокус.
+                $route = $this->routes['state'][$currentState];
+
+                // Отправляем тип 'state_answer', но по сути это тот же текст
+                $this->dispatchAnswer($route, 'state', [$text  ?? $callback_data]);
+
+                return;
+            }
+        }
+
+        if (($type === 'text' || $type === 'bot_command')) {
             if (!empty($text)) {
-                $userText = strtolower(mb_convert_encoding($text, 'UTF-8'));
-
-
                 if ($type === 'bot_command') {
-                    // Проверяeм реферал (onReferral)
-                    if (str_starts_with($userText, '/start ')
-                        && $this->routes['referral_command'] !== null
-                    ) {
-                        $route = $this->routes['referral_command'];
-                        $this->dispatchAnswer(
-                            $route, $type, [trim(mb_substr($text, 6))],
-                        );
-
-                        return;
-                    }
-
-                    // Проверяeм /start (onStart)
-                    if ($userText === '/start'
-                        && $this->routes['start_command'] !== null
-                    ) {
-                        $route = $this->routes['start_command'];
-                        $this->dispatchAnswer($route, $type);
-
-                        return;
-                    }
-
                     // Проверяем команды бота (onBotCommand)
                     $words = explode(' ', $userText);
                     $command = $words[0];
@@ -574,7 +636,6 @@ class Bot
 
                     return;
                 }
-
             }
 
             // Проверяем сообщение с фото
@@ -647,13 +708,6 @@ class Bot
                     [$leftMember],
                 );
             }
-
-            // Fallback, если ни один маршрут не сработал
-            if ($this->routes['fallback'] !== null) {
-                $this->dispatchAnswer($this->routes['fallback'], 'text');
-
-                return;
-            }
         }
 
         if ($type === 'callback_query') {
@@ -697,7 +751,10 @@ class Bot
                     foreach ($patterns as $pattern) {
                         if (preg_match($pattern, $callback_data, $matches)) {
                             $args = array_slice($matches, 1);
-                            $this->dispatchAnswer($route, $type, $args); // Передаем все совпадения
+                            $this->dispatchAnswer(
+                                $route, $type, $args,
+                            ); // Передаем все совпадения
+
                             return;
                         }
                     }
@@ -720,6 +777,14 @@ class Bot
 
                 return;
             }
+        }
+
+
+        // Fallback, если ни один маршрут не сработал
+        if ($this->routes['fallback'] !== null) {
+            $this->dispatchAnswer($this->routes['fallback'], 'text');
+
+            return;
         }
     }
 
@@ -885,6 +950,20 @@ class Bot
             return null;
         }
 
+        if ($type === 'state') {
+            $type = $this->context->getType();
+            if ($type === 'callback_query') {
+                $this->tg->answerCallbackQuery(
+                    $this->context->getQueryId(),
+                    ['text' => $route->getQueryText()],
+                );
+            }
+
+            $this->constructMessage($route);
+
+            return null;
+        }
+
         if ($type === 'button_callback_query') {
             $query_id = $this->context->getQueryId();
             $this->tg->answerCallbackQuery(
@@ -957,15 +1036,17 @@ class Bot
         if ($messageAction === 2) {
             return $msg->editCaption();
         }
+
         return $msg->editMedia();
     }
 
     /**
      * Метод прокидывает основной класс ZG в класс Bot.
      *
-     * Создан для удобного использования с методом получения обновления LongPoll.
+     * Создан для удобного использования с методом получения обновления
+     * LongPoll.
      *
-     * @param ZG $ZG    Объект класса ZG
+     * @param ZG $ZG Объект класса ZG
      *
      * @return Bot
      *
@@ -978,11 +1059,16 @@ class Bot
         $this->tg = $ZG;
         $this->context = $ZG->context;
 
+        if ($this->storage) {
+            $this->tg->setStorage($this->storage);
+        }
+
         return $this;
     }
 
     /**
-     * Метод является "сердцем" роутера. Он запускает процесс сопоставления (диспетчеризации) входящего обновления с определенными вами маршрутами.
+     * Метод является "сердцем" роутера. Он запускает процесс сопоставления
+     * (диспетчеризации) входящего обновления с определенными вами маршрутами.
      *
      * Обычно run вызывается один раз в конце вашего скрипта без параметров.
      *
