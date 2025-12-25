@@ -161,6 +161,7 @@ class ZG
     public function setStorage(StorageInterface $storage): self
     {
         $this->storage = $storage;
+
         return $this;
     }
 
@@ -190,7 +191,9 @@ class ZG
     public function step(string $state): void
     {
         if (!$this->storage) {
-            throw new LogicException('Storage is not configured. Use Bot->setStorage().');
+            throw new LogicException(
+                'Storage is not configured. Use Bot->setStorage().',
+            );
         }
         $userId = $this->getUserId();
         if ($userId) {
@@ -201,21 +204,27 @@ class ZG
     /**
      * Завершает текущий шаг (сбрасывает состояние)
      *
+     * Опционально можно задать удаление всех данных сессии
+     *
+     * @param bool $clear_data Удалять все данные сессии True/False
+     *
      * @return void
      *
      * @throws LogicException|\JsonException Если хранилище не подключено
      *
      * @see https://zenithgram.github.io/classes/zenithMethods/endStep
      */
-    public function endStep(): void
+    public function endStep(bool $clear_data = true): void
     {
         if (!$this->storage) {
             throw new LogicException('Storage is not configured.');
         }
         $user_id = $this->getUserId();
         if ($user_id) {
-             $this->storage->clearState($user_id);
-             $this->storage->clearSessionData($user_id);
+            $this->storage->clearState($user_id);
+            if ($clear_data) {
+                $this->storage->clearSessionData($user_id);
+            }
         }
     }
 
@@ -246,6 +255,7 @@ class ZG
 
         if ($data !== null) {
             $this->storage->setSessionData($user_id, $data);
+
             return $this->storage->getSessionData($user_id);
         }
 
@@ -759,7 +769,9 @@ class ZG
         }
 
         if ($user === null) {
-            throw new LogicException("Не удалось найти данные пользователя ('from') в текущем событии.");
+            throw new LogicException(
+                "Не удалось найти данные пользователя ('from') в текущем событии.",
+            );
         }
 
         return UserDto::fromArray($user);
@@ -812,7 +824,9 @@ class ZG
         }
 
         if ($chatData === null) {
-            throw new LogicException("Не удалось найти данные чата ('chat') в текущем событии.");
+            throw new LogicException(
+                "Не удалось найти данные чата ('chat') в текущем событии.",
+            );
         }
 
         return ChatDto::fromArray($chatData);
@@ -821,9 +835,9 @@ class ZG
     /**
      * Извлекает данные сообщения из любого подходящего поля в текущем событии.
      *
-     * Этот метод универсален и ищет данные сообщения ('message') в таких событиях,
-     * как message, callback_query, channel_post, my_chat_member и других,
-     * корректно обрабатывая вложенные структуры.
+     * Этот метод универсален и ищет данные сообщения ('message') в таких
+     * событиях, как message, callback_query, channel_post, my_chat_member и
+     * других, корректно обрабатывая вложенные структуры.
      *
      * @return MessageDto Объект чата.
      * @throws LogicException Если данные чата не найдены в событии.
@@ -845,7 +859,9 @@ class ZG
             return MessageDto::fromArray($messageData);
         }
 
-        throw new LogicException("Не удалось найти данные сообщения ('Message') в текущем событии.");
+        throw new LogicException(
+            "Не удалось найти данные сообщения ('Message') в текущем событии.",
+        );
     }
 
     private array $botButtons = [];
