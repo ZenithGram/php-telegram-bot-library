@@ -28,6 +28,7 @@
 - [Message](https://zenithgram.github.io/classes/message.md): Конструктор сообщений.
 - [Button](https://zenithgram.github.io/classes/button.md): Вспомогательный класс для создания кнопок.
 - [File](https://zenithgram.github.io/classes/file.md): Класс для работы с файлами.
+- [Storage](https://zenithgram.github.io/classes/storage.md): Классы для работы с хранилищем состояний (FSM).
 - [Poll](https://zenithgram.github.io/classes/poll.md): Класс для создания опросов.
 - [Pagination](https://zenithgram.github.io/classes/pagination.md): Класс для пагинации страниц.
 - [Inline](https://zenithgram.github.io/classes/inline.md): Класс для создания инлайн-ответов.
@@ -52,6 +53,11 @@
 - [sendAction](https://zenithgram.github.io/classes/zenithMethods/sendAction.md): Отправляет статус действия бота (например, 'typing').
 - [answers](https://zenithgram.github.io/classes/zenithMethods/answers.md): Методы для ответа на callback (answerCallbackQuery) и inline запросы.
 - [callAPI](https://zenithgram.github.io/classes/zenithMethods/callAPI.md): Выполняет произвольный метод Telegram Bot API.
+- [setStorage](https://zenithgram.github.io/classes/zenithMethods/setStorage.md): Устанавливает хранилище состояний.
+- [storage](https://zenithgram.github.io/classes/zenithMethods/getStorage.md): Возвращает объект текущего хранилища.
+- [step](https://zenithgram.github.io/classes/zenithMethods/step.md): Переводит пользователя на следующий шаг (состояние).
+- [endStep](https://zenithgram.github.io/classes/zenithMethods/endStep.md): Завершает диалог (сбрасывает состояние).
+- [session](https://zenithgram.github.io/classes/zenithMethods/session.md): Работа с данными сессии (получение и сохранение).
 
 #### Bot
 
@@ -77,8 +83,10 @@
 - [onEditedMessage](https://zenithgram.github.io/classes/botMethods/onEditedMessage.md): Срабатывает при редактировании сообщения пользователем.
 - [onMessage](https://zenithgram.github.io/classes/botMethods/onMessage.md): Обработчик любого текстового сообщения (fallback для текста).
 - [onDefault](https://zenithgram.github.io/classes/botMethods/onDefault.md): Глобальный fallback-обработчик для любых необработанных событий.
+- [onState](https://zenithgram.github.io/classes/botMethods/onState.md): Создает маршрут для обработки конкретного состояния.
 - [redirect](https://zenithgram.github.io/classes/botMethods/redirect.md): Перенаправляет выполнение на другой маршрут.
 - [middleware](https://zenithgram.github.io/classes/botMethods/middleware.md): Регистрирует глобальное Middleware для бота.
+- [setStorage](https://zenithgram.github.io/classes/botMethods/setStorage.md): Подключает хранилище к боту.
 - [ZG](https://zenithgram.github.io/classes/botMethods/zg.md): Передает экземпляр ZG в конструктор Bot.
 - [run](https://zenithgram.github.io/classes/botMethods/run.md): Запускает обработку обновлений и маршрутизацию.
 

@@ -1446,6 +1446,37 @@ $bot->run();
 ---
 
 ---
+url: 'https://zenithgram.github.io/classes/zenithMethods/endStep.md'
+description: Завершает диалог (сбрасывает состояние).
+---
+
+# endStep
+
+Метод сбрасывает текущее состояние пользователя, завершая диалог.
+
+## Параметры метода
+
+| # |    Название    |  Тип   |                           Описание                            |
+|:-:|:--------------:|:------:|:-------------------------------------------------------------:|
+| 1 | **clear\_data** | `bool` | Удалять данные сессии? `True`/`False`. \ По умолчанию: `true` |
+
+## Возвращает
+
+`void`
+
+## Пример использования
+
+```php
+$bot->onState('final_step')->func(function(ZG $tg) {
+    $tg->reply('Спасибо, опрос завершен!');
+    $tg->endStep(); // Пользователь больше не находится в состоянии
+    // Так же будут удалены все накопленные данные  
+});
+```
+
+---
+
+---
 url: 'https://zenithgram.github.io/classes/enum.md'
 description: Все Enum и их значения
 ---
@@ -2054,7 +2085,7 @@ description: 'Методы получения данных из обновлен
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ВАШ_ТОКЕН');
+$tg = ZG::create('ТОКЕН_БОТА');
 $update = $tg->getUpdate();
 ```
 
@@ -2251,7 +2282,7 @@ $callback_data = $tg->getCallbackData();
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ВАШ_ТОКЕН');
+$tg = ZG::create('ТОКЕН_БОТА');
 
 $chat_id = $tg->getChatID();
 $text = $tg->getText();
@@ -4597,6 +4628,65 @@ $bot->run();
 ---
 
 ---
+url: 'https://zenithgram.github.io/classes/botMethods/onState.md'
+description: Создает маршрут для обработки конкретного состояния.
+---
+
+# onState
+
+Метод создает маршрут, который срабатывает, когда пользователь находится в указанном состоянии (шаге диалога).
+Этот обработчик имеет приоритет над обычными текстовыми командами (`onText`, `onCommand`), что позволяет "захватить" ввод пользователя.
+
+::: tip Поддержка типов
+Маршрут `onState` перехватывает как текстовые сообщения, так и нажатия на кнопки (`callback_query`), если пользователь находится в заданном состоянии.
+:::
+
+## Параметры
+
+| # |   Название    |   Тип    |                   Описание                    |
+|:-:|:-------------:|:--------:|:---------------------------------------------:|
+| 1 | **stateName** | `string` | Название состояния, которое нужно обработать. |
+
+## Возвращает
+
+`Action` — экземпляр класса `Action`.
+
+## Аргументы
+
+`onState` передает в `func()` объект основного класса `ZG` и данные от пользователя (`текст сообщения` или `callback_data`):
+
+## Пример использования
+
+```php
+<?php
+require_once __DIR__ . '/vendor/autoload.php';
+use ZenithGram\ZenithGram\ZG;
+use ZenithGram\ZenithGram\Bot;
+use ZenithGram\ZenithGram\Storage\FileStorage;
+
+$tg = ZG::create('ТОКЕН_БОТА');
+$bot = new Bot($tg);
+$bot->setStorage(new FileStorage());
+
+// 1. Вход в диалог
+$bot->onBotCommand('reg', '/reg')->func(function(ZG $tg) {
+    $tg->reply('Введите ваше имя:');
+    $tg->step('wait_name');
+});
+
+// 2. Обработка состояния
+$bot->onState('wait_name')
+    ->func(function(ZG $tg, string $name) {
+        $tg->reply("Приятно познакомиться, $name! Диалог завершен.");
+        $tg->endStep(); // Выход
+    });
+
+$bot->run();
+```
+
+---
+
+---
 url: 'https://zenithgram.github.io/classes/botMethods/onSticker.md'
 description: Срабатывает при получении стикера.
 ---
@@ -5989,6 +6079,38 @@ $tg->sendMessage($chat_id, 'Привет, мир!');
 ---
 
 ---
+url: 'https://zenithgram.github.io/classes/zenithMethods/session.md'
+description: Работа с данными сессии (получение и сохранение).
+---
+
+# session
+
+Универсальный метод для работы с данными пользователя в рамках диалога. Позволяет как сохранять промежуточные данные (например, имя, возраст), так и получать их.
+
+## Параметры метода
+
+| # | Название |       Тип       |                                                    Описание                                                    |
+|:-:|:--------:|:---------------:|:--------------------------------------------------------------------------------------------------------------:|
+| 1 | **data** | `array`|`null` | Если передан массив — данные сохраняются (объединяются с текущими). Если `null` — возвращаются текущие данные. |
+
+## Возвращает
+
+`array` — Текущий массив данных сессии.
+
+## Пример использования
+
+```php
+// Сохранение данных
+$tg->session(['age' => 25]);
+
+// Получение данных
+$data = $tg->session();
+$age = $data['age']; // 25
+```
+
+---
+
+---
 url: 'https://zenithgram.github.io/classes/paginationMethods/setActivePageFormat.md'
 description: Формат отображения активной страницы.
 ---
@@ -6396,6 +6518,112 @@ $tg->pagination()->setSigns('⬅️ Назад', 'Вперед ➡️');
 ---
 
 ---
+url: 'https://zenithgram.github.io/classes/botMethods/setStorage.md'
+description: Подключает хранилище к боту.
+---
+
+# setStorage
+
+Метод подключает хранилище состояний (FSM) к боту. Это обязательный шаг для использования функционала диалогов (`onState`). Метод также автоматически прокидывает хранилище в основной класс `ZG`.
+
+## Параметры
+
+| # |  Название   |        Тип         |                    Описание                     |
+|:-:|:-----------:|:------------------:|:-----------------------------------------------:|
+| 1 | **storage** | `StorageInterface` | Реализация хранилища (например, `FileStorage`). |
+
+## Возвращает
+
+`Bot` — экземпляр класса `Bot`.
+
+## Пример использования
+
+```php
+<?php
+require_once __DIR__ . '/vendor/autoload.php';
+use ZenithGram\ZenithGram\ZG;
+use ZenithGram\ZenithGram\Bot;
+use ZenithGram\ZenithGram\Storage\FileStorage;
+
+$tg = ZG::create('ТОКЕН_БОТА');
+$bot = new Bot($tg);
+
+// Инициализируем хранилище
+$bot->setStorage(new FileStorage());
+```
+
+---
+
+---
+url: 'https://zenithgram.github.io/classes/zenithMethods/setStorage.md'
+description: Устанавливает хранилище состояний.
+---
+
+# setStorage
+
+Метод подключает объект хранилища к экземпляру `ZG`. Это необходимо для работы методов `step()`, `session()` и `endStep()`.
+
+::: tip Автоматизация
+Если вы используете класс `Bot`, рекомендуется устанавливать хранилище через `Bot->setStorage()`, он автоматически передаст его в `ZG`.
+:::
+
+## Параметры метода
+
+| # |  Название   |        Тип         |     Описание      |
+|:-:|:-----------:|:------------------:|:-----------------:|
+| 1 | **storage** | `StorageInterface` | Объект хранилища. |
+
+## Возвращает
+
+`ZG` - экземпляр класса ZG.
+
+## Пример использования
+
+```php
+<?php
+require_once __DIR__ . '/vendor/autoload.php';
+use ZenithGram\ZenithGram\ZG;
+use ZenithGram\ZenithGram\Storage\FileStorage;
+
+$tg = ZG::create('ТОКЕН_БОТА');
+$storage = new FileStorage();
+
+$tg->setStorage($storage);
+```
+
+---
+
+---
+url: 'https://zenithgram.github.io/classes/zenithMethods/step.md'
+description: Переводит пользователя на следующий шаг (состояние).
+---
+
+# step
+
+Метод устанавливает новое состояние для текущего пользователя. Используется внутри обработчиков для продвижения по диалогу.
+
+## Параметры метода
+
+| # | Название  |   Тип    |             Описание              |
+|:-:|:---------:|:--------:|:---------------------------------:|
+| 1 | **state** | `string` | Название нового состояния (шага). |
+
+## Возвращает
+
+`void`
+
+## Пример использования
+
+```php
+$bot->onCommand('start', '/start')->func(function(ZG $tg) {
+    $tg->reply('Как вас зовут?');
+    $tg->step('wait_name'); // Переход в состояние ожидания имени
+});
+```
+
+---
+
+---
 url: 'https://zenithgram.github.io/classes/messageMethods/sticker.md'
 description: Добавляет стикер.
 ---
@@ -6443,6 +6671,69 @@ if ($type === 'bot_command') {
 ## Вспомогательные методы
 
 * [`getFileId`](/classes/fileMethods/getFileId.md) - Получить ID файла
+
+---
+
+---
+url: 'https://zenithgram.github.io/classes/zenithMethods/getStorage.md'
+description: Возвращает объект текущего хранилища.
+---
+
+# getStorage
+
+Метод возвращает текущий объект хранилища для прямых манипуляций (например, если нужно вызвать специфичный метод хранилища).
+
+## Возвращает
+
+`StorageInterface`|`null` — Объект хранилища или null, если оно не задано.
+
+## Пример использования
+
+```php
+$data = $tg->getStorage()->getSessionData($user_id);
+```
+
+---
+
+---
+url: 'https://zenithgram.github.io/classes/storage.md'
+description: Классы для работы с хранилищем состояний (FSM).
+---
+
+# **Storage**
+
+В библиотеке реализована поддержка FSM (Finite State Machine) для создания диалогов. Для работы с состояниями используются классы хранилищ.
+
+## FileStorage
+
+Стандартная реализация хранилища на файлах (JSON). Использует асинхронные методы для работы с файловой системой, не блокируя поток выполнения.
+
+### Создание экземпляра
+
+```php
+<?php
+require_once __DIR__ . '/vendor/autoload.php';
+use ZenithGram\ZenithGram\Storage\FileStorage;
+
+// По умолчанию создает папку 'storage/sessions' в корне проекта
+$storage = new FileStorage();
+
+// Можно указать свой путь
+$storage = new FileStorage(__DIR__ . '/my_sessions');
+```
+
+## StorageInterface
+
+Интерфейс, который должны реализовать все хранилища. Вы можете написать свою реализацию для Redis, MySQL, Memcached и т.д.
+
+### Методы интерфейса
+
+* `getState(int|string $user_id): ?string` — Получить текущее состояние.
+* `setState(int|string $user_id, string $state): void` — Установить состояние.
+* `clearState(int|string $user_id): void` — Очистить состояние.
+* `getSessionData(int|string $user_id): array` — Получить данные сессии.
+* `setSessionData(int|string $user_id, array $data): void` — Сохранить данные.
+* `clearSessionData(int|string $user_id): void` — Очистить данные.
 
 ---
 
