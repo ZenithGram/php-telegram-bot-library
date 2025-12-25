@@ -19,7 +19,6 @@ class FileStorage implements StorageInterface
      *
      * @see https://zenithgram.github.io/classes/storage/fileStorage
      */
-
     public function __construct(string $path = 'storage/sessions')
     {
         $this->storageDir = rtrim($path, '/\\');
@@ -70,7 +69,6 @@ class FileStorage implements StorageInterface
         return $data['state'] ?? null;
     }
 
-
     public function setState(int|string $user_id, string $state): void
     {
         $data = $this->load($user_id);
@@ -78,7 +76,7 @@ class FileStorage implements StorageInterface
         $this->save($user_id, $data);
     }
 
-    public function clearState(int $user_id): void
+    public function clearState(int|string $user_id): void
     {
         $data = $this->load($user_id);
         if (isset($data['state'])) {
@@ -87,13 +85,13 @@ class FileStorage implements StorageInterface
         }
     }
 
-    public function getSessionData(int $user_id): array
+    public function getSessionData(int|string $user_id): array
     {
         $data = $this->load($user_id);
         return $data['session'] ?? [];
     }
 
-    public function setSessionData(int $user_id, array $data): void
+    public function setSessionData(int|string $user_id, array $data): void
     {
         $currentData = $this->load($user_id);
         // Мержим старые данные с новыми
@@ -101,7 +99,7 @@ class FileStorage implements StorageInterface
         $this->save($user_id, $currentData);
     }
 
-    public function clearSessionData(int $user_id): void
+    public function clearSessionData(int|string $user_id): void
     {
         $currentData = $this->load($user_id);
         if (isset($currentData['session'])) {
