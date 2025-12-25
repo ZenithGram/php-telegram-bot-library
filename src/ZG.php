@@ -171,7 +171,7 @@ class ZG
      *
      * @see https://zenithgram.github.io/classes/zenithMethods/storage
      */
-    public function storage(): ?StorageInterface
+    public function getStorage(): ?StorageInterface
     {
         return $this->storage;
     }
