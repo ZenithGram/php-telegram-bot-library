@@ -55,6 +55,7 @@ trait ErrorHandler
      *
      * @return ZG
      *
+     * @throws \ErrorException
      * @see https://zenithgram.github.io/classes/errorhandler#enableDebug
      */
     public function enableDebug(): self
@@ -63,9 +64,20 @@ trait ErrorHandler
         ini_set('display_startup_errors', 1);
         error_reporting(E_ALL);
 
-        set_error_handler([$this, 'handleError']);
-        set_exception_handler([$this, 'handleExceptionFatal']);
-        register_shutdown_function([$this, 'handleShutdown']);
+        set_error_handler(
+            fn(int $severity, string $message, string $file, int $line)
+                => $this->handleError($severity, $message, $file, $line),
+        );
+
+        // Обертка для Exception Handler
+        set_exception_handler(fn(\Throwable $e)
+            => $this->handleExceptionFatal($e),
+        );
+
+        // Обертка для Shutdown Function
+        register_shutdown_function(fn()
+            => $this->handleShutdown(),
+        );
 
         return $this;
     }
@@ -214,10 +226,11 @@ trait ErrorHandler
 
         echo "$bgRed$type $reset$boldWhite$msg$reset".PHP_EOL;
 
-        echo "$cyan" . $this->filteredFile($userFile) . ":$userLine$reset".PHP_EOL;
+        echo "$cyan".$this->filteredFile($userFile).":$userLine$reset".PHP_EOL;
 
         if ($userFile !== $realFile) {
-            echo " $gray(Inside: " . $this->filteredFile($realFile) . ":$realLine)$reset".PHP_EOL;
+            echo " $gray(Inside: ".$this->filteredFile($realFile)
+                .":$realLine)$reset".PHP_EOL;
         }
 
         echo PHP_EOL;
