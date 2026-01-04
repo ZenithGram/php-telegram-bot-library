@@ -4,6 +4,9 @@ namespace ZenithGram\ZenithGram;
 
 use ZenithGram\ZenithGram\Dto\UserDto;
 use ZenithGram\ZenithGram\Storage\StorageInterface;
+use ZenithGram\ZenithGram\Utils\DependencyResolver;
+use Psr\Container\ContainerInterface;
+use Psr\SimpleCache\CacheInterface;
 
 class Bot
 {
@@ -12,6 +15,7 @@ class Bot
     private UpdateContext|null $context;
     private array $ctx = [];
     private ?StorageInterface $storage = null;
+    private DependencyResolver $resolver;
 
     private array $routes
         = [
@@ -53,6 +57,39 @@ class Bot
     {
         $this->tg = $tg;
         $this->context = $tg?->context;
+        $this->resolver = new DependencyResolver();
+    }
+
+    /**
+     * Устанавливает PSR-11 Контейнер для внедрения зависимостей
+     *
+     * @param ContainerInterface $container Объект реализации кеша
+     *
+     * @return Bot
+     *
+     * @see https://zenithgram.github.io/classes/botMethods/setContainer
+     */
+    public function setContainer(ContainerInterface $container): self
+    {
+        $this->resolver->setContainer($container);
+
+        return $this;
+    }
+
+    /**
+     * Устанавливает PSR-16 кеш для рефлексии
+     *
+     * @param CacheInterface $cache Объект реализации кеша
+     *
+     * @return Bot
+     *
+     * @see https://zenithgram.github.io/classes/botMethods/setCache
+     */
+    public function setCache(CacheInterface $cache): self
+    {
+        $this->resolver->setCache($cache);
+
+        return $this;
     }
 
     /**
@@ -809,9 +846,13 @@ class Bot
 
     private function convertCommandPatternToRegex(string $pattern): string
     {
-        $pattern = preg_replace('/\{([a-zA-Z0-9_]+)\}/', '(?P<$1>\S+)', $pattern);
+        $pattern = preg_replace(
+            '/\{([a-zA-Z0-9_]+)\}/', '(?P<$1>\S+)', $pattern,
+        );
 
-        preg_match_all('/(?P<name>\(\?P<[^>]+>[^\)]+\))|%[swn]|\S+/u', $pattern, $matches);
+        preg_match_all(
+            '/(?P<name>\(\?P<[^>]+>[^\)]+\))|%[swn]|\S+/u', $pattern, $matches,
+        );
         $tokens = $matches[0];
 
         $regexParts = [];
@@ -837,14 +878,16 @@ class Bot
             }
         }
 
-        $regex = '^' . implode('\s+', $regexParts) . '$';
-        return '/' . $regex . '/u';
+        $regex = '^'.implode('\s+', $regexParts).'$';
+        return '/'.$regex.'/u';
     }
 
     private function convertPatternToRegex(string $pattern): string
     {
         $regex = preg_quote($pattern, '/');
-        $regex = preg_replace('/\\\{([a-zA-Z0-9_]+)\\\}/', '(?P<$1>[a-zA-Z0-9_-]+)', $regex);
+        $regex = preg_replace(
+            '/\\\{([a-zA-Z0-9_]+)\\\}/', '(?P<$1>[a-zA-Z0-9_-]+)', $regex,
+        );
 
         $replacements = [
             '%n' => '(\d+)',
@@ -852,11 +895,12 @@ class Bot
             '%s' => '(.+)',
         ];
 
-        $regex = str_replace(array_keys($replacements), array_values($replacements), $regex);
+        $regex = str_replace(
+            array_keys($replacements), array_values($replacements), $regex,
+        );
 
-        return '/^' . $regex . '$/u';
+        return '/^'.$regex.'$/u';
     }
-
 
 
     private function dispatchAnswer($route, $type, array $other_data = [])
@@ -1096,17 +1140,20 @@ class Bot
         }
     }
 
-    private function executeAction(Action $action, ?array $other_files = [])
+    private function executeAction(Action $action, array $other_data = [])
     {
         $handler = $action->getHandler();
         if ($handler !== null) {
-            return $handler($this->tg, ...$other_files);
+            // ИСПОЛЬЗУЕМ РЕЗОЛВЕР
+            // $other_data содержит аргументы из regex (именованные и нет)
+            $dependencies = $this->resolver->resolve($handler, $this->tg, $other_data);
+
+            return $handler(...$dependencies);
         }
 
         if (!empty($action->getMessageData())) {
             return $this->constructMessage($action);
         }
-
         return null;
     }
 
