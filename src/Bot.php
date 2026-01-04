@@ -809,51 +809,54 @@ class Bot
 
     private function convertCommandPatternToRegex(string $pattern): string
     {
-        // Находим все "токены": паттерны (%s %w %n)
-        preg_match_all('/%[swn]|\S+/u', $pattern, $matches);
+        $pattern = preg_replace('/\{([a-zA-Z0-9_]+)\}/', '(?P<$1>\S+)', $pattern);
+
+        preg_match_all('/(?P<name>\(\?P<[^>]+>[^\)]+\))|%[swn]|\S+/u', $pattern, $matches);
         $tokens = $matches[0];
 
         $regexParts = [];
         foreach ($tokens as $token) {
+            if (str_starts_with($token, '(?P<')) {
+                $regexParts[] = $token;
+                continue;
+            }
+
             switch ($token) {
-                case '%s': // string (до конца строки)
+                case '%s':
                     $regexParts[] = '(.+)';
                     break;
-                case '%w': // word (одно слово)
+                case '%w':
                     $regexParts[] = '(\S+)';
                     break;
-                case '%n': // number (только цифры)
+                case '%n':
                     $regexParts[] = '(\d+)';
                     break;
-                default: // статическая часть команды (например, "!cmd" или "+")
+                default: // статическая часть
                     $regexParts[] = preg_quote($token, '/');
                     break;
             }
         }
 
-        // Соединяем части через \s+, что требует хотя бы одного пробельного символа между ними
-        $regex = '^'.implode('\s+', $regexParts).'$';
-
-        return '/'.$regex.'/u';
+        $regex = '^' . implode('\s+', $regexParts) . '$';
+        return '/' . $regex . '/u';
     }
 
     private function convertPatternToRegex(string $pattern): string
     {
         $regex = preg_quote($pattern, '/');
+        $regex = preg_replace('/\\\{([a-zA-Z0-9_]+)\\\}/', '(?P<$1>[a-zA-Z0-9_-]+)', $regex);
 
         $replacements = [
-            '%n' => '(\d+)',             // Число
-            '%w' => '([a-zA-Z0-9_]+)',   // Слово (включая _)
-            '%s' => '(.+)',              // Всё остальное
+            '%n' => '(\d+)',
+            '%w' => '([a-zA-Z0-9_]+)',
+            '%s' => '(.+)',
         ];
 
-        $regex = str_replace(
-            array_keys($replacements), array_values($replacements), $regex,
-        );
+        $regex = str_replace(array_keys($replacements), array_values($replacements), $regex);
 
-        // 3. Добавляем границы строки
-        return '/^'.$regex.'$/u';
+        return '/^' . $regex . '$/u';
     }
+
 
 
     private function dispatchAnswer($route, $type, array $other_data = [])
