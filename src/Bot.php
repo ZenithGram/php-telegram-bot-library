@@ -503,7 +503,12 @@ class Bot
         };
 
         if (is_callable($this->middleware_handler)) {
-            ($this->middleware_handler)($this->tg, $next);
+            $args = ['next' => $next];
+
+            $dependencies = $this->resolver->resolve($this->middleware_handler, $this->tg, $args);
+
+            // Вызываем middleware
+            ($this->middleware_handler)(...$dependencies);
         } else {
             $next();
         }
@@ -861,7 +866,10 @@ class Bot
         };
 
         if (is_callable($route->middleware_handler)) {
-            ($route->middleware_handler)($this->tg, $next);
+            $resolveArgs = array_merge($other_data, ['next' => $next]);
+
+            $dependencies = $this->resolver->resolve($this->middleware_handler, $this->tg, $resolveArgs);
+            ($this->middleware_handler)(...$dependencies);
         } else {
             $next();
         }
@@ -873,51 +881,47 @@ class Bot
 
         if (!empty($route->redirect_to)) {
             $targetAction = $this->findActionById($route->redirect_to);
-
             if ($targetAction === null) {
                 throw new \LogicException(
                     "Redirect target with ID '{$route->redirect_to}' not found.",
                 );
             }
-
             $query_id = $this->context->getQueryId();
-
             if ($query_id && !empty($route->getQueryText())) {
                 $this->tg->answerCallbackQuery(
                     $query_id, ['text' => $route->getQueryText()],
                 );
             }
-
             return $this->executeAction($targetAction, $other_data);
         }
 
         $user_id = $this->context->getUserId();
-
         if ($user_id) {
             $accessIds = $route->getAccessIds();
             if (!empty($accessIds) && !in_array($user_id, $accessIds)) {
                 $accessHandler = $route->getAccessHandler();
                 if (is_callable($accessHandler)) {
-                    $accessHandler($this->tg);
-                }
+                    $dependencies = $this->resolver->resolve($accessHandler, $this->tg, $other_data);
+                    $accessHandler($dependencies);
 
+                }
                 return null;
             }
-
             $noAccessIds = $route->getNoAccessIds();
             if (!empty($noAccessIds) && in_array($user_id, $noAccessIds)) {
                 $noAccessHandler = $route->getNoAccessHandler();
                 if (is_callable($noAccessHandler)) {
-                    $noAccessHandler($this->tg);
+                    $dependencies = $this->resolver->resolve($noAccessHandler, $this->tg, $other_data);
+                    $noAccessHandler($dependencies);
                 }
-
                 return null;
             }
         }
 
         $handler = $route->getHandler();
         if (!empty($handler)) {
-            $handler($this->tg, ...$other_data);
+            $dependencies = $this->resolver->resolve($handler, $this->tg, $other_data);
+            $handler(...$dependencies);
 
             return null;
         }
@@ -928,9 +932,7 @@ class Bot
             if (empty($route->getMessageData())) {
                 return null;
             }
-
             $this->constructMessage($route);
-
             return null;
         }
 
@@ -942,9 +944,7 @@ class Bot
                     ['text' => $route->getQueryText()],
                 );
             }
-
             $this->constructMessage($route);
-
             return null;
         }
 
@@ -953,42 +953,30 @@ class Bot
             $this->tg->answerCallbackQuery(
                 $query_id, ['text' => $route->getQueryText()],
             );
-
             if (empty($route->getMessageData())) {
                 $callback_data = $this->context->getCallbackData();
-
                 foreach ($this->routes['callback_query'] as $route2) {
                     if ($route2->getCondition() === $callback_data) {
                         $this->dispatchAnswer($route2, 'callback_query');
-
                         return null;
                     }
                 }
-
                 return null;
             }
-
             $this->constructMessage($route);
-
             return null;
-
         }
 
         if ($type === 'callback_query') {
             $query_id = $this->context->getQueryId();
-
             $this->tg->answerCallbackQuery(
                 $query_id, ['text' => $route->getQueryText()],
             );
-
             if (empty($route->getMessageData())) {
                 return null;
             }
-
             $this->constructMessage($route);
-
             return null;
-
         }
 
         return null;
