@@ -867,9 +867,8 @@ class Bot
 
         if (is_callable($route->middleware_handler)) {
             $resolveArgs = array_merge($other_data, ['next' => $next]);
-
-            $dependencies = $this->resolver->resolve($this->middleware_handler, $this->tg, $resolveArgs);
-            ($this->middleware_handler)(...$dependencies);
+            $dependencies = $this->resolver->resolve($route->middleware_handler, $this->tg, $resolveArgs);
+            ($route->middleware_handler)(...$dependencies);
         } else {
             $next();
         }
@@ -1071,8 +1070,6 @@ class Bot
     {
         $handler = $action->getHandler();
         if ($handler !== null) {
-            // ИСПОЛЬЗУЕМ РЕЗОЛВЕР
-            // $other_data содержит аргументы из regex (именованные и нет)
             $dependencies = $this->resolver->resolve($handler, $this->tg, $other_data);
 
             return $handler(...$dependencies);
