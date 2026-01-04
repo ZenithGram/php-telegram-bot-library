@@ -902,7 +902,7 @@ class Bot
                 $accessHandler = $route->getAccessHandler();
                 if (is_callable($accessHandler)) {
                     $dependencies = $this->resolver->resolve($accessHandler, $this->tg, $other_data);
-                    $accessHandler($dependencies);
+                    $accessHandler(...$dependencies);
 
                 }
                 return null;
@@ -912,7 +912,7 @@ class Bot
                 $noAccessHandler = $route->getNoAccessHandler();
                 if (is_callable($noAccessHandler)) {
                     $dependencies = $this->resolver->resolve($noAccessHandler, $this->tg, $other_data);
-                    $noAccessHandler($dependencies);
+                    $noAccessHandler(...$dependencies);
                 }
                 return null;
             }
