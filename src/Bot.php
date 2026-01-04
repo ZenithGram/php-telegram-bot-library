@@ -581,7 +581,7 @@ class Bot
                 foreach ($this->routes['command'] as $route) {
                     $conditions = (array)$route->getCondition();
                     foreach ($conditions as $commandPattern) {
-                        if (str_contains($commandPattern, '%') || str_contains($commandPattern, '{')) {
+                        if (str_contains($commandPattern, '{')) {
                             $regex = $this->convertCommandPatternToRegex(
                                 $commandPattern,
                             );
@@ -705,7 +705,7 @@ class Bot
             foreach ($this->routes['callback_query'] as $route) {
                 $conditions = (array)$route->getCondition();
                 foreach ($conditions as $condition) {
-                    if (str_contains($condition, '%') || str_contains($condition, '{')) {
+                    if (str_contains($condition, '{')) {
                         $regex = $this->convertPatternToRegex($condition);
                         if (preg_match($regex, $callback_data, $matches)) {
                             $args = $this->cleanMatches($matches);
@@ -800,7 +800,7 @@ class Bot
         );
 
         preg_match_all(
-            '/(?P<name>\(\?P<[^>]+>[^\)]+\))|%[swn]|\S+/u', $pattern, $matches,
+            '/(?P<name>\(\?P<[^>]+>[^\)]+\))|\S+/u', $pattern, $matches,
         );
         $tokens = $matches[0];
 
@@ -811,20 +811,7 @@ class Bot
                 continue;
             }
 
-            switch ($token) {
-                case '%s':
-                    $regexParts[] = '(.+)';
-                    break;
-                case '%w':
-                    $regexParts[] = '(\S+)';
-                    break;
-                case '%n':
-                    $regexParts[] = '(\d+)';
-                    break;
-                default: // статическая часть
-                    $regexParts[] = preg_quote($token, '/');
-                    break;
-            }
+            $regexParts[] = preg_quote($token, '/');
         }
 
         $regex = '^'.implode('\s+', $regexParts).'$';
@@ -834,18 +821,9 @@ class Bot
     private function convertPatternToRegex(string $pattern): string
     {
         $regex = preg_quote($pattern, '/');
+
         $regex = preg_replace(
             '/\\\{([a-zA-Z0-9_]+)\\\}/', '(?P<$1>[a-zA-Z0-9_-]+)', $regex,
-        );
-
-        $replacements = [
-            '%n' => '(\d+)',
-            '%w' => '([a-zA-Z0-9_]+)',
-            '%s' => '(.+)',
-        ];
-
-        $regex = str_replace(
-            array_keys($replacements), array_values($replacements), $regex,
         );
 
         return '/^'.$regex.'$/u';
