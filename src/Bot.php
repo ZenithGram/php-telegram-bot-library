@@ -518,9 +518,8 @@ class Bot
 
         if ($type === 'bot_command'
             || ($type === "text"
-                && str_starts_with(
-                    $text, '/',
-                ))
+                && str_starts_with($text, '/')
+            )
         ) {
             $text = strtolower(mb_convert_encoding($text, 'UTF-8'));
 
@@ -531,7 +530,6 @@ class Bot
                 $this->dispatchAnswer(
                     $route, $type, [trim(mb_substr($text, 6))],
                 );
-
                 return;
             }
 
@@ -540,11 +538,9 @@ class Bot
             ) {
                 $route = $this->routes['start_command'];
                 $this->dispatchAnswer($route, $type);
-
                 return;
             }
 
-            // Проверяем команды бота (onBotCommand)
             $words = explode(' ', $text);
             $command = $words[0];
             unset($words[0]);
@@ -557,7 +553,6 @@ class Bot
                         $this->dispatchAnswer(
                             $route, $type, [$final_text],
                         );
-
                         return;
                     }
                 }
@@ -569,29 +564,25 @@ class Bot
 
             if ($currentState && isset($this->routes['state'][$currentState])) {
                 $route = $this->routes['state'][$currentState];
-
                 $this->dispatchAnswer(
                     $route, 'state', [$text ?? $callback_data],
                 );
-
                 return;
             }
         }
 
         if (($type === 'text' || $type === 'bot_command')) {
             if (!empty($text)) {
-                // Проверяем текстовые команды (onCommand)
                 foreach ($this->routes['command'] as $route) {
                     $conditions = (array)$route->getCondition();
                     foreach ($conditions as $commandPattern) {
-                        if (preg_match('/%[swn]/', $commandPattern)) {
+                        if (str_contains($commandPattern, '%') || str_contains($commandPattern, '{')) {
                             $regex = $this->convertCommandPatternToRegex(
                                 $commandPattern,
                             );
                             if (preg_match($regex, $text, $matches)) {
-                                $args = array_slice($matches, 1);
+                                $args = $this->cleanMatches($matches);
                                 $this->dispatchAnswer($route, $type, $args);
-
                                 return;
                             }
                         } else {
@@ -614,7 +605,6 @@ class Bot
                                             PREG_SPLIT_NO_EMPTY,
                                         );
                                     $this->dispatchAnswer($route, $type, $args);
-
                                     return;
                                 }
                             }
@@ -622,100 +612,62 @@ class Bot
                     }
                 }
 
-                // Проверяем точное совпадение (onText)
                 foreach ($this->routes['text_exact'] as $route) {
                     $conditions = (array)$route->getCondition();
                     foreach ($conditions as $condition) {
                         if ($condition === $text) {
                             $this->dispatchAnswer($route, $type);
-
                             return;
                         }
                     }
                 }
 
-                // Проверяем текстовые кнопки
                 foreach ($this->buttons['action'] as $route) {
                     $conditions = (array)$route->getCondition();
                     foreach ($conditions as $condition) {
                         if ($condition === $text) {
                             $this->dispatchAnswer($route, 'text_button');
-
                             return;
                         }
                     }
                 }
 
-                // Проверяем регулярные выражения (onTextPreg)
                 foreach ($this->routes['text_preg'] as $route) {
                     $patterns = (array)$route->getCondition();
                     foreach ($patterns as $pattern) {
                         if (preg_match($pattern, $text, $matches)) {
-                            $args = array_slice($matches, 1);
+                            // UPD: Используем cleanMatches
+                            $args = $this->cleanMatches($matches);
                             $this->dispatchAnswer($route, $type, $args);
-
                             return;
                         }
                     }
                 }
 
-                // Проверяем обычное сообщение
                 if ($this->routes['message_fallback'] !== null) {
                     $this->dispatchAnswer(
                         $this->routes['message_fallback'], 'text',
                     );
-
                     return;
                 }
             }
 
-            // Проверяем сообщение с фото
-            if ($this->tryProcessFallbackMedia('photo')) {
-                return;
-            }
+            if ($this->tryProcessFallbackMedia('photo')) return;
+            if ($this->tryProcessFallbackMedia('audio')) return;
+            if ($this->tryProcessFallbackMedia('video')) return;
+            if ($this->tryProcessFallbackMedia('sticker')) return;
+            if ($this->tryProcessFallbackMedia('voice')) return;
+            if ($this->tryProcessFallbackMedia('document')) return;
+            if ($this->tryProcessFallbackMedia('video_note')) return;
 
-            // Проверяем сообщение с аудио
-            if ($this->tryProcessFallbackMedia('audio')) {
-                return;
-            }
-
-            // Проверяем видео
-            if ($this->tryProcessFallbackMedia('video')) {
-                return;
-            }
-
-            // Проверяем стикеры
-            if ($this->tryProcessFallbackMedia('sticker')) {
-                return;
-            }
-
-            // Проверяем голосовые
-            if ($this->tryProcessFallbackMedia('voice')) {
-                return;
-            }
-
-            // Проверяем документы
-            if ($this->tryProcessFallbackMedia('document')) {
-                return;
-            }
-
-            // Проверяем видео-сообщения
-            if ($this->tryProcessFallbackMedia('video_note')) {
-                return;
-            }
-
-            if (!empty(
-                $this->context->getUpdateData()['message']['new_chat_members']
-                )
+            if (!empty($this->context->getUpdateData()['message']['new_chat_members'])
                 && $this->routes['new_chat_members'] !== null
             ) {
-                $newMembersData = $this->context->getUpdateData(
-                )['message']['new_chat_members'];
+                $newMembersData = $this->context->getUpdateData()['message']['new_chat_members'];
                 $newMembersDtos = array_map(
                     fn(array $memberData) => UserDto::fromArray($memberData),
                     $newMembersData,
                 );
-
                 $this->dispatchAnswer(
                     $this->routes['new_chat_members'],
                     'text',
@@ -723,16 +675,12 @@ class Bot
                 );
             }
 
-            if (!empty(
-                $this->context->getUpdateData()['message']['left_chat_member']
-                )
+            if (!empty($this->context->getUpdateData()['message']['left_chat_member'])
                 && $this->routes['left_chat_member'] !== null
             ) {
                 $leftMember = UserDto::fromArray(
-                    $this->context->getUpdateData(
-                    )['message']['left_chat_member'],
+                    $this->context->getUpdateData()['message']['left_chat_member'],
                 );
-
                 $this->dispatchAnswer(
                     $this->routes['left_chat_member'],
                     'text',
@@ -742,50 +690,39 @@ class Bot
         }
 
         if ($type === 'callback_query') {
-            // Проверяем inline-кнопки
             foreach ($this->buttons['action'] as $route) {
                 if ($route->getId() === $callback_data) {
                     $this->dispatchAnswer($route, 'button_'.$type);
-
                     return;
                 }
             }
 
-            // Проверяем callback_query
             foreach ($this->routes['callback_query'] as $route) {
                 $conditions = (array)$route->getCondition();
                 foreach ($conditions as $condition) {
-                    if (preg_match('/%[swn]/', $condition)) {
-                        $regex = $this->convertPatternToRegex(
-                            $condition,
-                        );
+                    if (str_contains($condition, '%') || str_contains($condition, '{')) {
+                        $regex = $this->convertPatternToRegex($condition);
                         if (preg_match($regex, $callback_data, $matches)) {
-                            $args = array_slice($matches, 1);
+                            $args = $this->cleanMatches($matches);
                             $this->dispatchAnswer($route, $type, $args);
-
                             return;
                         }
                     } else {
                         if ($condition === $callback_data) {
                             $this->dispatchAnswer($route, $type);
-
                             return;
                         }
                     }
                 }
             }
 
-            // Проверяем callback_query_preg
             if (!empty($this->routes['callback_query_preg'])) {
                 foreach ($this->routes['callback_query_preg'] as $route) {
                     $patterns = (array)$route->getCondition();
                     foreach ($patterns as $pattern) {
                         if (preg_match($pattern, $callback_data, $matches)) {
-                            $args = array_slice($matches, 1);
-                            $this->dispatchAnswer(
-                                $route, $type, $args,
-                            ); // Передаем все совпадения
-
+                            $args = $this->cleanMatches($matches);
+                            $this->dispatchAnswer($route, $type, $args);
                             return;
                         }
                     }
@@ -796,27 +733,34 @@ class Bot
         if ($type === 'edited_message') {
             if ($this->routes['edit_message'] !== null) {
                 $this->dispatchAnswer($this->routes['edit_message'], 'text');
-
                 return;
             }
         }
 
         if ($type === 'inline_query') {
-            // Проверяем inline
             if ($this->routes['inline_fallback'] !== null) {
                 $this->dispatchAnswer($this->routes['inline_fallback'], $type);
-
                 return;
             }
         }
 
-
-        // Fallback, если ни один маршрут не сработал
         if ($this->routes['fallback'] !== null) {
             $this->dispatchAnswer($this->routes['fallback'], 'text');
-
             return;
         }
+    }
+
+    private function cleanMatches(array $matches): array
+    {
+        $args = [];
+        foreach ($matches as $key => $value) {
+            if (is_string($key)) {
+                $args[$key] = $value;
+            } elseif ($key > 0) {
+                $args[] = $value;
+            }
+        }
+        return $args;
     }
 
     private function tryProcessFallbackMedia(string $route_type): bool
@@ -901,7 +845,6 @@ class Bot
 
         return '/^'.$regex.'$/u';
     }
-
 
     private function dispatchAnswer($route, $type, array $other_data = [])
     {
@@ -1051,10 +994,6 @@ class Bot
         return null;
     }
 
-    /**
-     * @throws \JsonException
-     * @throws \Exception
-     */
     private function constructMessage(Action $action): array
     {
         $msg = new Message('', $this->tg);
