@@ -816,11 +816,26 @@ class Bot
     private function cleanMatches(array $matches): array
     {
         $args = [];
+
+        $hasNamed = false;
         foreach ($matches as $key => $value) {
             if (is_string($key)) {
-                $args[$key] = $value;
-            } elseif ($key > 0) {
-                $args[] = $value;
+                $hasNamed = true;
+                break;
+            }
+        }
+
+        if ($hasNamed) {
+            foreach ($matches as $key => $value) {
+                if (is_string($key)) {
+                    $args[$key] = $value;
+                }
+            }
+        } else {
+            foreach ($matches as $key => $value) {
+                if (is_int($key) && $key > 0) {
+                    $args[] = $value;
+                }
             }
         }
 
