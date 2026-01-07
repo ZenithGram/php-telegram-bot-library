@@ -50,14 +50,32 @@ class Bot
         ];
 
     private array $pendingRedirects = [];
-
     private \Closure|null $middleware_handler = null;
+    private bool $useReflection = false;
 
     public function __construct(ZG|null $tg = null)
     {
         $this->tg = $tg;
         $this->context = $tg?->context;
         $this->resolver = new DependencyResolver();
+    }
+
+    /**
+     * Включает или отключает использование рефлексии (Dependency Injection)
+     * обработчиками.
+     *
+     * @param bool $status true - использовать DI, false - передавать ($zg,
+     *                     ...$args)
+     *
+     * @return Bot
+     *
+     * @see https://zenithgram.github.io/classes/botMethods/reflection
+     */
+    public function reflection(bool $status = true): self
+    {
+        $this->useReflection = $status;
+
+        return $this;
     }
 
     /**
@@ -465,7 +483,6 @@ class Bot
         return $route;
     }
 
-
     /**
      * Создает маршрут вышедшего участника чата
      *
@@ -503,12 +520,16 @@ class Bot
         };
 
         if (is_callable($this->middleware_handler)) {
-            $args = ['next' => $next];
+            if ($this->useReflection) {
+                $args = ['next' => $next];
+                $dependencies = $this->resolver->resolve(
+                    $this->middleware_handler, $this->tg, $args,
+                );
 
-            $dependencies = $this->resolver->resolve($this->middleware_handler, $this->tg, $args);
-
-            // Вызываем middleware
-            ($this->middleware_handler)(...$dependencies);
+                ($this->middleware_handler)(...$dependencies);
+            } else {
+                ($this->middleware_handler)($this->tg, $next);
+            }
         } else {
             $next();
         }
@@ -535,6 +556,7 @@ class Bot
                 $this->dispatchAnswer(
                     $route, $type, [trim(mb_substr($text, 6))],
                 );
+
                 return;
             }
 
@@ -543,6 +565,7 @@ class Bot
             ) {
                 $route = $this->routes['start_command'];
                 $this->dispatchAnswer($route, $type);
+
                 return;
             }
 
@@ -558,6 +581,7 @@ class Bot
                         $this->dispatchAnswer(
                             $route, $type, [$final_text],
                         );
+
                         return;
                     }
                 }
@@ -572,6 +596,7 @@ class Bot
                 $this->dispatchAnswer(
                     $route, 'state', [$text ?? $callback_data],
                 );
+
                 return;
             }
         }
@@ -588,6 +613,7 @@ class Bot
                             if (preg_match($regex, $text, $matches)) {
                                 $args = $this->cleanMatches($matches);
                                 $this->dispatchAnswer($route, $type, $args);
+
                                 return;
                             }
                         } else {
@@ -610,6 +636,7 @@ class Bot
                                             PREG_SPLIT_NO_EMPTY,
                                         );
                                     $this->dispatchAnswer($route, $type, $args);
+
                                     return;
                                 }
                             }
@@ -622,6 +649,7 @@ class Bot
                     foreach ($conditions as $condition) {
                         if ($condition === $text) {
                             $this->dispatchAnswer($route, $type);
+
                             return;
                         }
                     }
@@ -632,6 +660,7 @@ class Bot
                     foreach ($conditions as $condition) {
                         if ($condition === $text) {
                             $this->dispatchAnswer($route, 'text_button');
+
                             return;
                         }
                     }
@@ -644,6 +673,7 @@ class Bot
                             // UPD: Используем cleanMatches
                             $args = $this->cleanMatches($matches);
                             $this->dispatchAnswer($route, $type, $args);
+
                             return;
                         }
                     }
@@ -653,22 +683,40 @@ class Bot
                     $this->dispatchAnswer(
                         $this->routes['message_fallback'], 'text',
                     );
+
                     return;
                 }
             }
 
-            if ($this->tryProcessFallbackMedia('photo')) return;
-            if ($this->tryProcessFallbackMedia('audio')) return;
-            if ($this->tryProcessFallbackMedia('video')) return;
-            if ($this->tryProcessFallbackMedia('sticker')) return;
-            if ($this->tryProcessFallbackMedia('voice')) return;
-            if ($this->tryProcessFallbackMedia('document')) return;
-            if ($this->tryProcessFallbackMedia('video_note')) return;
+            if ($this->tryProcessFallbackMedia('photo')) {
+                return;
+            }
+            if ($this->tryProcessFallbackMedia('audio')) {
+                return;
+            }
+            if ($this->tryProcessFallbackMedia('video')) {
+                return;
+            }
+            if ($this->tryProcessFallbackMedia('sticker')) {
+                return;
+            }
+            if ($this->tryProcessFallbackMedia('voice')) {
+                return;
+            }
+            if ($this->tryProcessFallbackMedia('document')) {
+                return;
+            }
+            if ($this->tryProcessFallbackMedia('video_note')) {
+                return;
+            }
 
-            if (!empty($this->context->getUpdateData()['message']['new_chat_members'])
+            if (!empty(
+                $this->context->getUpdateData()['message']['new_chat_members']
+                )
                 && $this->routes['new_chat_members'] !== null
             ) {
-                $newMembersData = $this->context->getUpdateData()['message']['new_chat_members'];
+                $newMembersData = $this->context->getUpdateData(
+                )['message']['new_chat_members'];
                 $newMembersDtos = array_map(
                     fn(array $memberData) => UserDto::fromArray($memberData),
                     $newMembersData,
@@ -680,11 +728,14 @@ class Bot
                 );
             }
 
-            if (!empty($this->context->getUpdateData()['message']['left_chat_member'])
+            if (!empty(
+                $this->context->getUpdateData()['message']['left_chat_member']
+                )
                 && $this->routes['left_chat_member'] !== null
             ) {
                 $leftMember = UserDto::fromArray(
-                    $this->context->getUpdateData()['message']['left_chat_member'],
+                    $this->context->getUpdateData(
+                    )['message']['left_chat_member'],
                 );
                 $this->dispatchAnswer(
                     $this->routes['left_chat_member'],
@@ -698,6 +749,7 @@ class Bot
             foreach ($this->buttons['action'] as $route) {
                 if ($route->getId() === $callback_data) {
                     $this->dispatchAnswer($route, 'button_'.$type);
+
                     return;
                 }
             }
@@ -710,11 +762,13 @@ class Bot
                         if (preg_match($regex, $callback_data, $matches)) {
                             $args = $this->cleanMatches($matches);
                             $this->dispatchAnswer($route, $type, $args);
+
                             return;
                         }
                     } else {
                         if ($condition === $callback_data) {
                             $this->dispatchAnswer($route, $type);
+
                             return;
                         }
                     }
@@ -728,6 +782,7 @@ class Bot
                         if (preg_match($pattern, $callback_data, $matches)) {
                             $args = $this->cleanMatches($matches);
                             $this->dispatchAnswer($route, $type, $args);
+
                             return;
                         }
                     }
@@ -738,6 +793,7 @@ class Bot
         if ($type === 'edited_message') {
             if ($this->routes['edit_message'] !== null) {
                 $this->dispatchAnswer($this->routes['edit_message'], 'text');
+
                 return;
             }
         }
@@ -745,12 +801,14 @@ class Bot
         if ($type === 'inline_query') {
             if ($this->routes['inline_fallback'] !== null) {
                 $this->dispatchAnswer($this->routes['inline_fallback'], $type);
+
                 return;
             }
         }
 
         if ($this->routes['fallback'] !== null) {
             $this->dispatchAnswer($this->routes['fallback'], 'text');
+
             return;
         }
     }
@@ -765,6 +823,7 @@ class Bot
                 $args[] = $value;
             }
         }
+
         return $args;
     }
 
@@ -815,6 +874,7 @@ class Bot
         }
 
         $regex = '^'.implode('\s+', $regexParts).'$';
+
         return '/'.$regex.'/u';
     }
 
@@ -844,9 +904,16 @@ class Bot
         };
 
         if (is_callable($route->middleware_handler)) {
-            $resolveArgs = array_merge($other_data, ['next' => $next]);
-            $dependencies = $this->resolver->resolve($route->middleware_handler, $this->tg, $resolveArgs);
-            ($route->middleware_handler)(...$dependencies);
+            if ($this->useReflection) {
+                $resolveArgs = array_merge($other_data, ['next' => $next]);
+                $dependencies = $this->resolver->resolve(
+                    $route->middleware_handler, $this->tg, $resolveArgs,
+                );
+                ($route->middleware_handler)(...$dependencies);
+            } else {
+                ($route->middleware_handler)($this->tg, $next);
+            }
+
         } else {
             $next();
         }
@@ -860,7 +927,7 @@ class Bot
             $targetAction = $this->findActionById($route->redirect_to);
             if ($targetAction === null) {
                 throw new \LogicException(
-                    "Redirect target with ID '{$route->redirect_to}' not found.",
+                    "Редирект на айди '{$route->redirect_to}' не найден.",
                 );
             }
             $query_id = $this->context->getQueryId();
@@ -869,6 +936,7 @@ class Bot
                     $query_id, ['text' => $route->getQueryText()],
                 );
             }
+
             return $this->executeAction($targetAction, $other_data);
         }
 
@@ -878,27 +946,47 @@ class Bot
             if (!empty($accessIds) && !in_array($user_id, $accessIds)) {
                 $accessHandler = $route->getAccessHandler();
                 if (is_callable($accessHandler)) {
-                    $dependencies = $this->resolver->resolve($accessHandler, $this->tg, $other_data);
-                    $accessHandler(...$dependencies);
-
+                    if ($this->useReflection) {
+                        $dependencies = $this->resolver->resolve(
+                            $accessHandler, $this->tg, $other_data,
+                        );
+                        $accessHandler(...$dependencies);
+                    } else {
+                        $accessHandler($this->tg);
+                    }
                 }
+
                 return null;
             }
             $noAccessIds = $route->getNoAccessIds();
             if (!empty($noAccessIds) && in_array($user_id, $noAccessIds)) {
                 $noAccessHandler = $route->getNoAccessHandler();
                 if (is_callable($noAccessHandler)) {
-                    $dependencies = $this->resolver->resolve($noAccessHandler, $this->tg, $other_data);
-                    $noAccessHandler(...$dependencies);
+                    if ($this->useReflection) {
+                        $dependencies = $this->resolver->resolve(
+                            $noAccessHandler, $this->tg, $other_data,
+                        );
+                        $noAccessHandler(...$dependencies);
+                    } else {
+                        $noAccessHandler($this->tg);
+                    }
+
                 }
+
                 return null;
             }
         }
 
         $handler = $route->getHandler();
         if (!empty($handler)) {
-            $dependencies = $this->resolver->resolve($handler, $this->tg, $other_data);
-            $handler(...$dependencies);
+            if ($this->useReflection) {
+                $dependencies = $this->resolver->resolve(
+                    $handler, $this->tg, $other_data,
+                );
+                $handler(...$dependencies);
+            } else {
+                $handler($this->tg);
+            }
 
             return null;
         }
@@ -910,6 +998,7 @@ class Bot
                 return null;
             }
             $this->constructMessage($route);
+
             return null;
         }
 
@@ -922,6 +1011,7 @@ class Bot
                 );
             }
             $this->constructMessage($route);
+
             return null;
         }
 
@@ -935,12 +1025,15 @@ class Bot
                 foreach ($this->routes['callback_query'] as $route2) {
                     if ($route2->getCondition() === $callback_data) {
                         $this->dispatchAnswer($route2, 'callback_query');
+
                         return null;
                     }
                 }
+
                 return null;
             }
             $this->constructMessage($route);
+
             return null;
         }
 
@@ -953,6 +1046,7 @@ class Bot
                 return null;
             }
             $this->constructMessage($route);
+
             return null;
         }
 
@@ -1048,7 +1142,9 @@ class Bot
     {
         $handler = $action->getHandler();
         if ($handler !== null) {
-            $dependencies = $this->resolver->resolve($handler, $this->tg, $other_data);
+            $dependencies = $this->resolver->resolve(
+                $handler, $this->tg, $other_data,
+            );
 
             return $handler(...$dependencies);
         }
@@ -1056,6 +1152,7 @@ class Bot
         if (!empty($action->getMessageData())) {
             return $this->constructMessage($action);
         }
+
         return null;
     }
 
