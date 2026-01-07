@@ -33,8 +33,8 @@ use ZenithGram\ZenithGram\Bot;
 $tg = ZG::create('ТОКЕН_БОТА');
 $bot = new Bot($tg);
 
-$bot->onCommand('ban', '/ban %w')
-    ->func(function(ZG $tg, $banned_user) {
+$bot->onCommand('ban', '/ban {user}')
+    ->func(function(ZG $tg, string $user) {
         $tg->msg("✅ Пользователь `{$banned_user}` забанен")->send();
         
     })
@@ -54,9 +54,9 @@ use ZenithGram\ZenithGram\Bot;
 $tg = ZG::create('ТОКЕН_БОТА');
 $bot = new Bot($tg);
 
-$bot->onCommand('ban', '/ban %w')
-    ->func(function(ZG $tg, $banned_user) {
-        $tg->msg("✅ Пользователь `{$banned_user}` забанен")->send();
+$bot->onCommand('ban', '/ban {user}')
+    ->func(function(ZG $tg, $user) {
+        $tg->msg("✅ Пользователь `{$user}` забанен")->send();
         
     })
     ->access(123456, function(ZG $tg) {
@@ -2011,7 +2011,8 @@ description: Выполняет пользовательскую функцию-
 
 * `ZG` - экземпляр основного класса.
   Ваша функция может принимать аргументы, извлеченные из сообщения пользователя:
-* Для `onCommand`: значения, соответствующие плейсхолдерам (`%w`, `%n`, `%s`), или все аргументы команды.
+* Для `onCommand`: значения, соответствующие плейсхолдерам (`{name}`, `{age}`), или все аргументы команды.
+* Для `onCallback`: значения, соответствующие плейсхолдерам (`{name}`, `{age}`).
 * Для `onTextPreg`: значения совпадений из `preg_match`.
 * Для `onReferral`: значения из реферальной ссылки.
 * Для `onLeftChatMember`: экземпляр класса `UserDto`.
@@ -2030,7 +2031,7 @@ $tg = ZG::create('ТОКЕН_БОТА');
 $bot = new Bot($tg);
 
 // Пример с onCommand и аргументами
-$bot->onCommand('ban', '!ban %w %s')
+$bot->onCommand('ban', '!ban {username} {reason}')
     ->func(function(ZG $tg, string $username, string $reason) {
         // Здесь может быть ваша логика: запись в БД, проверка прав и т.д.
         $tg->msg("✅ Пользователь `{$username}` забанен по причине: `{$reason}`")
@@ -3457,13 +3458,13 @@ use ZenithGram\ZenithGram\Bot;
 $tg = ZG::create('ТОКЕН_БОТА');
 $bot = new Bot($tg);
 
-$bot->onCommand('ban', '/ban %w')
-    ->func(function(ZG $tg, string $bunned_user) {
+$bot->onCommand('ban', '/ban {username}')
+    ->func(function(ZG $tg, string $username) {
         $tg->msg("✅ Пользователь `{$bunned_user}` забанен")->send();
         
     })
     ->middleware(function(ZG $tg, callable $next) {
-        $user_id = $tg->getUserID();
+        $user_id = $tg->getUserId();
         if ($user_id === 123456) {
             $next();     
         } else {
@@ -3824,9 +3825,9 @@ use ZenithGram\ZenithGram\Bot;
 $tg = ZG::create('ТОКЕН_БОТА');
 $bot = new Bot($tg);
 
-$bot->onCommand('ban', '/ban %w')
-    ->func(function(ZG $tg, $arg1) {
-        $tg->msg("✅ Пользователь `{$arg1}` забанен")->send();
+$bot->onCommand('ban', '/ban {username}')
+    ->func(function(ZG $tg, $username) {
+        $tg->msg("✅ Пользователь `{$username}` забанен")->send();
         
     })
     ->noAccess(123456); // Только пользователь с ID 123456 не может использовать команду
@@ -3845,9 +3846,9 @@ use ZenithGram\ZenithGram\Bot;
 $tg = ZG::create('ТОКЕН_БОТА');
 $bot = new Bot($tg);
 
-$bot->onCommand('ban', '/ban %w')
-    ->func(function(ZG $tg, $arg1) {
-        $tg->msg("✅ Пользователь `{$arg1}` забанен")->send();
+$bot->onCommand('ban', '/ban {username}')
+    ->func(function(ZG $tg, $username) {
+        $tg->msg("✅ Пользователь `{$username}` забанен")->send();
         
     })
     ->noAccess(123456, function(ZG $tg) {
@@ -8149,11 +8150,11 @@ public function onCommand(string $id, array|string $command = null): Action
 $bot->onCommand('ping', '!ping')->text('Pong!');
 
 // Команда бана: !ban 12345 причина
-$bot->onCommand('ban', '!ban %n %s')
-    ->func(function(ZG $tg, $userId, $reason) {
-        // $userId = 12345 (int)
+$bot->onCommand('ban', '!ban {user_id} {reason}')
+    ->func(function(ZG $tg, $user_id, $reason) {
+        // $user_id = 12345 (int)
         // $reason = "причина" (string)
-        $tg->reply("Пользователь {$userId} забанен. Причина: {$reason}");
+        $tg->reply("Пользователь {$user_id} забанен. Причина: {$reason}");
     });
 ```
 
@@ -8271,11 +8272,11 @@ $bot->onBotCommand('actions', '/actions')
     ]);
 
 // Ловим паттерн: слово_число_слово
-$bot->onCallback('ban_handler', 'ban_%n_%w')
-    ->func(function (ZG $tg, $userId, $reason) {
+$bot->onCallback('ban_handler', 'ban_{user_id}_{reason}')
+    ->func(function (ZG $tg, string $user_id, string $reason) {
         // Аргументы автоматически попадают в функцию в нужном порядке
-        // $userId = 55 (int)
-        // $reason = "spam" (string)
+        // $user_id = 55
+        // $reason = "spam"
         
         $tg->answerCallbackQuery($tg->getQueryId(), ['text' => "Забанен!"]);
         $tg->reply("Пользователь #{$userId} заблокирован за {$reason}.");
@@ -8930,7 +8931,7 @@ use ZenithGram\ZenithGram\LongPoll;
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$lp = LongPoll::create('ТОКЕН_БОТА', 20);
+$lp = LongPoll::create('ТОКЕН_БОТА');
 $bot = new Bot(); // Создаем экземпляр бота без основного класса
 
 $bot->onMessage()->func(function(ZG $tg) {
@@ -9000,7 +9001,7 @@ $bot->onBotCommand('img', '/img')
     ->text('Изображение с котиком');
     
 // Обработка команды с параметрами
-$bot->onCommand('sum', '!посчитай %n + %n')
+$bot->onCommand('sum', '!посчитай {number1} + {number2}')
     ->func(function (ZG $tg, $number1, $number2) {
         $tg->msg($number1 + $number2)->send();
     });
