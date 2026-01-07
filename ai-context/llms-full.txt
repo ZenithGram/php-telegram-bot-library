@@ -33,9 +33,9 @@ use ZenithGram\ZenithGram\Bot;
 $tg = ZG::create('ТОКЕН_БОТА');
 $bot = new Bot($tg);
 
-$bot->onCommand('ban', '/ban {user}')
-    ->func(function(ZG $tg, string $user) {
-        $tg->msg("✅ Пользователь `{$banned_user}` забанен")->send();
+$bot->onCommand('ban', '/ban {username}')
+    ->func(function(ZG $tg, string $username) {
+        $tg->msg("✅ Пользователь `{$username}` забанен")->send();
         
     })
     ->access(123456); // Только пользователь с ID 123456 может использовать команду
@@ -3460,7 +3460,7 @@ $bot = new Bot($tg);
 
 $bot->onCommand('ban', '/ban {username}')
     ->func(function(ZG $tg, string $username) {
-        $tg->msg("✅ Пользователь `{$bunned_user}` забанен")->send();
+        $tg->msg("✅ Пользователь `{$username}` забанен")->send();
         
     })
     ->middleware(function(ZG $tg, callable $next) {
@@ -8279,7 +8279,7 @@ $bot->onCallback('ban_handler', 'ban_{user_id}_{reason}')
         // $reason = "spam"
         
         $tg->answerCallbackQuery($tg->getQueryId(), ['text' => "Забанен!"]);
-        $tg->reply("Пользователь #{$userId} заблокирован за {$reason}.");
+        $tg->reply("Пользователь #{$user_id} заблокирован за {$reason}.");
     });
 ```
 
@@ -8470,13 +8470,13 @@ $tg->msg("Список товаров (Страница 1):")
 Самое важное в пагинации — заставить кнопки навигации работать.
 Кнопки навигации генерируют `callback_data` в формате: `{prefix}{номер_страницы}`.
 
-Для обработки удобно использовать плейсхолдер `%n` (число) в методе `onCallback`.
+Для обработки удобно использовать плейсхолдер в методе `onCallback`.
 
 ```php
 // Обработчик переключения страниц
 // Ловим паттерн "page_" + число
-$bot->onCallback('pagination_handler', 'page_%n')
-    ->func(function(ZG $tg, int $page) use ($items) {
+$bot->onCallback('pagination_handler', 'page_{page}')
+    ->func(function(ZG $tg, $page) use ($items) {
         $query_id = $tg->getQueryId();
         $tg->answerCallbackQuery($query_id); // Убираем "часики"
 
@@ -8636,8 +8636,8 @@ $bot->onBotCommand('shop', '/shop')
     });
 
 // 2. Обработчик навигации (shop_page_1, shop_page_2...)
-$bot->onCallback('shop_nav', 'shop_page_%n')
-    ->func(function(ZG $tg, int $page) {
+$bot->onCallback('shop_nav', 'shop_page_{page}')
+    ->func(function(ZG $tg, $page) {
         $tg->answerCallbackQuery($tg->getQueryId());
         
         $kbd = getShopKeyboard($tg, $page);
