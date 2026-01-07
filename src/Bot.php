@@ -854,11 +854,11 @@ class Bot
     private function convertCommandPatternToRegex(string $pattern): string
     {
         $pattern = preg_replace(
-            '/\{([a-zA-Z0-9_]+)\}/', '(?P<$1>\S+)', $pattern,
+            '/\{([a-zA-Z0-9_]+)}/', '(?P<$1>\S+)', $pattern,
         );
 
         preg_match_all(
-            '/(?P<name>\(\?P<[^>]+>[^\)]+\))|\S+/u', $pattern, $matches,
+            '/(?P<name>\(\?P<[^>]+>[^)]+\))|\S+/u', $pattern, $matches,
         );
         $tokens = $matches[0];
 
@@ -984,7 +984,7 @@ class Bot
                 );
                 $handler(...$dependencies);
             } else {
-                $handler($this->tg);
+                $handler($this->tg, ...$other_data);
             }
 
             return null;
