@@ -15,6 +15,7 @@
 - [Конструктор сообщений](https://zenithgram.github.io/using/messages.md): Работа с Fluent Interface для создания, форматирования и отправки сообщений.
 - [Обработчики событий](https://zenithgram.github.io/using/handlers.md): Описание обработчиков из класса Bot
 - [Машина состояний (FSM / Диалоги)](https://zenithgram.github.io/using/fsm.md): Создание диалогов и пошаговых сценариев с помощью FSM (Finite State Machine).
+- [Внедрение зависимостей и Рефлексия (Dependency Injection)](https://zenithgram.github.io/using/reflection.md): Использование Dependency Injection и рефлексии для чистого кода.
 - [Middleware](https://zenithgram.github.io/using/middleware.md): Промежуточное ПО для фильтрации запросов, логирования и проверки прав доступа.
 - [Пагинация (Pagination)](https://zenithgram.github.io/using/pagination.md)
 - [Обработка ошибок](https://zenithgram.github.io/using/errorHandler.md): Руководство по настройке и использованию встроенного обработчика ошибок (ErrorHandler).
@@ -85,6 +86,9 @@
 - [onMessage](https://zenithgram.github.io/classes/botMethods/onMessage.md): Обработчик любого текстового сообщения (fallback для текста).
 - [onDefault](https://zenithgram.github.io/classes/botMethods/onDefault.md): Глобальный fallback-обработчик для любых необработанных событий.
 - [onState](https://zenithgram.github.io/classes/botMethods/onState.md): Создает маршрут для обработки конкретного состояния.
+- [reflection](https://zenithgram.github.io/classes/botMethods/reflection.md): Включает режим рефлексии для автоматического внедрения зависимостей.
+- [setCache](https://zenithgram.github.io/classes/botMethods/setCache.md): Устанавливает PSR-16 кеш для оптимизации рефлексии.
+- [setContainer](https://zenithgram.github.io/classes/botMethods/setContainer.md): Устанавливает PSR-11 контейнер для внедрения внешних зависимостей.
 - [redirect](https://zenithgram.github.io/classes/botMethods/redirect.md): Перенаправляет выполнение на другой маршрут.
 - [middleware](https://zenithgram.github.io/classes/botMethods/middleware.md): Регистрирует глобальное Middleware для бота.
 - [setStorage](https://zenithgram.github.io/classes/botMethods/setStorage.md): Подключает хранилище к боту.
