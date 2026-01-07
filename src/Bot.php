@@ -61,19 +61,16 @@ class Bot
     }
 
     /**
-     * Включает или отключает использование рефлексии (Dependency Injection)
+     * Включает использование рефлексии (Dependency Injection)
      * обработчиками.
-     *
-     * @param bool $status true - использовать DI, false - передавать ($zg,
-     *                     ...$args)
      *
      * @return Bot
      *
      * @see https://zenithgram.github.io/classes/botMethods/reflection
      */
-    public function reflection(bool $status = true): self
+    public function reflection(): self
     {
-        $this->useReflection = $status;
+        $this->useReflection = true;
 
         return $this;
     }
@@ -90,6 +87,7 @@ class Bot
     public function setContainer(ContainerInterface $container): self
     {
         $this->resolver->setContainer($container);
+        $this->useReflection = true;
 
         return $this;
     }
@@ -106,6 +104,7 @@ class Bot
     public function setCache(CacheInterface $cache): self
     {
         $this->resolver->setCache($cache);
+        $this->useReflection = true;
 
         return $this;
     }
@@ -1143,10 +1142,9 @@ class Bot
         $handler = $action->getHandler();
         if ($handler !== null) {
             if ($this->useReflection) {
-
                 $dependencies = $this->resolver->resolve(
-                $handler, $this->tg, $other_data,
-            );
+                    $handler, $this->tg, $other_data,
+                );
 
                 return $handler(...$dependencies);
             }
