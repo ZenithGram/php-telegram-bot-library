@@ -1142,11 +1142,16 @@ class Bot
     {
         $handler = $action->getHandler();
         if ($handler !== null) {
-            $dependencies = $this->resolver->resolve(
+            if ($this->useReflection) {
+
+                $dependencies = $this->resolver->resolve(
                 $handler, $this->tg, $other_data,
             );
 
-            return $handler(...$dependencies);
+                return $handler(...$dependencies);
+            }
+
+            return $handler($this->tg, ...$other_data);
         }
 
         if (!empty($action->getMessageData())) {
