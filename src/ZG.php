@@ -596,7 +596,7 @@ class ZG
      * @return array
      * @throws \Exception
      *
-     * @see https://zenithgram.github.io/classes/zenithMethods/answers
+     * @see https://zenithgram.github.io/classes/zenithMethods/answers#answercallbackquery
      */
     public function answerCallbackQuery(string|array $queryIdOrParams,
         array $params = [],
@@ -618,24 +618,40 @@ class ZG
     /**
      * Метод отправляет ответ Телеграму на inline-запрос
      *
-     * @param string $inlineQueryID
-     * @param array  $results
-     * @param array  $extra
+     * @param string|array $queryIdOrResults ID запроса (string) или сразу
+     *                                       массив результатов (array), тогда ID
+     *                                       берется из контекста.
+     * @param array        $resultsOrParams  Если 1-й аргумент ID, то здесь
+     *                                       результаты. Если 1-й — результаты,
+     *                                       то здесь доп. параметры (extra).
+     * @param array        $extra            Доп. параметры (если указаны ID и
+     *                                       результаты первыми двумя аргументами).
      *
      * @return array
+     * @throws \JsonException
      * @throws \Exception
      *
-     * @see https://zenithgram.github.io/classes/zenithMethods/answers
+     * @see https://zenithgram.github.io/classes/zenithMethods/answers#answerinlinequery
      */
-    public function answerInlineQuery(string $inlineQueryID, array $results,
-        array $extra = [],
+    public function answerInlineQuery(string|array $queryIdOrResults,
+        array $resultsOrParams = [], array $extra = [],
     ): array {
-        $params = array_merge([
-            'inline_query_id' => $inlineQueryID,
-            'results'         => json_encode($results, JSON_THROW_ON_ERROR),
-        ], $extra);
+        if (is_array($queryIdOrResults)) {
+            $queryId = $this->context->getQueryId();
+            $results = $queryIdOrResults;
+            $params  = $resultsOrParams;
+        } else {
+            $queryId = $queryIdOrResults;
+            $results = $resultsOrParams;
+            $params  = $extra;
+        }
 
-        return $this->api->callAPI('answerInlineQuery', $params);
+        $basePayload = [
+            'inline_query_id' => $queryId,
+            'results'         => json_encode($results, JSON_THROW_ON_ERROR),
+        ];
+
+        return $this->api->callAPI('answerInlineQuery', array_merge($basePayload, $params));
     }
 
     /**
