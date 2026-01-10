@@ -120,7 +120,6 @@ trait MessageBuilderTrait
 
     /* reply_markup */
 
-
     /**
      * Добавляет клавиатуру к сообщению
      *
@@ -391,12 +390,17 @@ trait MessageBuilderTrait
 
     /* Вспомогательные методы */
 
-
+    /**
+     * @internal
+     */
     public function getMessageData(): array
     {
         return $this->messageData;
     }
 
+    /**
+     * @internal
+     */
     public function setMessageData(array $messageData): self
     {
         $this->messageData = $messageData;
@@ -404,11 +408,17 @@ trait MessageBuilderTrait
         return $this;
     }
 
+    /**
+     * @internal
+     */
     public function getReplyMarkupRaw(): array
     {
         return $this->reply_markup_raw;
     }
 
+    /**
+     * @internal
+     */
     public function setReplyMarkupRaw(array $reply_markup): self
     {
         $this->reply_markup_raw = $reply_markup;
@@ -416,11 +426,17 @@ trait MessageBuilderTrait
         return $this;
     }
 
+    /**
+     * @internal
+     */
     public function getAdditionallyParams(): array
     {
         return $this->additionally_params;
     }
 
+    /**
+     * @internal
+     */
     public function setAdditionallyParams(array $params): self
     {
         $this->additionally_params = $params;
@@ -428,11 +444,17 @@ trait MessageBuilderTrait
         return $this;
     }
 
+    /**
+     * @internal
+     */
     public function getMediaQueue(): array
     {
         return $this->mediaQueue;
     }
 
+    /**
+     * @internal
+     */
     public function setMediaQueue(array $params): self
     {
         $this->mediaQueue = $params;
@@ -440,11 +462,17 @@ trait MessageBuilderTrait
         return $this;
     }
 
+    /**
+     * @internal
+     */
     public function getSendType(): array
     {
         return [$this->sendDice, $this->sendSticker];
     }
 
+    /**
+     * @internal
+     */
     public function setSendType(bool $sendDice, bool $sendSticker): self
     {
         $this->sendSticker = $sendSticker;
@@ -453,11 +481,17 @@ trait MessageBuilderTrait
         return $this;
     }
 
+    /**
+     * @internal
+     */
     public function getMediaPreviewUrl(): string
     {
         return $this->mediaPreviewUrl;
     }
 
+    /**
+     * @internal
+     */
     public function setMediaPreviewUrl(string $params): self
     {
         $this->mediaPreviewUrl = $params;

@@ -73,7 +73,7 @@ class ZG
         return $this;
     }
 
-    public function sendOK(): void
+    private function sendOK(): void
     {
         http_response_code(200);
         echo 'ok';
@@ -619,13 +619,14 @@ class ZG
      * Метод отправляет ответ Телеграму на inline-запрос
      *
      * @param string|array $queryIdOrResults ID запроса (string) или сразу
-     *                                       массив результатов (array), тогда ID
-     *                                       берется из контекста.
+     *                                       массив результатов (array), тогда
+     *                                       ID берется из контекста.
      * @param array        $resultsOrParams  Если 1-й аргумент ID, то здесь
      *                                       результаты. Если 1-й — результаты,
      *                                       то здесь доп. параметры (extra).
      * @param array        $extra            Доп. параметры (если указаны ID и
-     *                                       результаты первыми двумя аргументами).
+     *                                       результаты первыми двумя
+     *                                       аргументами).
      *
      * @return array
      * @throws \JsonException
@@ -639,11 +640,11 @@ class ZG
         if (is_array($queryIdOrResults)) {
             $queryId = $this->context->getQueryId();
             $results = $queryIdOrResults;
-            $params  = $resultsOrParams;
+            $params = $resultsOrParams;
         } else {
             $queryId = $queryIdOrResults;
             $results = $resultsOrParams;
-            $params  = $extra;
+            $params = $extra;
         }
 
         $basePayload = [
@@ -651,7 +652,9 @@ class ZG
             'results'         => json_encode($results, JSON_THROW_ON_ERROR),
         ];
 
-        return $this->api->callAPI('answerInlineQuery', array_merge($basePayload, $params));
+        return $this->api->callAPI(
+            'answerInlineQuery', array_merge($basePayload, $params),
+        );
     }
 
     /**
@@ -978,11 +981,17 @@ class ZG
 
     private array $botButtons = [];
 
+    /**
+     * @internal
+     */
     public function setBotButtons(array $buttons): void
     {
         $this->botButtons = $buttons;
     }
 
+    /**
+     * @internal
+     */
     public function getBotButtons(): array
     {
         return $this->botButtons;

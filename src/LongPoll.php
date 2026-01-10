@@ -31,8 +31,8 @@ class LongPoll
     /**
      * Создает объект класса LongPoll
      *
-     * @param string $token Токен Telegram
-     * @param int $timeout Сколько будет удерживаться соединение с Telegram
+     * @param string $token   Токен Telegram
+     * @param int    $timeout Сколько будет удерживаться соединение с Telegram
      *
      * @return LongPoll
      * @see https://zenithgram.github.io/classes/longpoll#create
@@ -86,20 +86,40 @@ class LongPoll
                         try {
                             $this->processUpdate($handler, $updateData);
                         } catch (Throwable $e) {
-                            // Логируем ошибку конкретного апдейта, но не роняем бота
-                            // Тут можно подключить Logger, пока просто вывод в stderr
-                            fwrite(
-                                STDERR,
-                                "[Update Error] ".$e->getMessage().PHP_EOL,
-                            );
+                            $this->reportInternalError($e, 'Update Error');
                         }
                     });
                 }
 
             } catch (Throwable $e) {
-                fwrite(STDERR, "[Network Error] ".$e->getMessage().PHP_EOL);
+                $this->reportInternalError($e, 'Network Error');
                 delay(2);
             }
+        }
+    }
+
+    private function reportInternalError(Throwable $e, $error): void
+    {
+        $context = new UpdateContext([]);
+        $tgInstance = new ZG($this->api, $context);
+
+        if ($this->debug) {
+            $tgInstance
+                ->enableDebug()
+                ->shortTrace($this->shortTrace)
+                ->setTracePathFilter($this->pathFiler);
+
+            if ($this->handler !== null) {
+                $tgInstance->setHandler($this->handler);
+            }
+
+            if ($this->debug_chat_ids !== null) {
+                $tgInstance->setSendIds($this->debug_chat_ids);
+            }
+
+            $tgInstance->reportException($e);
+        } else {
+            fwrite(STDERR, "[$error] ".$e->getMessage().PHP_EOL);
         }
     }
 

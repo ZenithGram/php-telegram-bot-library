@@ -63,12 +63,14 @@ class FileStorage implements StorageInterface
         write($file, $content);
     }
 
+    /** @internal  */
     public function getState(int|string $user_id): ?string
     {
         $data = $this->load($user_id);
         return $data['state'] ?? null;
     }
 
+    /** @internal  */
     public function setState(int|string $user_id, string $state): void
     {
         $data = $this->load($user_id);
@@ -76,6 +78,7 @@ class FileStorage implements StorageInterface
         $this->save($user_id, $data);
     }
 
+    /** @internal  */
     public function clearState(int|string $user_id): void
     {
         $data = $this->load($user_id);
@@ -85,12 +88,14 @@ class FileStorage implements StorageInterface
         }
     }
 
+    /** @internal  */
     public function getSessionData(int|string $user_id): array
     {
         $data = $this->load($user_id);
         return $data['session'] ?? [];
     }
 
+    /** @internal  */
     public function setSessionData(int|string $user_id, array $data): void
     {
         $currentData = $this->load($user_id);
@@ -99,6 +104,7 @@ class FileStorage implements StorageInterface
         $this->save($user_id, $currentData);
     }
 
+    /** @internal  */
     public function clearSessionData(int|string $user_id): void
     {
         $currentData = $this->load($user_id);

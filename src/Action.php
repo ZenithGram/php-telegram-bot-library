@@ -124,46 +124,55 @@ class Action
         return $this;
     }
 
+    /** @internal  */
     public function getQueryText(): string
     {
         return $this->queryText;
     }
 
+    /** @internal  */
     public function getId(): string
     {
         return $this->id;
     }
 
+    /** @internal  */
     public function getCondition(): mixed
     {
         return $this->condition;
     }
 
+    /** @internal  */
     public function getHandler(): ?callable
     {
         return $this->handler;
     }
 
+    /** @internal  */
     public function getAccessIds(): array
     {
         return $this->access_ids;
     }
 
+    /** @internal  */
     public function getNoAccessIds(): array
     {
         return $this->no_access_ids;
     }
 
+    /** @internal  */
     public function getAccessHandler(): ?callable
     {
         return $this->access_handler;
     }
 
+    /** @internal  */
     public function getNoAccessHandler(): ?callable
     {
         return $this->no_access_handler;
     }
 
+    /** @internal  */
     public function setHandler(?callable $handler): self
     {
         $this->handler = $handler;
@@ -171,6 +180,7 @@ class Action
         return $this;
     }
 
+    /** @internal  */
     public function setQueryText(?string $queryText): self
     {
         $this->queryText = $queryText;
@@ -226,6 +236,7 @@ class Action
         return $this;
     }
 
+    /** @internal  */
     public function getMessageDataAction(): int
     {
         return $this->messageDataAction;

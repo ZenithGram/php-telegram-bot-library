@@ -84,13 +84,12 @@ class ApiClient
     }
 
     /**
+     * @internal
      * Асинхронно скачивает файл по ссылке и сохраняет его на диск
      */
     public function downloadFile(string $url, string $destinationPath): void
     {
-        // 1. Делаем запрос (GET)
         $request = new Request($url, 'GET');
-        // Таймаут побольше для скачивания (5 минут)
         $request->setTransferTimeout(300);
         $request->setInactivityTimeout(60);
 
@@ -100,22 +99,20 @@ class ApiClient
             throw new \RuntimeException("Не удалось скачать файл. HTTP код: " . $response->getStatus());
         }
 
-        // 2. Открываем файл на диске для записи (асинхронно)
-        // Если папки нет, она должна быть создана ДО вызова этого метода
         $file = File\openFile($destinationPath, 'w');
 
         try {
-            // 3. "Труба": переливаем данные из сети (Body) в файл на диске
-            // Это не забивает оперативную память и не блокирует поток
             pipe($response->getBody(), $file);
         } finally {
-            // 4. Обязательно закрываем файл
             $file->close();
         }
     }
 
+    /** @internal  */
     public function getApiUrl(): string { return $this->apiUrl; }
+    /** @internal  */
     public function getApiFileUrl(): string { return $this->apiFileUrl; }
+    /** @internal  */
     public function getToken(): string { return $this->token; }
 
     private function formatParamsArray(array $array, int $indent = 0): string
@@ -125,7 +122,6 @@ class ApiClient
 
         foreach ($array as $key => $value) {
             if (is_string($value) && ($decoded = json_decode($value, true)) !== null) {
-                // Если значение — JSON, декодируем его в массив
                 $value = $decoded;
             }
 

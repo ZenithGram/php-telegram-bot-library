@@ -4,7 +4,6 @@ namespace ZenithGram\ZenithGram\Utils;
 
 class LocalFile
 {
-
     public function __construct(
         private string $path,
     ) {}
@@ -13,5 +12,4 @@ class LocalFile
     {
         return $this->path;
     }
-
 }
