@@ -494,7 +494,7 @@ class ZG
     /**
      * Метод отправляет сообщение в чат
      *
-     * @param int    $chatID
+     * @param int|string    $chat_id
      * @param string $text
      * @param array  $params
      *
@@ -504,10 +504,10 @@ class ZG
      *
      * @see https://zenithgram.github.io/classes/zenithMethods/sendMessage
      */
-    public function sendMessage(int $chatID, string $text, array $params = [],
+    public function sendMessage(int|string $chat_id, string $text, array $params = [],
     ): array {
         $params_message = [
-            'chat_id' => $chatID,
+            'chat_id' => $chat_id,
             'text'    => $text,
         ];
 
@@ -519,7 +519,7 @@ class ZG
     /**
      * Метод отправляет сообщение в чат
      *
-     * @param string $message
+     * @param string $text
      * @param array  $params
      *
      * @return array
@@ -528,14 +528,14 @@ class ZG
      *
      * @see https://zenithgram.github.io/classes/zenithMethods/reply
      */
-    public function reply(string $message, array $params = []): array
+    public function reply(string $text, array $params = []): array
     {
         if (!isset($params['chat_id'])) {
             $params['chat_id'] = $this->context->getChatId();
         }
 
         return $this->api->callAPI(
-            'sendMessage', array_merge($params, ['text' => $message]),
+            'sendMessage', array_merge($params, ['text' => $text]),
         );
     }
 
