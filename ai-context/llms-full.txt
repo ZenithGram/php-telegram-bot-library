@@ -244,7 +244,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 $bot->onCallback('click')->func(function(ZG $tg) {
@@ -298,7 +298,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // Предполагаем, что у нас есть $results
@@ -3492,19 +3492,19 @@ description: Добавляет скрытую ссылку для превью.
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
 use ZenithGram\ZenithGram\ZG;
+use ZenithGram\ZenithGram\Bot;
 
 $tg = ZG::create(BOT_TOKEN);
-$text = $tg->getText()
-$type = $tg->getType();
+$bot = new Bot($tg);
 
+$bot->onBotCommand('/mediaPreview')->func(function(ZG $tg) {
 $img_url = "https://example.com/img.jpg";
-
-if ($text === '/mediaPreview') {
     $tg->msg("Текст сообщения")
         ->mediaPreview($img_url) // Поддерживает только ссылки
         ->send();
-}
+});
 
+$bot->run();
 ```
 
 ## Пример, как будет выглядеть сообщение
@@ -3561,7 +3561,7 @@ Trait, который используется в классах `Message` и `A
 
 Он включает в себя все методы для сборки сообщений, например: `text()`, `parseMode()`, `reply()`.
 
-## Подробнее про класс Message и доступных мметодах [здесь](/classes/message.md)
+## Подробнее про класс Message и доступных методах [здесь](/classes/message.md)
 
 ## Примеры использования
 
@@ -3571,7 +3571,8 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 use ZenithGram\ZenithGram\Button;
-use ZenithGram\ZenithGram\MessageParseMode;
+use ZenithGram\ZenithGram\Enums\MessageParseMode;
+use ZenithGram\ZenithGram\Enums\MessageDice;
 
 $tg = ZG::create('ТОКЕН_БОТА');
 $bot = new Bot($tg);
@@ -3608,7 +3609,7 @@ $bot->onBotCommand('rules', '/rules')
 // 5. Развлекательные методы (Кубик)
 // dice() отправляет анимированный эмодзи
 $bot->onText('dice', 'кинь кубик')
-    ->dice('🎲');
+    ->dice(MessageDice::Dice);
     
 // 6. Сложная цепочка (Fluent Interface во всей красе)
 $bot->onBotCommand('promo', '/promo')
@@ -6078,7 +6079,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 $bot->onText()->func(function(ZG $tg) {
@@ -6305,7 +6306,7 @@ use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Enums\ChatAction;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 $bot->onBotCommand('/action')->func(function(ZG $tg) {
@@ -6366,7 +6367,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 $bot->onText()->func(function(ZG $tg) {
@@ -8049,8 +8050,7 @@ $tg->msg("Клавиатура убрана.")
 // Пример в обработчике callback-запроса
 $bot->onCallback('edit_text')
     ->func(function(ZG $tg) {
-        $query_id = $tg->getQueryId();
-        $tg->answerCallbackQuery($query_id);
+        $tg->answerCallbackQuery();
         
         $tg->msg("Этот текст изменён")->editText();
     });
@@ -8092,7 +8092,6 @@ $tg->msg("Новая подпись к новому фото")
 | `entities`     | Устанавливает массив [сущностей](https://core.telegram.org/bots/api#messageentity) для форматирования. |
 | `mediaPreview` | Добавляет "невидимый" предпросмотр ссылки.                                                             |
 | `params`       | Добавляет любые дополнительные параметры в запрос к API.                                               |
-| `action`       | Отправляет действие в чат (`typing`, `upload_photo` и др.).                                            |
 | `send`         | **Завершающий метод.** Отправляет собранное сообщение.                                                 |
 | `editText`     | **Завершающий метод.** Редактирует текст существующего сообщения.                                      |
 | `editCaption`  | **Завершающий метод.** Редактирует подпись к медиа в существующем сообщении.                           |
