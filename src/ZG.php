@@ -390,6 +390,71 @@ class ZG
     }
 
     /**
+     * Закрепляет сообщение в чате
+     *
+     * @param int|null        $msg_id               ID сообщения, которое будет
+     *                                              закреплено
+     * @param int|string|null $chat_id              ID чата, в котором будет
+     *                                              закреплено сообщение
+     * @param bool            $disable_notification Выключить звук? True/False
+     *
+     * @return array
+     *
+     * @throws \Amp\Http\Client\HttpException
+     *
+     * @see https://zenithgram.github.io/classes/zenithMethods/pinMsg
+     */
+    public function pinMsg(
+        int|null $msg_id = null,
+        int|string|null $chat_id = null,
+        bool $disable_notification = false,
+    ): array {
+        $msg_id ??= $this->context->getMessageId();
+        $chat_id ??= $this->context->getChatId();
+
+        return $this->api->callAPI('pinChatMessage', [
+            'chat_id'              => $chat_id,
+            'message_id'           => $msg_id,
+            'disable_notification' => $disable_notification,
+        ]);
+    }
+
+    /**
+     * Открепляет сообщение
+     *
+     * @param int|null        $msg_id  ID сообщения, которое будет
+     *                                 закреплено
+     * @param int|string|null $chat_id ID чата, в котором будет
+     *                                 закреплено сообщение
+     * @param bool            $all     Открепить все сообщения? True/False
+     *
+     * @return array
+     *
+     * @throws \Amp\Http\Client\HttpException
+     *
+     * @see https://zenithgram.github.io/classes/zenithMethods/unpinMsg
+     */
+    public function unpinMsg(
+        int|null $msg_id = null,
+        int|string|null $chat_id = null,
+        bool $all = false,
+    ): array {
+        $chat_id ??= $this->context->getChatId();
+
+        $params = ['chat_id' => $chat_id];
+
+        if ($all) {
+            $msg_id ??= $this->context->getMessageId();
+            $params['message_id'] = $msg_id;
+            $method = 'unpinChatMessage';
+        } else {
+            $method = 'unpinAllChatMessage';
+        }
+
+        return $this->api->callAPI($method, $params);
+    }
+
+    /**
      * Устанавливает действие бота
      *
      * @param string|null $action
