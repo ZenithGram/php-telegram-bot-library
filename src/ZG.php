@@ -277,18 +277,13 @@ class ZG
     public function delMsg(array|int $msg_ids = null,
         int|string $chat_id = null,
     ): array {
-        if ($msg_ids === null) {
-            $msg_ids = $this->getMsgId();
-        }
 
-        if ($chat_id === null) {
-            $chat_id = $this->getChatId();
-        }
+        $msg_ids ??= $this->context->getMessageId();
+        $chat_id ??= $this->context->getChatId();
 
-
-        $bool = is_array($msg_ids);
-        $method = $bool ? 'deleteMessages' : 'deleteMessage';
-        $param = $bool ? 'messages_id' : 'message_id';
+        $isArray = is_array($msg_ids);
+        $method = $isArray ? 'deleteMessages' : 'deleteMessage';
+        $param = $isArray ? 'messages_id' : 'message_id';
 
         return $this->api->callAPI(
             $method, ['chat_id' => $chat_id, $param => $msg_ids],
@@ -306,27 +301,18 @@ class ZG
      *
      * @throws \Exception
      *
-     *
      * @see https://zenithgram.github.io/classes/zenithMethods/copyMsg
      */
     public function copyMsg(int|array $msg_ids = null,
         int|string $chat_id = null, int|string $from_chat_id = null,
     ): array {
-        if ($msg_ids === null) {
-            $msg_ids = $this->getMsgId();
-        }
+        $msg_ids ??= $this->context->getMessageId();
+        $chat_id ??= $this->context->getChatId();
+        $from_chat_id ??= $chat_id;
 
-        if ($chat_id === null) {
-            $chat_id = $this->getChatId();
-        }
-
-        if ($from_chat_id === null) {
-            $from_chat_id = $chat_id;
-        }
-
-        $bool = is_array($msg_ids);
-        $method = $bool ? 'copyMessages' : 'copyMessage';
-        $param = $bool ? 'messages_id' : 'message_id';
+        $isArray = is_array($msg_ids);
+        $method = $isArray ? 'copyMessages' : 'copyMessage';
+        $param = $isArray ? 'messages_id' : 'message_id';
 
         return $this->api->callAPI(
             $method, ['chat_id' => $chat_id, 'from_chat_id' => $from_chat_id,
