@@ -280,12 +280,18 @@ class ZG
         $msg_ids ??= $this->context->getMessageId();
         $chat_id ??= $this->context->getChatId();
 
-        $isArray = is_array($msg_ids);
-        $method = $isArray ? 'deleteMessages' : 'deleteMessage';
-        $param = $isArray ? 'messages_id' : 'message_id';
+        if (is_array($msg_ids)) {
+            $method = 'deleteMessages';
+            $params = ['message_ids' => $msg_ids];
+        } else {
+            $method = 'deleteMessage';
+            $params = ['message_id' => $msg_ids];
+        }
+
+        $params['chat_id'] = $chat_id;
 
         return $this->api->callAPI(
-            $method, ['chat_id' => $chat_id, $param => $msg_ids],
+            $method, $params,
         );
     }
 
