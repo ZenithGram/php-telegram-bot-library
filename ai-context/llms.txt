@@ -51,7 +51,10 @@
 - [sendMessage](https://zenithgram.github.io/classes/zenithMethods/sendMessage.md): Отправляет текстовое сообщение в указанный чат (прямой метод).
 - [reply](https://zenithgram.github.io/classes/zenithMethods/reply.md): Отправляет ответ на текущее сообщение (сокращенный метод).
 - [copyMsg](https://zenithgram.github.io/classes/zenithMethods/copyMsg.md): Копирует сообщение из одного чата в другой.
+- [fwdMsg](https://zenithgram.github.io/classes/zenithMethods/fwdMsg.md): Пересылает сообщение из одного чата в другой.
 - [delMsg](https://zenithgram.github.io/classes/zenithMethods/delMsg.md): Удаляет сообщение по его ID.
+- [pinMsg](https://zenithgram.github.io/classes/zenithMethods/pinMsg.md): Закрепляет сообщение в чате.
+- [unpinMsg](https://zenithgram.github.io/classes/zenithMethods/unpinMsg.md): Открепляет сообщение в чате.
 - [sendAction](https://zenithgram.github.io/classes/zenithMethods/sendAction.md): Отправляет статус действия бота (например, 'typing').
 - [answers](https://zenithgram.github.io/classes/zenithMethods/answers.md): Методы для ответа на callback (answerCallbackQuery) и inline запросы.
 - [callAPI](https://zenithgram.github.io/classes/zenithMethods/callAPI.md): Выполняет произвольный метод Telegram Bot API.
