@@ -298,18 +298,23 @@ class ZG
     /**
      * Метод копирует одно или несколько сообщений
      *
-     * @param int|array|null  $msg_ids
-     * @param int|string|null $chat_id
-     * @param int|string|null $from_chat_id
-     * @param array|null      $params Дополнительные параметры (caption,
-     *                                parse_mode, reply_markup,
-     *                                message_thread_id)
+     * @param int|array|null  $msg_ids      ID сообщения или массив ID
+     *                                      сообщений
+     * @param int|string|null $chat_id      Куда пересылать (по умолчанию
+     *                                      текущий чат)
+     * @param int|string|null $from_chat_id Откуда пересылать (по умолчанию из
+     *                                      chat_id)
+     * @param array|null      $params       Дополнительные параметры (caption,
+     *                                      parse_mode, reply_markup,
+     *                                      message_thread_id)
      *
      * @return array
      *
      * @throws \Amp\Http\Client\HttpException
      *
      * @see https://zenithgram.github.io/classes/zenithMethods/copyMsg
+     * @see https://core.telegram.org/bots/api#copyMessages
+     * @see https://core.telegram.org/bots/api#copyMessage
      */
     public function copyMsg(int|array $msg_ids = null,
         int|string $chat_id = null, int|string $from_chat_id = null,
@@ -340,32 +345,50 @@ class ZG
     /**
      * Метод пересылает одно или несколько сообщений
      *
-     * @param int|array|null  $msg_ids
-     * @param int|string|null $chat_id
-     * @param int|string|null $from_chat_id
+     * @param int|array|null  $msg_ids      ID сообщения или массив ID
+     *                                      сообщений
+     * @param int|string|null $chat_id      Куда пересылать (по умолчанию
+     *                                      текущий чат)
+     * @param int|string|null $from_chat_id Откуда пересылать (по умолчанию из
+     *                                      chat_id)
+     * @param array           $params       Доп. параметры (message_thread_id,
+     *                                      disable_notification,
+     *                                      protect_content)
      *
      * @return array
      *
-     * @throws \Exception
+     * @throws \Amp\Http\Client\HttpException
      *
-     * @see https://zenithgram.github.io/classes/zenithMethods/copyMsg
+     * @see https://zenithgram.github.io/classes/zenithMethods/fwdMsg
+     * @see https://core.telegram.org/bots/api#forwardmessages
+     * @see https://core.telegram.org/bots/api#forwardmessage
      */
-    public function fwdMsg(int|array $msg_ids = null,
-        int|string $chat_id = null, int|string $from_chat_id = null,
+    public function fwdMsg(
+        int|array $msg_ids = null,
+        int|string $chat_id = null,
+        int|string $from_chat_id = null,
+        array $params = [],
     ): array {
         $msg_ids ??= $this->context->getMessageId();
         $chat_id ??= $this->context->getChatId();
         $from_chat_id ??= $chat_id;
 
-        $isArray = is_array($msg_ids);
-        $method = $isArray ? 'copyMessages' : 'copyMessage';
-        $param = $isArray ? 'messages_id' : 'message_id';
+        if (is_array($msg_ids)) {
+            $method = 'forwardMessages';
+            $baseParams = ['message_ids' => $msg_ids];
+        } else {
+            $method = 'forwardMessage';
+            $baseParams = ['message_id' => $msg_ids];
+        }
 
-        return $this->api->callAPI(
-            $method, ['chat_id' => $chat_id, 'from_chat_id' => $from_chat_id,
-                      $param    => $msg_ids],
-        );
+        $baseParams['chat_id'] = $chat_id;
+        $baseParams['from_chat_id'] = $from_chat_id;
+
+        $payload = array_merge($baseParams, $params);
+
+        return $this->api->callAPI($method, $payload);
     }
+
 
     /**
      * Устанавливает действие бота
