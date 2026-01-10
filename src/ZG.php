@@ -277,7 +277,6 @@ class ZG
     public function delMsg(array|int $msg_ids = null,
         int|string $chat_id = null,
     ): array {
-
         $msg_ids ??= $this->context->getMessageId();
         $chat_id ??= $this->context->getChatId();
 
@@ -296,6 +295,48 @@ class ZG
      * @param int|array|null  $msg_ids
      * @param int|string|null $chat_id
      * @param int|string|null $from_chat_id
+     * @param array|null      $params Дополнительные параметры (caption,
+     *                                parse_mode, reply_markup,
+     *                                message_thread_id)
+     *
+     * @return array
+     *
+     * @throws \Amp\Http\Client\HttpException
+     *
+     * @see https://zenithgram.github.io/classes/zenithMethods/copyMsg
+     */
+    public function copyMsg(int|array $msg_ids = null,
+        int|string $chat_id = null, int|string $from_chat_id = null,
+        array|null $params = null,
+    ): array {
+        $msg_ids ??= $this->context->getMessageId();
+        $chat_id ??= $this->context->getChatId();
+        $from_chat_id ??= $chat_id;
+
+        $isArray = is_array($msg_ids);
+
+        if ($isArray) {
+            $method = 'copyMessages';
+            $baseParams = ['message_ids' => $msg_ids];
+        } else {
+            $method = 'copyMessage';
+            $baseParams = ['message_id' => $msg_ids];
+        }
+
+        $baseParams['chat_id'] = $chat_id;
+        $baseParams['from_chat_id'] = $from_chat_id;
+
+        $payload = array_merge($baseParams, $params);
+
+        return $this->api->callAPI($method, $payload);
+    }
+
+    /**
+     * Метод пересылает одно или несколько сообщений
+     *
+     * @param int|array|null  $msg_ids
+     * @param int|string|null $chat_id
+     * @param int|string|null $from_chat_id
      *
      * @return array
      *
@@ -303,7 +344,7 @@ class ZG
      *
      * @see https://zenithgram.github.io/classes/zenithMethods/copyMsg
      */
-    public function copyMsg(int|array $msg_ids = null,
+    public function fwdMsg(int|array $msg_ids = null,
         int|string $chat_id = null, int|string $from_chat_id = null,
     ): array {
         $msg_ids ??= $this->context->getMessageId();
