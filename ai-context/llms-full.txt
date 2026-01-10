@@ -30,7 +30,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 $bot->onCommand('ban', '/ban {username}')
@@ -51,7 +51,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 $bot->onCommand('ban', '/ban {user}')
@@ -90,7 +90,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 $bot->onBotCommand('start', '/start')
@@ -144,9 +144,9 @@ url: 'https://zenithgram.github.io/classes/inlineMethods/address.md'
 description: Устанавливает адрес.
 ---
 
-# coordinates
+# address
 
-Метод устанавливает координаты для inline-запроса.
+Метод устанавливает адрес для inline-запроса.
 
 ## Параметры метода
 
@@ -165,7 +165,7 @@ description: Устанавливает адрес.
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $query_id = $tg->getQueryId();
 
 $results = [
@@ -368,52 +368,57 @@ description: Добавляет аудио.
 
 ```php
 <?php
-require_once __DIR__ . '/vendor/autoload.php'; 
+require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
+use ZenithGram\ZenithGram\Bot;
 
 $tg = ZG::create(BOT_TOKEN);
-$text = $tg->getText();
-$type = $tg->getType();
+$bot = new Bot($tg);
 
-if ($type === 'bot_command') {
-
+$bot->onBotCommand('/audioUrl')->func(function(ZG $tg) {
     $audio_url = "https://example.com/audio.mp3";
+    $tg->msg("Отправка сообщения с аудио по ссылке")
+        ->audio($audio_url)
+        ->send();
+});
+
+$bot->onBotCommand('/audioId')->func(function(ZG $tg) {
     $audio_id = "AgACAgIAAxkDAAICUmfbEudQY2SXKgsMr00_b_ZAcYErAALP9TEbJsnZSlufCaTwR76hAQADAgADeQADNgQ";
+    $tg->msg("Отправка сообщения с аудио по ID") 
+        ->audio($audio_id)
+        ->send();
+});
+
+$bot->onBotCommand('/audioPath')->func(function(ZG $tg) {
     $audio_path = "media/audio.mp3";
-    
-    switch ($text) {
-        case '/audioUrl':
-            $tg->msg("Отправка сообщения с аудио по ссылке")
-                ->audio($audio_url)
-                ->send();
-            break;
-           
-        case '/audioId':
-            $tg->msg("Отправка сообщения с аудио по ID") 
-                ->audio($audio_id)
-                ->send();
-            break;
-           
-        case '/audioPath':
-            $tg->msg("Отправка сообщения с аудио по локальному пути") 
-                ->audio($audio_path)
-                ->send();
-            break;
+    $tg->msg("Отправка сообщения с аудио по локальному пути") 
+        ->audio($audio_path)
+        ->send();
+});
 
-        case '/audioArray':
-            $tg->msg('Отправка сообщения с массивом аудио-файлов')
-                ->audio([$audio_url1, $audio_url2])
-                ->send();
-            break;
+$bot->onBotCommand('/audioPath')->func(function(ZG $tg) {
+    $audio_path = "media/audio.mp3";
+    $tg->msg("Отправка сообщения с аудио по локальному пути") 
+        ->audio($audio_path)
+        ->send();
+});
 
-        case '/audioLot':
-            $tg->msg('Отправка сообщения с несколькими вызовами audio()')
-                ->audio($audio_url1)
-                ->audio($audio_url2)
-                ->send();
-            break;
-    }
-}
+$bot->onBotCommand('/audioArray')->func(function(ZG $tg) {
+    $audio_url1 = $audio_url2 = "https://example.com/audio.mp3";
+    $tg->msg('Отправка сообщения с массивом аудио-файлов')
+        ->audio([$audio_url1, $audio_url2])
+        ->send();
+});
+
+$bot->onBotCommand('/audioLot')->func(function(ZG $tg) {
+    $audio_url1 = $audio_url2 = "https://example.com/audio.mp3";
+    $tg->msg('Отправка сообщения с несколькими вызовами audio()')
+        ->audio($audio_url1)
+        ->audio($audio_url2)
+        ->send();
+});
+
+$bot->run();
 ```
 
 ## Вспомогательные методы
@@ -447,7 +452,7 @@ use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
 // Инициализация для работы через Webhook
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // ... здесь вся логика вашего бота ...
@@ -465,7 +470,7 @@ use ZenithGram\ZenithGram\LongPoll;
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$lp = LongPoll::create('ТОКЕН_БОТА');
+$lp = LongPoll::create(BOT_TOKEN);
 $bot = new Bot(); // Сразу не передаем ZG
 // ... здесь вся логика вашего бота ...
 
@@ -489,7 +494,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // --- Определяем маршруты и действия ---
@@ -553,7 +558,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // 1. Определяем действия для каждой кнопки
@@ -678,7 +683,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 
 $me = $tg->callAPI('getMe');
 $name = "Имя бота: " . $me['result']['first_name'] . "\n";
@@ -795,7 +800,7 @@ description: Устанавливает координаты.
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $query_id = $tg->getQueryId();
 
 $results = [
@@ -940,7 +945,7 @@ description: Собирает массив результата.
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $query_id = $tg->getQueryId();
 
 $results = [
@@ -1015,7 +1020,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Enums\MessageParseMode;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $tg->defaultParseMode(MessageParseMode::MarkdownV2);
 
 $tg->msg('*Привет!*')->send();
@@ -1109,7 +1114,7 @@ description: Устанавливает описание.
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $query_id = $tg->getQueryId();
 
 $results = [
@@ -1197,50 +1202,48 @@ description: Добавляет документ.
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
 use ZenithGram\ZenithGram\ZG;
+use ZenithGram\ZenithGram\Bot;
 
 $tg = ZG::create(BOT_TOKEN);
-$text = $tg->getText();
-$type = $tg->getType();
+$bot = new Bot($tg);
 
-if ($type === 'bot_command') {
-
+$bot->onBotCommand('/docUrl')->func(function(ZG $tg) {
     $doc_url = "https://example.com/doc.txt";
+    $tg->msg("Отправка сообщения с файлом по ссылке")
+        ->doc($doc_url)
+        ->send();
+});
+
+$bot->onBotCommand('/docId')->func(function(ZG $tg) {
     $doc_id = "AgACAgIAAxkDAAICUmfbEudQY2SXKgsMr00_b_ZAcYErAALP9TEbJsnZSlufCaTwR76hAQADAgADeQADNgQ";
+    $tg->msg("Отправка сообщения с файлом по ID") 
+        ->doc($doc_id)
+        ->send();
+});
+
+$bot->onBotCommand('/docPath')->func(function(ZG $tg) {
     $doc_path = "media/doc.txt";
+    $tg->msg("Отправка сообщения с файлом по локальному пути") 
+        ->doc($doc_path)
+        ->send();
+});
 
-    switch ($text) {
-        case '/docUrl':
-            $tg->msg("Отправка сообщения с файл по ссылке")
-                ->doc($doc_url)
-                ->send();
-            break;
-           
-        case '/docId':
-            $tg->msg("Отправка сообщения с файлом по ID") 
-                ->doc($doc_id)
-                ->send();
-            break;
-           
-        case '/docPath':
-            $tg->msg("Отправка сообщения с файлом по локальному пути") 
-                ->doc($doc_path)
-                ->send();
-            break;
+$bot->onBotCommand('/docArray')->func(function(ZG $tg) {
+    $doc_url1 = $doc_url2 = "https://example.com/doc.txt";
+    $tg->msg('Отправка сообщения с массивом файлов')
+        ->doc([$doc_url1, $doc_url2])
+        ->send();
+});
 
-        case '/docArray':
-            $tg->msg('Отправка сообщения с массивом файлов')
-                ->doc([$doc_url1, $doc_url2])
-                ->send();
-            break;
+$bot->onBotCommand('/docLot')->func(function(ZG $tg) {
+    $doc_url1 = $doc_url2 = "https://example.com/doc.txt";
+    $tg->msg('Отправка сообщения с несколькими вызовами doc()')
+        ->doc($doc_url1)
+        ->doc($doc_url2)
+        ->send();
+});
 
-        case '/docLot':
-            $tg->msg('Отправка сообщения с несколькими вызовами doc()')
-                ->doc($doc_url1)
-                ->doc($doc_url2)
-                ->send();
-            break;
-    }
-}
+$bot->run();
 ```
 
 ## Вспомогательные методы
@@ -1281,7 +1284,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 $bot->onCommand('/userdto')
@@ -1337,7 +1340,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 $bot->onCommand('/chatdto')
@@ -1711,8 +1714,8 @@ WebHook:
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
-$tg->enableDebug;
+$tg = ZG::create(BOT_TOKEN);
+$tg->enableDebug();
 ```
 
 Longpoll:
@@ -1722,8 +1725,8 @@ Longpoll:
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\LongPoll;
 
-$lp = LongPoll::create('ТОКЕН_БОТА');
-$lp->enableDebug;
+$lp = LongPoll::create(BOT_TOKEN);
+$lp->enableDebug();
 ```
 
 ## setSendIds
@@ -1749,11 +1752,11 @@ WebHook:
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
-$tg->enableDebug
+$tg = ZG::create(BOT_TOKEN);
+$tg->enableDebug()
     ->setSendIds(123456789); // Один пользователь
 
-$tg->enableDebug
+$tg->enableDebug()
     ->setSendIds([123456789, 987654321]); // Два пользователя
 ```
 
@@ -1764,11 +1767,11 @@ Longpoll:
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\LongPoll;
 
-$lp = LongPoll::create('ТОКЕН_БОТА');
-$lp->enableDebug
+$lp = LongPoll::create(BOT_TOKEN);
+$lp->enableDebug()
     ->setSendIds(123456789); // Один пользователь
 
-$lp->enableDebug
+$lp->enableDebug()
     ->setSendIds([123456789, 987654321]); // Два пользователя
 ```
 
@@ -1803,8 +1806,8 @@ $lp->enableDebug
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
-$tg->enableDebug
+$tg = ZG::create(BOT_TOKEN);
+$tg->enableDebug()
     ->setHandler(function(ZG $tg, Throwable $e) {
         $tg->reply("В боте возникла неизвестная ошибка!\n" . $e->getMessage());
     });
@@ -1835,7 +1838,7 @@ $tg->enableDebug
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА')
+$tg = ZG::create(BOT_TOKEN)
     ->enableDebug()
     ->setSendIds(123456789)
     ->setTracePathFilter('/path/to/your/project');
@@ -1863,7 +1866,7 @@ $tg = ZG::create('ТОКЕН_БОТА')
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА')
+$tg = ZG::create(BOT_TOKEN)
     ->enableDebug()
     ->setSendIds(123456789)
     ->shortTrace(true); 
@@ -1936,7 +1939,7 @@ description: 'Создает экземпляр класса File для раб�
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 
 $img_id = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef...";
 
@@ -1973,7 +1976,7 @@ description: Класс для работы с файлами.
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 
 $img_id = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef...";
 
@@ -1985,7 +1988,6 @@ $File = $tg->file($img_id);
 Для создания экземпляра класса потребуется его импорт и стандартный синтаксис:
 
 ```php
-<?php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\File;
@@ -2000,11 +2002,11 @@ $File = new File($img_id);
 ---
 
 ---
-url: 'https://zenithgram.github.io/classes/inlineMethods/fileID.md'
+url: 'https://zenithgram.github.io/classes/inlineMethods/fileId.md'
 description: Устанавливает file_id файла.
 ---
 
-# fileID
+# fileId
 
 Метод устанавливает id-файла, который отправит бот.
 
@@ -2025,7 +2027,7 @@ description: Устанавливает file_id файла.
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $query_id = $tg->getQueryId();
 
 $results = [
@@ -2033,7 +2035,7 @@ $results = [
         ->id('photo')
         ->title('Команда')
         ->description('Описание команды')
-        ->fileID('id')  // id фото или прочего файла
+        ->fileId('id')  // id фото или прочего файла
         ->create(),
 ];
 
@@ -2068,7 +2070,7 @@ description: Устанавливает URL файла.
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $query_id = $tg->getQueryId();
 
 $results = [
@@ -2169,7 +2171,7 @@ use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 use ZenithGram\ZenithGram\MessageParseMode;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // Пример с onCommand и аргументами
@@ -2287,7 +2289,7 @@ description: 'Методы получения данных из обновлен
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $update = $tg->getUpdate();
 ```
 
@@ -2484,9 +2486,9 @@ $callback_data = $tg->getCallbackData();
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 
-$chat_id = $tg->getChatID();
+$chat_id = $tg->getChatId();
 $text = $tg->getText();
 $type = $tg->getType();
 
@@ -2528,7 +2530,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\File;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 
 $result = $tg->msg("Вот вам картинка")
     ->img('https://example.com/img.jpg')
@@ -2547,7 +2549,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\File;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 
 $update = $tg->getUpdate();
 
@@ -2578,7 +2580,7 @@ description: Получает информацию о файле через API.
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 
 $img_id = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef...";
 
@@ -2615,7 +2617,7 @@ description: Возвращает прямую ссылку на файл (дл�
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 
 $img_id = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef...";
 
@@ -2653,7 +2655,7 @@ description: Возвращает размер файла.
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 
 $img_id = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef...";
 
@@ -2727,50 +2729,48 @@ description: Добавляет GIF.
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
 use ZenithGram\ZenithGram\ZG;
+use ZenithGram\ZenithGram\Bot;
 
 $tg = ZG::create(BOT_TOKEN);
-$text = $tg->getText();
-$type = $tg->getType();
+$bot = new Bot($tg);
 
-if ($type === 'bot_command') {
-
+$bot->onBotCommand('/gifUrl')->func(function(ZG $tg) {
     $gif_url = "https://example.com/gif.gif";
+    $tg->msg("Отправка сообщения с гиф по ссылке")
+        ->gif($gif_url)
+        ->send();
+});
+
+$bot->onBotCommand('/gifId')->func(function(ZG $tg) {
     $gif_id = "AgACAgIAAxkDAAICUmfbEudQY2SXKgsMr00_b_ZAcYErAALP9TEbJsnZSlufCaTwR76hAQADAgADeQADNgQ";
+    $tg->msg("Отправка сообщения с гиф по ID") 
+        ->gif($gif_id)
+        ->send();
+});
+
+$bot->onBotCommand('/gifPath')->func(function(ZG $tg) {
     $gif_path = "media/gif.gif";
+    $tg->msg("Отправка сообщения с гиф по локальному пути") 
+        ->gif($gif_path)
+        ->send();
+});
 
-    switch ($text) {
-        case '/gifUrl':
-            $tg->msg("Отправка сообщения с гиф по ссылке")
-                ->gif($gif_url)
-                ->send();
-            break;
-           
-        case '/gifId':
-            $tg->msg("Отправка сообщения с гиф по ID") 
-                ->gif($gif_id)
-                ->send();
-            break;
-           
-        case '/gifPath':
-            $tg->msg("Отправка сообщения с гиф по локальному пути") 
-                ->gif($gif_path)
-                ->send();
-            break;
+$bot->onBotCommand('/gifArray')->func(function(ZG $tg) {
+    $gif_url1 = $gif_url2 = "https://example.com/gif.gif";
+    $tg->msg('Отправка сообщения с массивом гифок')
+        ->gif([$gif_url1, $gif_url2])
+        ->send();
+});
 
-        case '/gifArray':
-            $tg->msg('Отправка сообщения с массивом гифок')
-                ->gif([$gif_url1, $gif_url2])
-                ->send();
-            break;
+$bot->onBotCommand('/gifLot')->func(function(ZG $tg) {
+    $gif_url1 = $gif_url2 = "https://example.com/gif.gif";
+    $tg->msg('Отправка сообщения с несколькими вызовами gif()')
+        ->gif($gif_url1)
+        ->gif($gif_url2)
+        ->send();
+});
 
-        case '/gifLot':
-            $tg->msg('Отправка сообщения с несколькими вызовами gif()')
-                ->gif($gif_url1)
-                ->gif($gif_url2)
-                ->send();
-            break;
-    }
-}
+$bot->run();
 ```
 
 ## Вспомогательные методы
@@ -2805,7 +2805,7 @@ description: Устанавливает ID результата.
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $query_id = $tg->getQueryId();
 
 $results = [
@@ -2847,50 +2847,48 @@ description: Добавляет изображение (или альбом).
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
 use ZenithGram\ZenithGram\ZG;
+use ZenithGram\ZenithGram\Bot;
 
 $tg = ZG::create(BOT_TOKEN);
-$text = $tg->getText();
-$type = $tg->getType();
+$bot = new Bot($tg);
 
-if ($type === 'bot_command') {
-
+$bot->onBotCommand('/imgUrl')->func(function(ZG $tg) {
     $img_url = "https://example.com/img.jpg";
+    $tg->msg("Отправка сообщения с фото по ссылке")
+        ->img($img_url)
+        ->send();
+});
+
+$bot->onBotCommand('/imgId')->func(function(ZG $tg) {
     $img_id = "AgACAgIAAxkDAAICUmfbEudQY2SXKgsMr00_b_ZAcYErAALP9TEbJsnZSlufCaTwR76hAQADAgADeQADNgQ";
+    $tg->msg("Отправка сообщения с фото по ID") 
+        ->img($img_id)
+        ->send();
+});
+
+$bot->onBotCommand('/imgPath')->func(function(ZG $tg) {
     $img_path = "media/img.jpg";
-    
-    switch ($text) {
-        case '/imgUrl':
-            $tg->msg("Отправка сообщения с фото по ссылке")
-                ->img($img_url)
-                ->send();
-            break;
-           
-        case '/imgId':
-            $tg->msg("Отправка сообщения с фото по ID") 
-                ->img($img_id)
-                ->send();
-            break;
-           
-        case '/imgPath':
-            $tg->msg("Отправка сообщения с фото по локальному пути") 
-                ->img($img_path)
-                ->send();
-            break;
+    $tg->msg("Отправка сообщения с фото по локальному пути") 
+        ->img($img_path)
+        ->send();
+});
 
-        case '/imgArray':
-            $tg->msg('Отправка сообщения с массивом фотографий')
-                ->img([$img_url1, $img_url2])
-                ->send();
-            break;
+$bot->onBotCommand('/imgArray')->func(function(ZG $tg) {
+    $img_url1 = $img_url2 = "https://example.com/img.jpg";
+    $tg->msg('Отправка сообщения с массивом фотографий')
+        ->img([$img_url1, $img_url2])
+        ->send();
+});
 
-        case '/imgLot':
-            $tg->msg('Отправка сообщения с несколькими вызовами img()')
-                ->img($img_url1)
-                ->img($img_url2)
-                ->send();
-            break;
-    }
-}
+$bot->onBotCommand('/imgLot')->func(function(ZG $tg) {
+    $img_url1 = $img_url2 = "https://example.com/img.jpg";
+    $tg->msg('Отправка сообщения с несколькими вызовами img()')
+        ->img($img_url1)
+        ->img($img_url2)
+        ->send();
+});
+
+$bot->run();
 ```
 
 ## Вспомогательные методы
@@ -2935,7 +2933,7 @@ description: >-
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 // В $update хранится событие, которое пришло от Телеграма
 $update = $tg->initVars($chat_id, $user_id, $text, $type, $callback_data, $query_id, $msg_id, $is_bot, $is_command);
 
@@ -2949,7 +2947,7 @@ if ($type === 'text') { // Проверяем тип события
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 
 // В $update хранится событие, которое пришло от Телеграма.
 // Все переменные (chat_id, user_id и т.д.) будут заполнены по ссылке.
@@ -3036,7 +3034,7 @@ description: Создает экземпляр класса Inline для отв
 require_once __DIR__ . '/vendor/autoload.php';
 
 use ZenithGram\ZenithGram\ZG;
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $inline_result = [
     $tg->inline('article')
         ->id('article')
@@ -3075,7 +3073,7 @@ description: Класс для создания инлайн-ответов.
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $query_id = $tg->getQueryId();
 
 $results = [
@@ -3096,12 +3094,11 @@ $tg->answerInlineQuery($query_id, $results);
 
 ```php
 <?php
-<?php
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Inline;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $query_id = $tg->getQueryId();
 
 $results = [
@@ -3262,7 +3259,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Button;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $query_id = $tg->getQueryId();
 
 $buttons = [
@@ -3299,8 +3296,8 @@ description: Добавляет Reply-клавиатуру.
 | # |       Название       |   Тип    |                   Описание                    |
 |:-:|:--------------------:|:--------:|:---------------------------------------------:|
 | 1 |     **buttons**      | `array`  |          Принимает объект клавиатуры          |
-| 3 |     **one\_time**     |  `bool`  |  Свернуть клавиатуру при нажатии? true/false  |
-| 4 |      **resize**      |  `bool`  | Менять размер кнопок в клавиатуре? true/false |
+| 2 |     **one\_time**     |  `bool`  |  Свернуть клавиатуру при нажатии? true/false  |
+| 3 |      **resize**      |  `bool`  | Менять размер кнопок в клавиатуре? true/false |
 
 ## Возвращает
 
@@ -3391,7 +3388,7 @@ use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
 // 1. Создаем экземпляр LongPoll с токеном вашего бота
-$lp = LongPoll::create('ТОКЕН_БОТА');
+$lp = LongPoll::create(BOT_TOKEN);
 
 // Для удобства используем конструктор Bot
 $bot = new Bot();
@@ -3460,7 +3457,7 @@ php bot.php
 Если использовать этот метод, при запуске опроса скрипт пропустит старые обновления и начнёт получать новые
 
 ```php
-$lp = LongPoll::create('ТОКЕН_БОТА')
+$lp = LongPoll::create(BOT_TOKEN)
     ->skipOldUpdates(); // Пропускаем старые обновления
 ```
 
@@ -3543,7 +3540,7 @@ description: Конструктор сообщений.
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 
 $tg->msg("Привет, Мир")->send();
 ```
@@ -3574,7 +3571,7 @@ use ZenithGram\ZenithGram\Button;
 use ZenithGram\ZenithGram\Enums\MessageParseMode;
 use ZenithGram\ZenithGram\Enums\MessageDice;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // 1. Текст с форматированием
@@ -3657,7 +3654,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 $bot->onCommand('ban', '/ban {username}')
@@ -3707,7 +3704,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 $bot->middleware(function(ZG $tg, callable $next) {
@@ -3780,7 +3777,7 @@ function isUserRegistered(int $user_id): bool {
 
 const ADMIN_IDS = [12345, 54321]; // Список ID администраторов
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // Устанавливаем глобальное Middleware
@@ -3833,7 +3830,7 @@ use ZenithGram\ZenithGram\Bot;
 
 const ADMIN_IDS = [12345, 54321]; // Список ID администраторов
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 $bot->onBotCommand('/start')->text('Добро пожаловать!');
@@ -3902,7 +3899,7 @@ description: Устанавливает MIME-тип контента.
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $query_id = $tg->getQueryId();
 
 $results = [
@@ -3946,7 +3943,7 @@ description: Создает экземпляр класса Message для от�
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $tg->msg("Привет")->send();
 ```
 
@@ -4024,7 +4021,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 $bot->onCommand('ban', '/ban {username}')
@@ -4045,7 +4042,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 $bot->onCommand('ban', '/ban {username}')
@@ -4088,7 +4085,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // Отреагирует на любое пришедшее аудио
@@ -4128,7 +4125,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // Простая команда без аргументов
@@ -4182,7 +4179,7 @@ use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 use ZenithGram\ZenithGram\Button;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // По команде /vote отправляем сообщение с кнопками, созданными вручную
@@ -4244,7 +4241,7 @@ use ZenithGram\ZenithGram\Bot;
 use ZenithGram\ZenithGram\Button;
 use ZenithGram\ZenithGram\Pagination; // Не забудьте подключить класс констант
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 function getCatalogKeyboard(ZG $tg, int $page): array {
@@ -4316,7 +4313,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // Простая команда без аргументов
@@ -4378,7 +4375,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // Основные команды бота
@@ -4422,7 +4419,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // Отреагирует на любой пришедший документ
@@ -4459,7 +4456,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 $bot->onEditedMessage()
@@ -4495,7 +4492,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 $results = [
@@ -4544,12 +4541,11 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // Отреагирует на вышедшего/исключенного пользователя
-$bot->onLeftChatMember()
-    ->text("Ну и пока!");
+$bot->onLeftChatMember()->text("Ну и пока!");
 
 $bot->run();
 ```
@@ -4568,13 +4564,13 @@ use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 use ZenithGram\ZenithGram\Dto\UserDto;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // Отреагирует на вышедшего/исключенного пользователя
 $bot->onLeftChatMember()
     ->func(function (ZG $tg, UserDto $user) {
-        $tg->msg("Из чата вышел . " $user->firstName)->send();
+        $tg->reply("Из чата вышел " . $user->firstName);
     });
 
 $bot->run();
@@ -4607,7 +4603,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // Отреагирует на любое пришедшее сообщение
@@ -4644,7 +4640,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // Отреагирует на зашедших/добавленных пользователей
@@ -4670,7 +4666,7 @@ use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 use ZenithGram\ZenithGram\Dto\UserDto;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // Отреагирует на зашедших/добавленных пользователей
@@ -4691,7 +4687,7 @@ use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 use ZenithGram\ZenithGram\Dto\UserDto;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // Отреагирует на зашедших/добавленных пользователей
@@ -4730,7 +4726,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // Отреагирует на любое пришедшее фото
@@ -4771,7 +4767,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 $bot->onReferral()
@@ -4805,7 +4801,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // С помощью отдельного метода
@@ -4860,7 +4856,7 @@ use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 use ZenithGram\ZenithGram\Storage\FileStorage;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 $bot->setStorage(new FileStorage());
 
@@ -4907,7 +4903,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // Отреагирует на любой пришедший стикер
@@ -4949,7 +4945,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // Создаем кнопки для стандартной клавиатуры
@@ -5013,7 +5009,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // Маршрут для извлечения email-адреса из текста
@@ -5064,7 +5060,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // Отреагирует на любое пришедшее видео
@@ -5101,7 +5097,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // Отреагирует на любое пришедшее видео-сообщение
@@ -5138,7 +5134,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // Отреагирует на любое пришедшее голосовое сообщение
@@ -5211,7 +5207,7 @@ description: Создает экземпляр класса Pagination для г
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $pager = $tg->pagination();
 ```
 
@@ -5240,7 +5236,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Button;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 
 // Генерируем массив кнопок (например, 20 штук)
 $items = [];
@@ -5289,7 +5285,7 @@ $keyboard = $pag->setItems($items)  // Передаем кнопки
     ->setPrefix('page_')            // Префикс для кнопок навигации
     ->create();                     // Собираем массив
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 
 // Отправляем сообщение с клавиатурой
 $tg->msg("Выберите товар (Страница 1):")
@@ -5327,7 +5323,7 @@ description: Добавляет доп. параметры.
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $query_id = $tg->getQueryId();
 
 $results = [
@@ -5368,28 +5364,26 @@ description: Устанавливает дополнительные парам�
 
 ```php
 <?php
-require_once __DIR__ . '/vendor/autoload.php'; 
+require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
+use ZenithGram\ZenithGram\Bot;
 
 $tg = ZG::create(BOT_TOKEN);
-$text = $tg->getText()
-$type = $tg->getType();
+$bot = new Bot($tg);
 
-if ($type === 'bot_command') {    
-    switch ($text) {
-        case '/paramsNotification':
-            $tg->msg("Сообщение без звука уведомлений")
-                ->params(['disable_notification' => true])
-                ->send();
-            break;
-           
-        case '/paramsPreview':
-            $tg->msg("Сообщение без превью ссылки")
-                ->params(['disable_web_page_preview' => true]) 
-                ->send();
-            break;
-    }
-}
+$bot->onBotCommand('/paramsNotification')->func(function(ZG $tg) {
+    $tg->msg("Сообщение без звука уведомлений")
+        ->params(['disable_notification' => true])
+        ->send();
+});
+
+$bot->onBotCommand('/paramsPreview')->func(function(ZG $tg) {
+    $tg->msg("Сообщение без превью ссылки")
+        ->params(['disable_web_page_preview' => true]) 
+        ->send();
+});
+
+$bot->run();
 ```
 
 ---
@@ -5421,7 +5415,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Enums\MessageParseMode;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 
 $results = [
     $tg->inline('article')
@@ -5651,7 +5645,7 @@ description: Создает экземпляр класса Poll для созд
 require_once __DIR__ . '/vendor/autoload.php';
 
 use ZenithGram\ZenithGram\ZG;
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $tg->poll('regular')
     ->question('Вопрос')
     ->addAnswers('Ответ 1', 'Ответ 2', 'Ответ 3')
@@ -5688,7 +5682,7 @@ description: Класс для создания опросов.
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 
 $tg->poll('regular')        // Тип опроса
     ->question('Вопрос')    // Вопрос
@@ -5749,7 +5743,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // Определяем кнопку
@@ -5838,7 +5832,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // 1. Действие, на которое будем ссылаться, - главное меню.
@@ -5892,7 +5886,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // 1. Действие, на которое будем ссылаться, - главное меню.
@@ -5940,7 +5934,7 @@ use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 use ZenithGram\ZenithGram\Dto\UserDto;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // Включаем рефлексию
@@ -6021,27 +6015,25 @@ description: Устанавливает ID сообщения для ответ�
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
 use ZenithGram\ZenithGram\ZG;
+use ZenithGram\ZenithGram\Bot;
 
 $tg = ZG::create(BOT_TOKEN);
-$text = $tg->getText();
-$type = $tg->getType();
+$bot = new Bot($tg);
 
-if ($type === 'bot_command') {    
-    switch ($text) {
-        case '/reply':
-            $tg->msg("Ответ на отправленное сообщение")
-                ->reply()
-                ->send();
-            break;
-           
-        case '/replyToID':
-            $msg_id = 1234;
-            $tg->msg("Ответ на сообщение по его id")
-                ->reply($msg_id)
-                ->send();
-            break;
-    }
-}
+$bot->onBotCommand('/reply')->func(function(ZG $tg) {
+    $tg->msg("Ответ на отправленное сообщение")
+        ->reply()
+        ->send();
+});
+
+$bot->onBotCommand('/replyToId')->func(function(ZG $tg) {
+    $msg_id = 1234;
+    $tg->msg("Ответ на сообщение по его id")
+        ->reply($msg_id)
+        ->send();
+});
+
+$bot->run();
 ```
 
 ---
@@ -6183,7 +6175,7 @@ description: Скачивает и сохраняет файл локально.
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 
 $img_id = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef...";
 
@@ -6205,9 +6197,9 @@ description: Отправляет сформированное сообщени�
 
 ## Параметры метода
 
-| # |             Название             |      Тип      |
-|:-:|:--------------------------------:|:-------------:|
-| 1 |            **chatID**            | `int`|`null` |
+| # |  Название   |           Тип           |
+|:-:|:-----------:|:-----------------------:|
+| 1 | **chat\_id** | `int`|`string`|`null` |
 
 ## Возвращает
 
@@ -6218,26 +6210,23 @@ description: Отправляет сформированное сообщени�
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
-
 use ZenithGram\ZenithGram\ZG;
+use ZenithGram\ZenithGram\Bot;
 
 $tg = ZG::create(BOT_TOKEN);
-$text = $tg->getText();
-$type = $tg->getType();
+$bot = new Bot($tg);
 
-if ($type === 'bot_command') {
-    switch ($text) {
-        case '/send':
-            $tg->msg("Отправка сообщения")
-                ->send();
-            break;
-            
-        case '/sendChatID':   
-            $tg->msg("Отправка сообщения в чат с id = 123")
-                ->send(123);
-            break;
-    }    
-}
+$bot->onBotCommand('/send')->func(function(ZG $tg) {
+    $tg->msg("Отправка сообщения")
+        ->send();
+});
+
+$bot->onBotCommand('/sendChatID')->func(function(ZG $tg) {
+    $tg->msg("Отправка сообщения в чат с id = 123")
+        ->send(123);
+});
+
+$bot->run();
 ```
 
 ---
@@ -6921,7 +6910,7 @@ use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 use ZenithGram\ZenithGram\Storage\FileStorage;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // Инициализируем хранилище
@@ -6961,7 +6950,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Storage\FileStorage;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $storage = new FileStorage();
 
 $tg->setStorage($storage);
@@ -7024,24 +7013,19 @@ description: Добавляет стикер.
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
 use ZenithGram\ZenithGram\ZG;
+use ZenithGram\ZenithGram\Bot;
 
 $tg = ZG::create(BOT_TOKEN);
-$text = $tg->getText();
-$type = $tg->getType();
+$bot = new Bot($tg);
 
-if ($type === 'bot_command') {
-
+$bot->onBotCommand('/sticker')->func(function(ZG $tg) {
     $sticker_id = "AgACAgIAAxkDAAICUmfbEudQY2SXKgsMr00_b_ZAcYErAALP9TEbJsnZSlufCaTwR76hAQADAgADeQADNgQ";
+    $tg->msg() // Телеграм проигнорирует текст
+        ->sticker($sticker_id)
+        ->send();
+});
 
-    switch ($text) {
-           
-        case '/sticker':
-            $tg->msg() // Телеграм проигнорирует текст
-                ->sticker($sticker_id)
-                ->send();
-            break;
-    }
-}
+$bot->run();
 ```
 
 ## Вспомогательные методы
@@ -7139,7 +7123,7 @@ description: Устанавливает текст сообщения при в�
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $query_id = $tg->getQueryId();
 
 $results = [
@@ -7181,26 +7165,24 @@ description: Устанавливает текст сообщения.
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
 use ZenithGram\ZenithGram\ZG;
+use ZenithGram\ZenithGram\Bot;
 
 $tg = ZG::create(BOT_TOKEN);
-$text = $tg->getText();
-$type = $tg->getType();
+$bot = new Bot($tg);
 
-if ($type === 'bot_command') {    
-    switch ($text) {
-        case '/text':
-            $tg->msg()   // Задаём текст сообщения не при создании сообщения, а в промежуточной функции
-                ->text("Текст сообщения")
-                ->send();
-            break;
-           
-        case '/textChange':
-            $send = $tg->msg("Изначальное сообщение"); 
-            // Какой-то код...
-            $send->text("Изменяем существующий текст")->send();
-            break;
-    }
-}
+$bot->onBotCommand('/text')->func(function(ZG $tg) {
+    $tg->msg()   // Задаём текст сообщения не при создании сообщения, а в промежуточной функции
+        ->text("Текст сообщения")
+        ->send();
+});
+
+$bot->onBotCommand('/textChange')->func(function(ZG $tg) {
+    $send = $tg->msg("Изначальное сообщение"); 
+    // Какой-то код...
+    $send->text("Изменяем существующий текст")->send();
+});
+
+$bot->run();
 ```
 
 ---
@@ -7231,7 +7213,7 @@ description: Устанавливает миниатюру.
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $query_id = $tg->getQueryId();
 
 $results = [
@@ -7275,7 +7257,7 @@ description: Устанавливает заголовок.
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $query_id = $tg->getQueryId();
 
 $results = [
@@ -7336,6 +7318,13 @@ $tg->unpinMsg(all: true);
 ---
 
 ---
+url: 'https://zenithgram.github.io/classes/messageMethods/test.md'
+---
+
+
+---
+
+---
 url: 'https://zenithgram.github.io/index.md'
 ---
 
@@ -7367,50 +7356,48 @@ description: Добавляет видео (или альбом).
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; 
 use ZenithGram\ZenithGram\ZG;
+use ZenithGram\ZenithGram\Bot;
 
 $tg = ZG::create(BOT_TOKEN);
-$text = $tg->getText();
-$type = $tg->getType();
+$bot = new Bot($tg);
 
-if ($type === 'bot_command') {
-
+$bot->onBotCommand('/videoUrl')->func(function(ZG $tg) {
     $video_url = "https://example.com/video.mp4";
+    $tg->msg("Отправка сообщения с видео по ссылке")
+        ->video($video_url)
+        ->send();
+});
+
+$bot->onBotCommand('/videoId')->func(function(ZG $tg) {
     $video_id = "AgACAgIAAxkDAAICUmfbEudQY2SXKgsMr00_b_ZAcYErAALP9TEbJsnZSlufCaTwR76hAQADAgADeQADNgQ";
+    $tg->msg("Отправка сообщения с видео по ID") 
+        ->video($video_id)
+        ->send();
+});
+
+$bot->onBotCommand('/videoPath')->func(function(ZG $tg) {
     $video_path = "media/video.mp4";
+    $tg->msg("Отправка сообщения с видео по локальному пути") 
+        ->video($video_path)
+        ->send();
+});
 
-    switch ($text) {
-        case '/videoUrl':
-            $tg->msg("Отправка сообщения с видео по ссылке")
-                ->video($video_url)
-                ->send();
-            break;
-           
-        case '/videoId':
-            $tg->msg("Отправка сообщения с видео по ID") 
-                ->video($video_id)
-                ->send();
-            break;
-           
-        case '/videoPath':
-            $tg->msg("Отправка сообщения с видео по локальному пути") 
-                ->video($video_path)
-                ->send();
-            break;
+$bot->onBotCommand('/videoArray')->func(function(ZG $tg) {
+    $video_url1 = $video_url2 = "https://example.com/video.mp4";
+    $tg->msg('Отправка сообщения с массивом видео-файлов')
+        ->video([$video_url1, $video_url2])
+        ->send();
+});
 
-        case '/videoArray':
-            $tg->msg('Отправка сообщения с массивом видео-файлов')
-                ->video([$video_url1, $video_url2])
-                ->send();
-            break;
+$bot->onBotCommand('/videoLot')->func(function(ZG $tg) {
+    $video_url1 = $video_url2 = "https://example.com/video.mp4";
+    $tg->msg('Отправка сообщения с несколькими вызовами video()')
+        ->video($video_url1)
+        ->video($video_url2)
+        ->send();
+});
 
-        case '/videoLot':
-            $tg->msg('Отправка сообщения с несколькими вызовами video()')
-                ->video($video_url1)
-                ->video($video_url2)
-                ->send();
-            break;
-    }
-}
+$bot->run();
 ```
 
 ## Вспомогательные методы
@@ -7442,40 +7429,35 @@ description: Добавляет голосовое сообщение.
 
 ```php
 <?php
-require_once __DIR__ . '/vendor/autoload.php'; 
-
+require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
+use ZenithGram\ZenithGram\Bot;
 
 $tg = ZG::create(BOT_TOKEN);
-$text = $tg->getText();
-$type = $tg->getType();
+$bot = new Bot($tg);
 
-if ($type === 'bot_command') 
-
+$bot->onBotCommand('/voiceUrl')->func(function(ZG $tg) {
     $voice_url = "https://example.com/voice.mp3";
-    $voice_id = "AgACAgIAAxkDAAICUmfbEudQY2SXKgsMr00_b_ZAcYErAALP9TEbJsnZSlufCaTwR76hAQADAgADeQADNgQ";
-    $voice_path = "media/voice.mp3";
+    $tg->msg() // Телеграм проигнорирует текст
+        ->voice($voice_url)
+        ->send();
+});
 
-    switch ($text) {
-        case '/voiceUrl':
-            $tg->msg() // Телеграм проигнорирует текст
-                ->voice($voice_url)
-                ->send();
-            break;
-           
-        case '/voiceId':
-            $tg->msg() 
-                ->voice($voice_id)
-                ->send();
-            break;
-           
-        case '/voicePath':
-            $tg->msg() 
-                ->voice($voice_path)
-                ->send();
-            break;
-    }
-}
+$bot->onBotCommand('/voiceId')->func(function(ZG $tg) {
+    $voice_id = "AgACAgIAAxkDAAICUmfbEudQY2SXKgsMr00_b_ZAcYErAALP9TEbJsnZSlufCaTwR76hAQADAgADeQADNgQ";
+    $tg->msg() 
+        ->voice($voice_id)
+        ->send();
+});
+
+$bot->onBotCommand('/voicePath')->func(function(ZG $tg) {
+    $voice_path = "media/voice.mp3";
+    $tg->msg() 
+        ->voice($voice_path)
+        ->send();
+});
+
+$bot->run();
 ```
 
 ## Вспомогательные методы
@@ -7574,7 +7556,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
 // Замените 'ТОКЕН' на фактический токен вашего бота
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 ```
 
 ## Сценарии использования
@@ -7716,7 +7698,7 @@ $builder->addDefinitions([
 $container = $builder->build();
 
 // 2. Передаем контейнер в бота
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 $bot->setContainer($container); // Это также включает reflection()
 
@@ -8124,7 +8106,7 @@ use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 use ZenithGram\ZenithGram\Storage\FileStorage;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // Инициализируем хранилище в Bot
@@ -8742,7 +8724,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Button; // Используем современный класс кнопок
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 
 // 1. Генерируем тестовый массив кнопок
 $items = [];
@@ -8900,7 +8882,7 @@ use ZenithGram\ZenithGram\Enums\PaginationMode;
 use ZenithGram\ZenithGram\Enums\PaginationNumberStyle;
 use ZenithGram\ZenithGram\Enums\PaginationLayout;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // Функция-помощник для создания клавиатуры
@@ -8998,7 +8980,7 @@ use ZenithGram\ZenithGram\Bot;
 use ZenithGram\ZenithGram\ZG;
 
 // Создаем экземпляр LongPoll с помощью удобного статического метода
-$lp = LongPoll::create('ТОКЕН_БОТА');
+$lp = LongPoll::create(BOT_TOKEN);
 // Создаем экземпляр класса-конструктора
 $bot = new Bot();
 
@@ -9070,7 +9052,7 @@ use ZenithGram\ZenithGram\Bot;
 // 2. Декодирует JSON-данные.
 // 3. Создает и настраивает объект ZG, готовый к работе.
 // 4. Автоматически отправляет ответ "ok" и HTTP-код 200, чтобы Telegram знал, что обновление получено.
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 // Создаем экземпляр класса-конструктора. В отличие от предыдущего примера, сразу передаем готовый класс ZG
 $bot = new Bot($tg);
 
@@ -9201,7 +9183,7 @@ description: >-
 require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $tg->reply('Привет, Мир!');
 ```
 
@@ -9215,7 +9197,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg); // Создаем экземпляр бота
 
 $bot->onMessage()->func(function(ZG $tg) {
@@ -9233,7 +9215,7 @@ use ZenithGram\ZenithGram\LongPoll;
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$lp = LongPoll::create('ТОКЕН_БОТА');
+$lp = LongPoll::create(BOT_TOKEN);
 $bot = new Bot(); // Создаем экземпляр бота без основного класса
 
 $bot->onMessage()->func(function(ZG $tg) {
@@ -9253,7 +9235,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg); // Создаем экземпляр бота
 
 $bot->onCommand('img', '!картинка')
@@ -9272,7 +9254,7 @@ use ZenithGram\ZenithGram\LongPoll;
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$lp = LongPoll::create('ТОКЕН_БОТА');
+$lp = LongPoll::create(BOT_TOKEN);
   
 $bot = new Bot(); // Создаем экземпляр бота без основного класса
 
@@ -9294,7 +9276,7 @@ use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 use ZenithGram\ZenithGram\Button;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg); // Создаем экземпляр бота
 
 // Обработка команды бота
@@ -9336,7 +9318,7 @@ use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 use ZenithGram\ZenithGram\Button;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg); // Создаем экземпляр бота
 
 $bot->onStart()
@@ -9371,7 +9353,7 @@ use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 use ZenithGram\ZenithGram\Button;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 $bot->onBotCommand('/vote')
@@ -9406,7 +9388,7 @@ use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 use ZenithGram\ZenithGram\Button;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // Функция для генерации клавиатуры
@@ -9470,7 +9452,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ZenithGram\ZenithGram\ZG;
 use ZenithGram\ZenithGram\Bot;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 $admins = [123456789, 987654321]; // ID администраторов
@@ -9515,7 +9497,7 @@ use ZenithGram\ZenithGram\Bot;
 use ZenithGram\ZenithGram\Storage\FileStorage;
 use ZenithGram\ZenithGram\Button;
 
-$tg = ZG::create('ТОКЕН_БОТА');
+$tg = ZG::create(BOT_TOKEN);
 $bot = new Bot($tg);
 
 // 1. Подключаем хранилище (обязательно для FSM)

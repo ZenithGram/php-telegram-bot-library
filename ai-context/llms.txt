@@ -179,7 +179,6 @@
 - [description](https://zenithgram.github.io/classes/inlineMethods/description.md): Устанавливает описание.
 - [text](https://zenithgram.github.io/classes/inlineMethods/text.md): Устанавливает текст сообщения при выборе.
 - [fileUrl](https://zenithgram.github.io/classes/inlineMethods/fileUrl.md): Устанавливает URL файла.
-- [fileID](https://zenithgram.github.io/classes/inlineMethods/fileID.md): Устанавливает file_id файла.
 - [mimeType](https://zenithgram.github.io/classes/inlineMethods/mimeType.md): Устанавливает MIME-тип контента.
 - [coordinates](https://zenithgram.github.io/classes/inlineMethods/coordinates.md): Устанавливает координаты.
 - [address](https://zenithgram.github.io/classes/inlineMethods/address.md): Устанавливает адрес.
@@ -192,5 +191,7 @@
 
 ### Other
 
+- [fileID](https://zenithgram.github.io/classes/inlineMethods/fileId.md): Устанавливает file_id файла.
+- [Untitled](https://zenithgram.github.io/classes/messageMethods/test.md)
 - [Untitled](https://zenithgram.github.io/index.md)
 
