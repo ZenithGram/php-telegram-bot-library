@@ -131,9 +131,9 @@ class Inline
      *
      * @return Inline
      *
-     * @see https://zenithgram.github.io/classes/inlineMethods/fileID
+     * @see https://zenithgram.github.io/classes/inlineMethods/fileId
      */
-    public function fileID(string $id = ''): self
+    public function fileId(string $id = ''): self
     {
         $this->fileId = $id;
 
