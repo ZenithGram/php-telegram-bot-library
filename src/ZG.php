@@ -457,7 +457,9 @@ class ZG
     /**
      * Устанавливает действие бота
      *
-     * @param string|null $action
+     * @param ChatAction $action Одно из действий перечисления (Enum)
+     *
+     *                           По умолчанию: Typing
      *
      * @return ZG
      *
@@ -465,27 +467,13 @@ class ZG
      *
      * @see https://zenithgram.github.io/classes/zenithMethods/sendAction
      */
-    public function sendAction(?string $action = 'typing'): self
-    {
-        if (!in_array($action, [
-            'typing',
-            'upload_photo',
-            'upload_video',
-            'record_video',
-            'record_voice',
-            'upload_voice',
-            'upload_document',
-            'choose_sticker',
-            'find_location',
-            'record_video_note',
-            'upload_video_note',
-        ])
-        ) {
-            $action = 'typing';
-        }
+    public function sendAction(ChatAction $action = ChatAction::Typing,
+    ): self {
         $this->api->callAPI(
             'sendChatAction',
-            ['chat_id' => $this->context->getChatId(), 'action' => $action],
+            ['chat_id' => $this->context->getChatId(),
+             'action'  => $action->value,
+            ],
         );
 
         return $this;
@@ -494,9 +482,9 @@ class ZG
     /**
      * Метод отправляет сообщение в чат
      *
-     * @param int|string    $chat_id
-     * @param string $text
-     * @param array  $params
+     * @param int|string $chat_id
+     * @param string     $text
+     * @param array      $params
      *
      * @return array
      *
@@ -504,7 +492,8 @@ class ZG
      *
      * @see https://zenithgram.github.io/classes/zenithMethods/sendMessage
      */
-    public function sendMessage(int|string $chat_id, string $text, array $params = [],
+    public function sendMessage(int|string $chat_id, string $text,
+        array $params = [],
     ): array {
         $params_message = [
             'chat_id' => $chat_id,
