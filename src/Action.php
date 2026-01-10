@@ -90,15 +90,16 @@ class Action
     /**
      * Устанавливает список ID пользователей, которым доступен маршрут
      *
-     * @param int|array     $ids     Идентификаторы пользователей
-     * @param callable|null $handler Обработчик, если доступ к маршруту запрещен
+     * @param int|string|array $ids     Идентификаторы пользователей
+     * @param callable|null    $handler Обработчик, если доступ к маршруту
+     *                                  запрещен
      *
      * @return Action
      *
      * @see https://zenithgram.github.io/classes/actionMethods/access
      */
-    public function access(int|array $ids, ?callable $handler = null): self
-    {
+    public function access(int|string|array $ids, ?callable $handler = null,
+    ): self {
         $this->access_ids = is_numeric($ids) ? [$ids] : $ids;
         $this->access_handler = ($handler !== null) ? $handler(...) : null;
 
@@ -108,15 +109,16 @@ class Action
     /**
      * Устанавливает список ID пользователей, которым не доступен маршрут
      *
-     * @param int|array     $ids     Идентификаторы пользователей
-     * @param callable|null $handler Обработчик, если доступ к маршруту запрещен
+     * @param int|string|array $ids     Идентификаторы пользователей
+     * @param callable|null    $handler Обработчик, если доступ к маршруту
+     *                                  запрещен
      *
      * @return Action
      *
      * @see https://zenithgram.github.io/classes/actionMethods/noAccess
      */
-    public function noAccess(int|array $ids, ?callable $handler = null): self
-    {
+    public function noAccess(int|string|array $ids, ?callable $handler = null,
+    ): self {
         $this->no_access_ids = is_numeric($ids) ? [$ids] : $ids;
 
         $this->no_access_handler = ($handler !== null) ? $handler(...) : null;
@@ -124,55 +126,55 @@ class Action
         return $this;
     }
 
-    /** @internal  */
+    /** @internal */
     public function getQueryText(): string
     {
         return $this->queryText;
     }
 
-    /** @internal  */
+    /** @internal */
     public function getId(): string
     {
         return $this->id;
     }
 
-    /** @internal  */
+    /** @internal */
     public function getCondition(): mixed
     {
         return $this->condition;
     }
 
-    /** @internal  */
+    /** @internal */
     public function getHandler(): ?callable
     {
         return $this->handler;
     }
 
-    /** @internal  */
+    /** @internal */
     public function getAccessIds(): array
     {
         return $this->access_ids;
     }
 
-    /** @internal  */
+    /** @internal */
     public function getNoAccessIds(): array
     {
         return $this->no_access_ids;
     }
 
-    /** @internal  */
+    /** @internal */
     public function getAccessHandler(): ?callable
     {
         return $this->access_handler;
     }
 
-    /** @internal  */
+    /** @internal */
     public function getNoAccessHandler(): ?callable
     {
         return $this->no_access_handler;
     }
 
-    /** @internal  */
+    /** @internal */
     public function setHandler(?callable $handler): self
     {
         $this->handler = $handler;
@@ -180,7 +182,7 @@ class Action
         return $this;
     }
 
-    /** @internal  */
+    /** @internal */
     public function setQueryText(?string $queryText): self
     {
         $this->queryText = $queryText;
@@ -236,7 +238,7 @@ class Action
         return $this;
     }
 
-    /** @internal  */
+    /** @internal */
     public function getMessageDataAction(): int
     {
         return $this->messageDataAction;
