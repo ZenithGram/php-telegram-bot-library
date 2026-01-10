@@ -274,8 +274,8 @@ class ZG
      *
      * @see https://zenithgram.github.io/classes/zenithMethods/delMsg
      */
-    public function delMsg(array|int $msg_ids = null,
-        int|string $chat_id = null,
+    public function delMsg(array|int|null $msg_ids = null,
+        int|string|null $chat_id = null,
     ): array {
         $msg_ids ??= $this->context->getMessageId();
         $chat_id ??= $this->context->getChatId();
@@ -304,7 +304,7 @@ class ZG
      *                                      текущий чат)
      * @param int|string|null $from_chat_id Откуда пересылать (по умолчанию из
      *                                      chat_id)
-     * @param array|null      $params       Дополнительные параметры (caption,
+     * @param array           $params       Дополнительные параметры (caption,
      *                                      parse_mode, reply_markup,
      *                                      message_thread_id)
      *
@@ -316,9 +316,9 @@ class ZG
      * @see https://core.telegram.org/bots/api#copyMessages
      * @see https://core.telegram.org/bots/api#copyMessage
      */
-    public function copyMsg(int|array $msg_ids = null,
-        int|string $chat_id = null, int|string $from_chat_id = null,
-        array|null $params = null,
+    public function copyMsg(int|array|null $msg_ids = null,
+        int|string|null $chat_id = null, int|string|null $from_chat_id = null,
+        array $params = [],
     ): array {
         $msg_ids ??= $this->context->getMessageId();
         $chat_id ??= $this->context->getChatId();
@@ -364,9 +364,9 @@ class ZG
      * @see https://core.telegram.org/bots/api#forwardmessage
      */
     public function fwdMsg(
-        int|array $msg_ids = null,
-        int|string $chat_id = null,
-        int|string $from_chat_id = null,
+        int|array|null $msg_ids = null,
+        int|string|null $chat_id = null,
+        int|string|null $from_chat_id = null,
         array $params = [],
     ): array {
         $msg_ids ??= $this->context->getMessageId();
@@ -388,7 +388,6 @@ class ZG
 
         return $this->api->callAPI($method, $payload);
     }
-
 
     /**
      * Устанавливает действие бота
