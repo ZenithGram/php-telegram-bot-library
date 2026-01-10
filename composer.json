@@ -4,7 +4,6 @@
     "type": "library",
     "require": {
         "php": ">=8.2",
-        "ext-curl": "*",
         "ext-mbstring": "*",
         "amphp/http-client": "^5.3",
         "revolt/event-loop": "^1.0",

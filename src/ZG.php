@@ -2,7 +2,6 @@
 
 namespace ZenithGram\ZenithGram;
 
-use CURLFile;
 use Exception;
 use LogicException;
 use ZenithGram\ZenithGram\Dto\ChatDto;
