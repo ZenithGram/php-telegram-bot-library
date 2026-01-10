@@ -444,11 +444,11 @@ class ZG
         $params = ['chat_id' => $chat_id];
 
         if ($all) {
+            $method = 'unpinAllChatMessage';
+        } else {
             $msg_id ??= $this->context->getMessageId();
             $params['message_id'] = $msg_id;
             $method = 'unpinChatMessage';
-        } else {
-            $method = 'unpinAllChatMessage';
         }
 
         return $this->api->callAPI($method, $params);
