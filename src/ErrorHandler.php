@@ -69,12 +69,10 @@ trait ErrorHandler
                 => $this->handleError($severity, $message, $file, $line),
         );
 
-        // Обертка для Exception Handler
         set_exception_handler(fn(\Throwable $e)
             => $this->handleExceptionFatal($e),
         );
 
-        // Обертка для Shutdown Function
         register_shutdown_function(fn()
             => $this->handleShutdown(),
         );

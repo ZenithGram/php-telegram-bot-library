@@ -335,41 +335,6 @@ class ZG
     }
 
     /**
-     * Метод сначала загружает файл на сервер Telegram, а затем возвращает ID
-     * файла, для последующей быстрой отправки
-     *
-     * @param string          $url
-     * @param string          $type
-     * @param int|string|null $chat_id
-     *
-     * @return null|string
-     *
-     * @throws \Exception
-     *
-     * @see https://zenithgram.github.io/classes/zenithMethods/getFileID
-     */
-    public function getFileID(string $url, string $type = 'document',
-        int|string $chat_id = null,
-    ): ?string {
-        if (!in_array(
-            $type,
-            ['document', 'audio', 'photo', 'animation', 'video', 'video_note',
-             'voice', 'sticker'],
-        )
-        ) {
-            $type = 'document';
-        }
-        $params[$type] = new CURLFile($url);
-        $params['chat_id'] = $chat_id;
-
-        $method = 'send'.ucfirst($type);
-        $result = $this->api->callAPI($method, $params);
-
-        return File::getFileId($result, $type);
-    }
-
-
-    /**
      * Устанавливает действие бота
      *
      * @param string|null $action
