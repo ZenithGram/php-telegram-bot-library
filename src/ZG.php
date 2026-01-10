@@ -586,22 +586,23 @@ class ZG
     /**
      * Метод отправляет ответ Телеграму на callback-запрос
      *
-     * @param string|array $queryIdOrParams  Можно указать ID (ZG::getQueryId),
-     *                                       или сразу параметры типа ['text'
-     *                                       => 'Всплывающее сообщение']
-     * @param array        $params           Если в первом параметре указан ID,
-     *                                       то параметры можно указать вторым
-     *                                       аргументом
+     * @param string|array|null $queryIdOrParams Можно указать ID
+     *                                           (ZG::getQueryId), или сразу
+     *                                           параметры типа ['text'
+     *                                           => 'Всплывающее сообщение']
+     * @param array             $params          Если в первом параметре указан
+     *                                           ID, то параметры можно указать
+     *                                           вторым аргументом
      *
      * @return array
      * @throws \Exception
      *
      * @see https://zenithgram.github.io/classes/zenithMethods/answers#answercallbackquery
      */
-    public function answerCallbackQuery(string|array $queryIdOrParams,
+    public function answerCallbackQuery(string|array|null $queryIdOrParams = null,
         array $params = [],
     ): array {
-        if (is_array($queryIdOrParams)) {
+        if (is_array($queryIdOrParams) || $queryIdOrParams === null) {
             $queryId = $this->context->getQueryId();
             $params = array_merge($params, $queryIdOrParams);
         } else {
