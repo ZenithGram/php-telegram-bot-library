@@ -9,6 +9,7 @@ use ZenithGram\ZenithGram\Dto\ChatDto;
 use ZenithGram\ZenithGram\Dto\MessageDto;
 use ZenithGram\ZenithGram\Dto\UserDto;
 use ZenithGram\ZenithGram\Enums\MessageParseMode;
+use ZenithGram\ZenithGram\Enums\ChatAction;
 use ZenithGram\ZenithGram\Utils\EnvironmentDetector;
 use ZenithGram\ZenithGram\Storage\StorageInterface;
 
