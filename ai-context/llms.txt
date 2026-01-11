@@ -7,6 +7,7 @@
 ### Начало работы
 
 - [Почему ZenithGram?](https://zenithgram.github.io/install/who_zenith.md): Обзор возможностей библиотеки: Webhook/LongPoll, цепочки методов, роутинг и работа с медиа.
+- [Установка и подключение](https://zenithgram.github.io/install/requirements.md): Системные требования (PHP 8.2+) и инструкция по установке через Composer.
 - [Примеры ботов](https://zenithgram.github.io/install/examples.md): Коллекция примеров кода: Echo-бот, LongPoll, Webhook и использование конструктора Bot.
 
 ### Использование
@@ -45,7 +46,6 @@
 - [pagination](https://zenithgram.github.io/classes/zenithMethods/pagination.md): Создает экземпляр класса Pagination для генерации страниц.
 - [inline](https://zenithgram.github.io/classes/zenithMethods/inline.md): Создает экземпляр класса Inline для ответов на Inline-запросы.
 - [file](https://zenithgram.github.io/classes/zenithMethods/file.md): Создает экземпляр класса File для работы с файлами (скачивание, инфо).
-- [initVars](https://zenithgram.github.io/classes/zenithMethods/initVars.md): Инициализирует основные переменные (chat_id, user_id, text) из входящего обновления.
 - [get](https://zenithgram.github.io/classes/zenithMethods/get.md): Методы получения данных из обновления (getChatId, getText и др.).
 - [defaultParseMode](https://zenithgram.github.io/classes/zenithMethods/defaultParseMode.md): Устанавливает режим разметки по умолчанию для всех сообщений.
 - [sendMessage](https://zenithgram.github.io/classes/zenithMethods/sendMessage.md): Отправляет текстовое сообщение в указанный чат (прямой метод).
