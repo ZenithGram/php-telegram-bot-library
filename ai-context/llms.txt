@@ -192,6 +192,5 @@
 ### Other
 
 - [fileID](https://zenithgram.github.io/classes/inlineMethods/fileId.md): Устанавливает file_id файла.
-- [Untitled](https://zenithgram.github.io/classes/messageMethods/test.md)
 - [Untitled](https://zenithgram.github.io/index.md)
 
