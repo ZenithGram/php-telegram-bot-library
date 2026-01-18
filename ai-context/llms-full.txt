@@ -4733,7 +4733,7 @@ $bot->run();
 
 ---
 
-# Message|Action::reply
+# Message::reply
 
 Метод добавляет ответ на сообщение по его id
 
