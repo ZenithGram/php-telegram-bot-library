@@ -6,8 +6,6 @@
 
 ### Начало работы
 
-- [Почему ZenithGram?](https://zenithgram.github.io/install/who_zenith.md): Обзор возможностей библиотеки: Webhook/LongPoll, цепочки методов, роутинг и работа с медиа.
-- [Установка и подключение](https://zenithgram.github.io/install/requirements.md): Системные требования (PHP 8.2+) и инструкция по установке через Composer.
 - [Примеры ботов](https://zenithgram.github.io/install/examples.md): Коллекция примеров кода: Echo-бот, LongPoll, Webhook и использование конструктора Bot.
 
 ### Использование
@@ -191,6 +189,5 @@
 
 ### Other
 
-- [fileID](https://zenithgram.github.io/classes/inlineMethods/fileId.md): Устанавливает file_id файла.
 - [Untitled](https://zenithgram.github.io/index.md)
 
