@@ -2,6 +2,16 @@
 Library: ZenithGram (PHP 8.2+)
 Namespace: ZenithGram\ZenithGram
 
+=== CODING STYLE PRIORITY ===
+1. ALWAYS import classes, enums and dto via "use" statements.
+2. NEVER use fully qualified class names (FQCN) inline.
+
+BAD:
+->parseMode(\ZenithGram\ZenithGram\Enums\MessageParseMode::HTML)
+GOOD:
+use ZenithGram\ZenithGram\Enums\MessageParseMode;
+->parseMode(MessageParseMode::HTML)
+
 Implicit Setup & Imports for all code examples:
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
