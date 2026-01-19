@@ -227,7 +227,7 @@ trait ErrorHandler
         echo $cyan.$this->filteredFile($userFile).":$userLine$reset".PHP_EOL;
 
         if ($userFile !== $realFile) {
-            echo " $gray(Inside: ".$this->filteredFile($realFile)
+            echo "$gray(Inside: ".$this->filteredFile($realFile)
                 .":$realLine)$reset".PHP_EOL;
         }
 
