@@ -21,6 +21,7 @@ class LongPoll
     private array|null $debug_chat_ids = null;
     private bool $debug = false;
     private Closure|null $handler = null;
+    private array $allowedUpdates = [];
 
     public function __construct(ApiClient $api, int $timeout = 20)
     {
@@ -33,13 +34,40 @@ class LongPoll
      *
      * @param string $token   Токен Telegram
      * @param int    $timeout Сколько будет удерживаться соединение с Telegram
+     * @param string $baseUrl Адрес локального сервера Telegram (По умолчанию:
+     *                        https://api.telegram.org)
      *
      * @return LongPoll
-     * @see https://zenithgram.github.io/classes/longpoll#create
+     *
+     * @see https://zenithgram.github.io/classes/longpoll
      */
-    public static function create(string $token, int $timeout = 20): self
+    public static function create(string $token, int $timeout = 20,
+        string $baseUrl = ApiClient::DEFAULT_API_URL,
+    ): self {
+        return new self(new ApiClient($token, $baseUrl), $timeout);
+    }
+
+    /**
+     * Устанавливает типы обновлений, которые бот хочет получать.
+     *
+     * @param array $updates Массив строк или Enum значений UpdateType.
+     *                       Пример: [UpdateType::Message, 'callback_query']
+     *
+     * @return self
+     *
+     * @see https://zenithgram.github.io/classes/longpoll#allowedupdates
+     */
+    public function allowedUpdates(array $updates): self
     {
-        return new self(new ApiClient($token), $timeout);
+        $this->allowedUpdates = array_map(function($item) {
+            if ($item instanceof UpdateType) {
+                return $item->value;
+            }
+
+            return (string)$item;
+        }, $updates);
+
+        return $this;
     }
 
     /**
@@ -132,7 +160,7 @@ class LongPoll
             [
                 'offset'          => $this->offset,
                 'timeout'         => $this->timeout,
-                'allowed_updates' => [], // Получаем всё
+                'allowed_updates' => $this->allowedUpdates,
             ],
             $clientTimeout,
         );
@@ -144,7 +172,7 @@ class LongPoll
     {
         try {
             $data = $this->api->callAPI(
-                'getUpdates', ['limit' => 1, 'offset' => -1],
+                'getUpdates', ['limit' => 1, 'offset' => -1,],
             );
             if (!empty($data['result'])) {
                 $lastUpdate = end($data['result']);

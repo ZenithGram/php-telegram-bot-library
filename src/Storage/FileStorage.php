@@ -51,7 +51,11 @@ class FileStorage implements StorageInterface
     private function save(int|string $user_id, array $data): void
     {
         if (!isDirectory($this->storageDir)) {
-            createDirectoryRecursively($this->storageDir, 0777);
+            try {
+                createDirectoryRecursively($this->storageDir, 0777);
+            } catch (\Throwable $e) {
+                mkdir($this->storageDir, 0777, true);
+            }
         }
 
         $file = $this->getFilePath($user_id);

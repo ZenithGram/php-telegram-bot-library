@@ -27,14 +27,24 @@ class ZG
         $this->context = $context;
     }
 
-    public static function create(string $token): self
+    /**
+     * Создает объект класса ZG
+     *
+     * @param string $token   Токен, полученный в BotFather
+     * @param string $baseUrl Адрес локального сервера Telegram (По умолчанию: https://api.telegram.org)
+     *
+     * @return self
+     *
+     * @see https://zenithgram.github.io/classes/zenith
+     */
+    public static function create(string $token, string $baseUrl = ApiClient::DEFAULT_API_URL): self
     {
         if (!EnvironmentDetector::isCli()) {
             http_response_code(200);
             echo 'ok';
         }
 
-        $api = new ApiClient($token);
+        $api = new ApiClient($token, $baseUrl);
         $context = UpdateContext::fromWebhook();
 
         return new self($api, $context);

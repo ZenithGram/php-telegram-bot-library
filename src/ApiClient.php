@@ -15,7 +15,8 @@ use function Amp\ByteStream\pipe;
 
 class ApiClient
 {
-    private const API_BASE_URL = 'https://api.telegram.org';
+
+    public const DEFAULT_API_URL = 'https://api.telegram.org';
     private const DEFAULT_TIMEOUT = 10;
 
     private string $apiUrl;
@@ -23,10 +24,11 @@ class ApiClient
     private HttpClient $httpClient;
     private string $token;
 
-    public function __construct(string $token)
+    public function __construct(string $token, string $baseUrl = self::DEFAULT_API_URL)
     {
-        $this->apiUrl = self::API_BASE_URL . '/bot' . $token . '/';
-        $this->apiFileUrl = self::API_BASE_URL . '/file/bot' . $token . '/';
+        $baseUrl = rtrim($baseUrl, '/');
+        $this->apiUrl = $baseUrl . '/bot' . $token . '/';
+        $this->apiFileUrl = $baseUrl . '/file/bot' . $token . '/';
         $this->httpClient = HttpClientBuilder::buildDefault();
         $this->token = $token;
     }
