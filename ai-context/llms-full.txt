@@ -1442,6 +1442,29 @@ $bot->onState('final_step')->func(function(ZG $tg) {
 * `ChatAction::RecordVideoNote` — Статус "записывает видеосообщение...".
 * `ChatAction::UploadVideoNote` — Статус "отправляет видеосообщение...".
 
+## UpdateType
+
+Содержит перечисление типов входящих обновлений (событий), поступающих от Telegram. Позволяет определить, какое именно действие произошло: отправка сообщения, нажатие кнопки, изменение статуса участника и так далее.
+
+### Возможные значения
+
+* `UpdateType::Message` — Новое входящее сообщение любого типа (текст, фото, стикер и т.д.).
+* `UpdateType::EditedMessage` — Новая версия сообщения, которое было отредактировано.
+* `UpdateType::ChannelPost` — Новый пост в канале любого типа.
+* `UpdateType::EditedChannelPost` — Новая версия поста в канале, который был отредактирован.
+* `UpdateType::InlineQuery` — Новый входящий inline-запрос.
+* `UpdateType::ChosenInlineResult` — Результат inline-запроса, который был выбран пользователем.
+* `UpdateType::CallbackQuery` — Новый входящий callback-запрос (нажатие на inline-кнопку).
+* `UpdateType::ShippingQuery` — Новый запрос на доставку (только для счетов с гибкой ценой).
+* `UpdateType::PreCheckoutQuery` — Запрос на предварительную проверку заказа (содержит полную информацию).
+* `UpdateType::Poll` — Новое состояние опроса (обновления об остановке опроса и т.д.).
+* `UpdateType::PollAnswer` — Пользователь изменил свой ответ в опросе.
+* `UpdateType::MyChatMember` — Обновлен статус участия самого бота в чате (блокировка/разблокировка, добавление в группу).
+* `UpdateType::ChatMember` — Обновлен статус участия другого участника чата.
+* `UpdateType::ChatJoinRequest` — Отправлен запрос на вступление в чат.
+* `UpdateType::ChatBoost` — В чат добавлен буст (Chat Boost).
+* `UpdateType::RemovedChatBoost` — Из чата удален буст.
+
 ## PaginationMode
 
 Определяет, какого типа будут использоваться кнопки навигации для метода `setMode()` (Класс **[Pagination](/classes/pagination)**.
@@ -2812,6 +2835,8 @@ php bot.php
 
 **Parameters:**
 - token (string): Токен вашего Telegram бота, полученный от @BotFather.
+- timeout (int): Время, которое будет держаться соединение с сервером Telegram. По умолчанию: 20
+- baseUrl (string): Ссылка на сервер Telegram (Может быть как локально развернутый, так и стандартный). По умолчанию: https://api.telegram.org
 **Возвращает**: `LongPoll` - экземпляр класса `LongPoll`.
 
 ### listen
@@ -2821,6 +2846,17 @@ php bot.php
 **Parameters:**
 - handler (callable): Функция (замыкание), которая будет вызвана для каждого полученного обновления. В нее передается экземпляр `ZG`.
 **Возвращает**: `void`
+
+### allowedUpdates
+
+Устанавливает типы обновлений, которые бот будет получать от телеграма
+
+**Parameters:**
+- updates (array): Массив типов обновлений, которые вынесены в отдельный Enum. Возможные значения описаны в [UpdateType](/classes/enum#updatetype)
+```php
+$lp = LongPoll::create(BOT_TOKEN)
+    ->allowedUpdates([UpdateType::Message, UpdateType::EditedMessage]);
+```
 
 ### skipOldUpdates
 
@@ -5974,6 +6010,7 @@ $lp->listen(function(ZG $tg) use ($bot) {
 
 **Parameters:**
 - token (string): Токен вашего Telegram бота, полученный от @BotFather.
+- baseUrl (string): Ссылка на сервер Telegram (Может быть как локально развернутый, так и стандартный). По умолчанию: https://api.telegram.org
 ### Возвращает
 
 `ZG` - экземпляр класса `ZG`, готовый к использованию.
@@ -5982,7 +6019,9 @@ $lp->listen(function(ZG $tg) use ($bot) {
 
 ```php
 
-// Замените 'ТОКЕН' на фактический токен вашего бота
+// Замените 'BOT_TOKEN' на фактический токен вашего бота
+
+// Со своим сервером
 ```
 
 ## Сценарии использования
@@ -5997,7 +6036,7 @@ $message = $tg->msg();  // Класс Message
 
 ```php
 $me = $tg->callAPI('getMe');
-$tg->answerCallbackQuery($query_id, ['text' => "Вы нажали кнопку!"]);
+$tg->sendMessage($tg->getChatId, "Вы используете библиотеку ZenithGram!");
 ```
 
 3. Работа с контекстом
