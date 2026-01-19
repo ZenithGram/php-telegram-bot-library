@@ -103,7 +103,6 @@ class FileStorage implements StorageInterface
     public function setSessionData(int|string $user_id, array $data): void
     {
         $currentData = $this->load($user_id);
-        // Мержим старые данные с новыми
         $currentData['session'] = array_merge($currentData['session'] ?? [], $data);
         $this->save($user_id, $currentData);
     }

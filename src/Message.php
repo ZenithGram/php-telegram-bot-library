@@ -4,6 +4,7 @@ namespace ZenithGram\ZenithGram;
 
 use ZenithGram\ZenithGram\Enums\MessageParseMode;
 use ZenithGram\ZenithGram\Utils\LocalFile;
+use ZenithGram\ZenithGram\Exceptions\MessageBuilderException;
 
 final class Message
 {
@@ -34,6 +35,7 @@ final class Message
      *
      * @throws \JsonException
      * @throws \Amp\Http\Client\HttpException
+     * @throws \ZenithGram\ZenithGram\Exceptions\MessageBuilderException
      * @see https://zenithgram.github.io/classes/messageMethods/send
      */
     public function send(int|string|null $chat_id = null): array
@@ -98,7 +100,7 @@ final class Message
             );
         }
 
-        throw new \LogicException(
+        throw new MessageBuilderException(
             "Вы добавили несовместимые типы медиа. Пример: нельзя отправлять одновременно несколько голосовых",
         );
 
@@ -183,7 +185,7 @@ final class Message
         $params = $this->getIdentifier($message_id, $chat_id);
 
         if (count($this->mediaQueue) !== 1) {
-            throw new \LogicException(
+            throw new MessageBuilderException(
                 "Для редактирования медиа (editMedia) нужно добавить новые файлы",
             );
         }
@@ -382,7 +384,7 @@ final class Message
         $searchBotButtons = false;
         foreach ($buttons as $row) {
             if (!is_array($row)) {
-                throw new \RuntimeException("Неправильный формат клавиатуры");
+                throw new MessageBuilderException("Неправильный формат клавиатуры");
             }
             foreach ($row as $button) {
                 if (is_string($button)) {
@@ -424,7 +426,7 @@ final class Message
                                 = $this->ZG->buttonText($botButtons[$button]);
                         }
                     } else {
-                        throw new \RuntimeException(
+                        throw new MessageBuilderException(
                             "Не удалось найти кнопку $button",
                         );
                     }

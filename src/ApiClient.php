@@ -9,6 +9,8 @@ use Amp\Http\Client\HttpClientBuilder;
 use Amp\Http\Client\Request;
 use Amp\Http\Client\Form;
 use Amp\File;
+use ZenithGram\ZenithGram\Exceptions\NetworkException;
+use ZenithGram\ZenithGram\Exceptions\TelegramApiException;
 use ZenithGram\ZenithGram\Utils\LocalFile;
 
 use function Amp\ByteStream\pipe;
@@ -18,7 +20,6 @@ class ApiClient
 
     public const DEFAULT_API_URL = 'https://api.telegram.org';
     private const DEFAULT_TIMEOUT = 10;
-
     private string $apiUrl;
     private string $apiFileUrl;
     private HttpClient $httpClient;
@@ -69,10 +70,19 @@ class ApiClient
         $request->setTcpConnectTimeout(10);
         $request->setTlsHandshakeTimeout(10);
 
-        $response = $this->httpClient->request($request);
+        try {
+            $response = $this->httpClient->request($request);
+        } catch (HttpException $e) {
+            throw new NetworkException("Ошибка сети при запросе к Telegram API: " . $e->getMessage(), 0, $e);
+        }
+
         $responseJson = $response->getBody()->read();
 
-        $responseArray = json_decode($responseJson, true, 512, JSON_THROW_ON_ERROR);
+        try {
+            $responseArray = json_decode($responseJson, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            throw new TelegramApiException("Некорректный JSON ответ от Telegram: " . $e->getMessage());
+        }
 
         if ($response->getStatus() === 200 && ($responseArray['ok'] ?? false)) {
             return $responseArray;
@@ -84,8 +94,7 @@ class ApiClient
             $responseArray['description'] ?? 'No description'
         );
 
-        // Можно выбрасывать свой класс исключения, если хочешь, но пока хватит Runtime
-        throw new \RuntimeException($errorMsg . "\n" . $this->formatParamsArray($params));
+        throw new TelegramApiException($errorMsg . "\n" . $this->formatParamsArray($params), (int)$responseArray['error_code'], $params);
     }
 
     /**

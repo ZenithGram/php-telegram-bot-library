@@ -5,6 +5,7 @@ namespace ZenithGram\ZenithGram;
 use ZenithGram\ZenithGram\Dto\UserDto;
 use ZenithGram\ZenithGram\Storage\StorageInterface;
 use ZenithGram\ZenithGram\Utils\DependencyResolver;
+use ZenithGram\ZenithGram\Exceptions\RouteException;
 use Psr\Container\ContainerInterface;
 use Psr\SimpleCache\CacheInterface;
 
@@ -1138,17 +1139,14 @@ class Bot
     {
         if ($id === null) {
             $this->processRedirects();
-
             $this->dispatch();
         } else {
             $actionToRun = $this->findActionById($id);
-
             if ($actionToRun === null) {
-                throw new \InvalidArgumentException(
-                    "Cannot run handler: Action with ID '$id' not found.",
+                throw new RouteException(
+                    "Не удалось выполнить обработчик: Маршрут '$id' не найден.",
                 );
             }
-
             $this->executeAction($actionToRun);
         }
     }
@@ -1201,15 +1199,15 @@ class Bot
         foreach ($this->pendingRedirects as $redirect) {
             $sourceAction = $this->findActionById($redirect['from']);
             if ($sourceAction === null) {
-                throw new \LogicException(
-                    "Redirect source route with ID '{$redirect['from']}' not found.",
+                throw new RouteException(
+                    "Исходный маршрут редиректа с ID '{$redirect['from']}' не найден.",
                 );
             }
 
             $targetAction = $this->findActionById($redirect['to']);
             if ($targetAction === null) {
-                throw new \LogicException(
-                    "Redirect target route with ID '{$redirect['to']}' not found.",
+                throw new RouteException(
+                    "Целевой маршрут редиректа с ID '{$redirect['to']}' не найден.",
                 );
             }
 
