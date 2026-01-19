@@ -593,7 +593,7 @@ class ZG
     ): array {
         if (is_array($queryIdOrParams) || $queryIdOrParams === null) {
             $queryId = $this->context->getQueryId();
-            $params = array_merge($params, $queryIdOrParams);
+            $params = array_merge($params, $queryIdOrParams ?? []);
         } else {
             $queryId = $queryIdOrParams;
         }

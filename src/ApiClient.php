@@ -32,11 +32,14 @@ class ApiClient
     }
 
     /**
-     * @param string     $method  Метод API
-     * @param array      $params  Параметры
-     * @param int        $timeout Клиентский таймаут <br> По умолчанию: 10.
+     * @param string $method  Метод API
+     * @param array  $params  Параметры
+     * @param int    $timeout Клиентский таймаут <br> По умолчанию: 10.
      *
+     * @return array
+     * @throws \Amp\ByteStream\StreamException
      * @throws \Amp\Http\Client\HttpException
+     * @throws \JsonException
      */
     public function callAPI(string $method, array $params = [], int $timeout = self::DEFAULT_TIMEOUT): array
     {
