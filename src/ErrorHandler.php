@@ -214,7 +214,7 @@ trait ErrorHandler
         string $fullTrace,
     ): void {
         $reset = "\033[0m";
-        $bgRed = "\033[41;1;37m";
+        $bgRed = "\033[41;30m";
         $yellow = "\033[1;33m";
         $cyan = "\033[36m";
         $gray = "\033[90m";
@@ -222,9 +222,9 @@ trait ErrorHandler
 
         echo PHP_EOL;
 
-        echo "$bgRed$type $reset$boldWhite$msg$reset".PHP_EOL;
+        echo "$bgRed$type$reset$boldWhite$msg$reset".PHP_EOL;
 
-        echo "$cyan".$this->filteredFile($userFile).":$userLine$reset".PHP_EOL;
+        echo $cyan.$this->filteredFile($userFile).":$userLine$reset".PHP_EOL;
 
         if ($userFile !== $realFile) {
             echo " $gray(Inside: ".$this->filteredFile($realFile)
@@ -250,7 +250,6 @@ trait ErrorHandler
         echo PHP_EOL."$yellow Stack Trace: $reset".PHP_EOL.$gray.$fullTrace
             .$reset.PHP_EOL;
     }
-
 
     private function sendTelegramError(string $type, string $msg,
         string $userFile, int $userLine, string $realFile, int $realLine,

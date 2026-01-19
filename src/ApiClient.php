@@ -43,6 +43,7 @@ class ApiClient
      * @throws \Amp\ByteStream\StreamException
      * @throws \Amp\Http\Client\HttpException
      * @throws \JsonException
+     * @throws \ZenithGram\ZenithGram\Exceptions\TelegramApiException|\ZenithGram\ZenithGram\Exceptions\NetworkException
      */
     public function callAPI(string $method, array $params = [], int $timeout = self::DEFAULT_TIMEOUT): array
     {
@@ -89,7 +90,7 @@ class ApiClient
         }
 
         $errorMsg = sprintf(
-            "Telegram API Error [%s]: %s",
+            "Ошибка запроса [%s]: %s",
             $responseArray['error_code'] ?? 'Unknown',
             $responseArray['description'] ?? 'No description'
         );
@@ -98,6 +99,7 @@ class ApiClient
     }
 
     /**
+     * @throws \ZenithGram\ZenithGram\Exceptions\TelegramApiException
      * @internal
      * Асинхронно скачивает файл по ссылке и сохраняет его на диск
      */
@@ -110,7 +112,7 @@ class ApiClient
         $response = $this->httpClient->request($request);
 
         if ($response->getStatus() !== 200) {
-            throw new \RuntimeException("Не удалось скачать файл. HTTP код: " . $response->getStatus());
+            throw new TelegramApiException("Не удалось скачать файл. HTTP код: " . $response->getStatus());
         }
 
         $file = File\openFile($destinationPath, 'w');
