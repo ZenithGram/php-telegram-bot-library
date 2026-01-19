@@ -222,7 +222,7 @@ trait ErrorHandler
 
         echo PHP_EOL;
 
-        echo "$bgRed$type$reset$boldWhite$msg$reset".PHP_EOL;
+        echo "$bgRed$type $reset$boldWhite$msg$reset".PHP_EOL;
 
         echo $cyan.$this->filteredFile($userFile).":$userLine$reset".PHP_EOL;
 
