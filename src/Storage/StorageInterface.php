@@ -11,7 +11,7 @@ interface StorageInterface
      *
      * @return string|null
      *
-     * @see https://zenithgram.github.io/classes/storage/getState
+     * @see https://zenithgram.github.io/classes/storage#%D0%BC%D0%B5%D1%82%D0%BE%D0%B4%D1%8B-%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D1%84%D0%B5%D0%B8%D1%81%D0%B0
      */
     public function getState(int|string $user_id): ?string;
 
@@ -24,7 +24,7 @@ interface StorageInterface
      * @return void
      *
      * @throws \JsonException
-     * @see https://zenithgram.github.io/classes/storage/setState
+     * @see https://zenithgram.github.io/classes/storage#%D0%BC%D0%B5%D1%82%D0%BE%D0%B4%D1%8B-%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D1%84%D0%B5%D0%B8%D1%81%D0%B0
      */
     public function setState(int|string $user_id, string $state): void;
 
@@ -36,7 +36,7 @@ interface StorageInterface
      * @return void
      *
      * @throws \JsonException
-     * @see https://zenithgram.github.io/classes/storage/clearState
+     * @see https://zenithgram.github.io/classes/storage#%D0%BC%D0%B5%D1%82%D0%BE%D0%B4%D1%8B-%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D1%84%D0%B5%D0%B8%D1%81%D0%B0
      */
     public function clearState(int|string $user_id): void;
 
@@ -47,7 +47,7 @@ interface StorageInterface
      *
      * @return array
      *
-     * @see https://zenithgram.github.io/classes/storage/getSessionData
+     * @see https://zenithgram.github.io/classes/storage#%D0%BC%D0%B5%D1%82%D0%BE%D0%B4%D1%8B-%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D1%84%D0%B5%D0%B8%D1%81%D0%B0
      */
     public function getSessionData(int|string $user_id): array;
 
@@ -59,18 +59,18 @@ interface StorageInterface
      *
      * @return void
      *
-     * @see https://zenithgram.github.io/classes/storage/setSessionData
+     * @see https://zenithgram.github.io/classes/storage#%D0%BC%D0%B5%D1%82%D0%BE%D0%B4%D1%8B-%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D1%84%D0%B5%D0%B8%D1%81%D0%B0
      */
     public function setSessionData(int|string $user_id, array $data): void;
 
     /**
      * Полностью очищает данные сессии пользователя
      *
-     * @param int $userId ID пользователя
+     * @param int|string $user_id
      *
      * @return void
      *
-     * @see https://zenithgram.github.io/classes/storage/clearSessionData
+     * @see https://zenithgram.github.io/classes/storage#%D0%BC%D0%B5%D1%82%D0%BE%D0%B4%D1%8B-%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D1%84%D0%B5%D0%B8%D1%81%D0%B0
      */
 
     public function clearSessionData(int|string $user_id): void;

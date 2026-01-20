@@ -17,7 +17,7 @@ class FileStorage implements StorageInterface
      *
      * @param string $path Путь к папке для хранения сессий
      *
-     * @see https://zenithgram.github.io/classes/storage/fileStorage
+     * @see https://zenithgram.github.io/classes/storage#filestorage
      */
     public function __construct(string $path = 'storage/sessions')
     {
@@ -26,7 +26,7 @@ class FileStorage implements StorageInterface
 
     private function getFilePath(int|string $user_id): string
     {
-        return $this->storageDir . DIRECTORY_SEPARATOR . $user_id . '.json';
+        return $this->storageDir.DIRECTORY_SEPARATOR.$user_id.'.json';
     }
 
     private function load(int|string $user_id): array
@@ -39,7 +39,9 @@ class FileStorage implements StorageInterface
                 if (empty($content)) {
                     return [];
                 }
-                return json_decode($content, true, 512, JSON_THROW_ON_ERROR) ?? [];
+
+                return json_decode($content, true, 512, JSON_THROW_ON_ERROR) ??
+                    [];
             } catch (\Throwable $e) {
                 return [];
             }
@@ -61,20 +63,21 @@ class FileStorage implements StorageInterface
         $file = $this->getFilePath($user_id);
         $content = json_encode(
             $data,
-            JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE
+            JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE,
         );
 
         write($file, $content);
     }
 
-    /** @internal  */
+    /** @internal @inheritDoc */
     public function getState(int|string $user_id): ?string
     {
         $data = $this->load($user_id);
+
         return $data['state'] ?? null;
     }
 
-    /** @internal  */
+    /** @internal @inheritDoc */
     public function setState(int|string $user_id, string $state): void
     {
         $data = $this->load($user_id);
@@ -82,7 +85,7 @@ class FileStorage implements StorageInterface
         $this->save($user_id, $data);
     }
 
-    /** @internal  */
+    /** @internal @inheritDoc */
     public function clearState(int|string $user_id): void
     {
         $data = $this->load($user_id);
@@ -92,22 +95,25 @@ class FileStorage implements StorageInterface
         }
     }
 
-    /** @internal  */
+    /** @internal @inheritDoc */
     public function getSessionData(int|string $user_id): array
     {
         $data = $this->load($user_id);
+
         return $data['session'] ?? [];
     }
 
-    /** @internal  */
+    /** @internal @inheritDoc */
     public function setSessionData(int|string $user_id, array $data): void
     {
         $currentData = $this->load($user_id);
-        $currentData['session'] = array_merge($currentData['session'] ?? [], $data);
+        $currentData['session'] = array_merge(
+            $currentData['session'] ?? [], $data,
+        );
         $this->save($user_id, $currentData);
     }
 
-    /** @internal  */
+    /** @internal @inheritDoc */
     public function clearSessionData(int|string $user_id): void
     {
         $currentData = $this->load($user_id);
