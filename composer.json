@@ -10,7 +10,7 @@
     "amphp/file": "^3.2",
     "amphp/redis": "^2.0",
     "psr/simple-cache": "^3.0",
-    "psr/container": "^2.0",
+    "psr/container": "^2.0"
   },
   "autoload": {
     "psr-4": {
