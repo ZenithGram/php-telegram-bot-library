@@ -124,7 +124,6 @@ class Bot
     public function setStorage(StorageInterface $storage): self
     {
         $this->storage = $storage;
-        // Прокидываем хранилище в основной класс ZG, чтобы методы step() работали
         $this->tg?->setStorage($storage);
 
         return $this;
@@ -146,6 +145,16 @@ class Bot
 
         return $route;
     }
+
+    public function attributes(): AttributesLoader
+    {
+        return new AttributesLoader($this);
+    }
+
+    /** @internal  */
+    public function getContainer(): ?ContainerInterface { return $this->resolver->getContainer(); }
+    /** @internal  */
+    public function getCache(): ?CacheInterface { return $this->resolver->getCache(); }
 
     /**
      * Устанавливает middleware

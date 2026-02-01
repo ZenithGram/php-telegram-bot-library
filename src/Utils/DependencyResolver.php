@@ -161,4 +161,16 @@ class DependencyResolver
         }
         return 'zg_refl_' . md5(serialize($handler));
     }
+
+    /** @internal */
+    public function getContainer(): ?ContainerInterface
+    {
+        return $this->container;
+    }
+
+    /** @internal  */
+    public function getCache(): ?CacheInterface
+    {
+        return $this->cache;
+    }
 }

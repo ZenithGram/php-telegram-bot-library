@@ -24,11 +24,14 @@ class AttributesLoader
 
     private const CACHE_KEY_PREFIX = 'zg_attr_map_';
 
-    public function __construct(
-        private Bot $bot,
-        private ?ContainerInterface $container = null,
-        private ?CacheInterface $cache = null
-    ) {}
+    private ?CacheInterface $cache;
+    private ?ContainerInterface $container;
+
+    public function __construct(private Bot $bot)
+    {
+        $this->container = $bot->getContainer();
+        $this->cache = $bot->getCache();
+    }
 
     /**
      * Регистрирует список классов-контроллеров.
@@ -138,3 +141,4 @@ class AttributesLoader
         return reset($vars); // Возвращает первое свойство объекта
     }
 }
+
