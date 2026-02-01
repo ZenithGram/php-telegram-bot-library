@@ -7,6 +7,7 @@ use ZenithGram\ZenithGram\Storage\StorageInterface;
 use ZenithGram\ZenithGram\Utils\DependencyResolver;
 use ZenithGram\ZenithGram\Utils\EnvironmentDetector;
 use ZenithGram\ZenithGram\Exceptions\RouteException;
+use ZenithGram\ZenithGram\Utils\AttributesLoader;
 use Psr\Container\ContainerInterface;
 use Psr\SimpleCache\CacheInterface;
 
