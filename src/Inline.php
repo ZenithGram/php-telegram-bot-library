@@ -7,12 +7,10 @@ use ZenithGram\ZenithGram\Enums\InlineType;
 
 class Inline
 {
-
-    // Лимиты Telegram в байтах
-//    private const VIDEO_SIZE_LIMIT = 20971520; // 20 MB
-//    private const AUDIO_SIZE_LIMIT = 20971520; // 20 MB
-//    private const GIF_SIZE_LIMIT   = 20971520; // 20 MB
-//    private const PHOTO_SIZE_LIMIT = 5242880;  // 5 MB
+    //    private const VIDEO_SIZE_LIMIT = 20971520; // 20 MB
+    //    private const AUDIO_SIZE_LIMIT = 20971520; // 20 MB
+    //    private const GIF_SIZE_LIMIT   = 20971520; // 20 MB
+    //    private const PHOTO_SIZE_LIMIT = 5242880;  // 5 MB
 
     private string $type;
     private string $parse_mode;

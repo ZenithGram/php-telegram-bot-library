@@ -8,6 +8,7 @@ use ZenithGram\ZenithGram\Dto\ChatDto;
 use ZenithGram\ZenithGram\Dto\MessageDto;
 use ZenithGram\ZenithGram\Dto\UserDto;
 use ZenithGram\ZenithGram\Enums\ChatAction;
+use ZenithGram\ZenithGram\Enums\InlineType;
 use ZenithGram\ZenithGram\Storage\StorageInterface;
 use ZenithGram\ZenithGram\Interfaces\ApiClientInterface;
 
@@ -114,13 +115,13 @@ class ZG
     /**
      * Метод создает объект класса Inline для конструктора Inline-запросов
      *
-     * @param string $type
+     * @param InlineType $type
      *
      * @return Inline
      *
      * @see https://zenithgram.github.io/classes/zenithMethods/inline
      */
-    public function inline(string $type = ''): Inline
+    public function inline(InlineType $type = InlineType::Article): Inline
     {
         return new Inline($type);
     }
