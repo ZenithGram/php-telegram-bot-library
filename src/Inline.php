@@ -3,6 +3,7 @@
 namespace ZenithGram\ZenithGram;
 
 use ZenithGram\ZenithGram\Enums\MessageParseMode;
+use ZenithGram\ZenithGram\Enums\InlineType;
 
 class Inline
 {
@@ -29,18 +30,9 @@ class Inline
     private float $longitude = 0;
     private string $address = '';
 
-    public function __construct(string $type)
+    public function __construct(InlineType $type = InlineType::Article)
     {
-        if (!in_array(
-            $type,
-            ['article', 'location', 'mpeg4_gif', 'venue', 'photo',
-             'gif', 'video', 'audio', 'voice', 'document'],
-        )
-        ) {
-            $type = 'article';
-        }
-
-        $this->type = $type;
+        $this->type = $type->value;
     }
 
     /**
