@@ -5,12 +5,12 @@ namespace ZenithGram\ZenithGram\Attributes;
 use Attribute;
 
 /**
- * Создает маршрут для пользовательской команды (например, '!start').
+ * Создает маршрут для команды бота (например, '/start').
  *
- * @param string|array $command Текст команды.
+ * @param string|array $command Текст команды бота.
  */
 #[Attribute(Attribute::TARGET_METHOD)]
-class OnCommand
+class OnBotCommand
 {
     public function __construct(
         public string|array $command

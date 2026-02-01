@@ -9,17 +9,42 @@ use Psr\SimpleCache\CacheInterface;
 use ZenithGram\ZenithGram\Bot;
 use ZenithGram\ZenithGram\Exceptions\RouteException;
 
-use ZenithGram\ZenithGram\Attributes\OnCommand;
+use ZenithGram\ZenithGram\Attributes\{
+    OnCommand, OnBotCommand, OnStart, OnReferral, OnText, OnTextPreg,
+    Btn, OnCallback, OnCallbackPreg, OnInline, OnPhoto, OnVideo,
+    OnAudio, OnVoice, OnVideoNote, OnDocument, OnSticker,
+    OnNewChatMember, OnLeftChatMember, OnEditedMessage, OnMessage,
+    OnDefault, OnState
+};
 
 class AttributesLoader
 {
-    /**
-     * Карта: Атрибут => Метод класса Bot
-     */
     private const ATTRIBUTE_MAP = [
-        OnCommand::class  => 'onCommand',
-        // 'ZenithGram\ZenithGram\Attributes\OnCallback' => 'onCallback',
+        OnStart::class          => 'onStart',
+        OnBotCommand::class     => 'onBotCommand',
+        OnCommand::class        => 'onCommand',
+        OnReferral::class       => 'onReferral',
+        OnText::class           => 'onText',
+        OnTextPreg::class       => 'onTextPreg',
+        Btn::class              => 'btn',
+        OnCallback::class       => 'onCallback',
+        OnCallbackPreg::class   => 'onCallbackPreg',
+        OnInline::class         => 'onInline',
+        OnPhoto::class          => 'onPhoto',
+        OnVideo::class          => 'onVideo',
+        OnAudio::class          => 'onAudio',
+        OnVoice::class          => 'onVoice',
+        OnVideoNote::class      => 'onVideoNote',
+        OnDocument::class       => 'onDocument',
+        OnSticker::class        => 'onSticker',
+        OnNewChatMember::class  => 'onNewChatMember',
+        OnLeftChatMember::class => 'onLeftChatMember',
+        OnEditedMessage::class  => 'onEditedMessage',
+        OnMessage::class        => 'onMessage',
+        OnDefault::class        => 'onDefault',
+        OnState::class          => 'onState',
     ];
+
 
     private const CACHE_KEY_PREFIX = 'zg_attr_map_v1_';
     private ?CacheInterface $cache;
