@@ -17,7 +17,6 @@ final class Message
     public function __construct(?string $text, ZG $ZG)
     {
         $this->messageData['text'] = $text;
-        $this->messageData['parse_mode'] = $ZG->parseModeDefault->value;
         $this->api = $ZG->api;
         $this->context = $ZG->context;
         $this->ZG = $ZG;
