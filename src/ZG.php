@@ -16,30 +16,29 @@ use ZenithGram\ZenithGram\Interfaces\ApiClientInterface;
 class ZG
 {
     use ErrorHandler;
-
-    public ApiClientInterface $api;
-    public UpdateContext $context;
     public MessageParseMode $parseModeDefault = MessageParseMode::None;
     private ?StorageInterface $storage = null;
 
-    public function __construct(ApiClientInterface $api, UpdateContext $context)
-    {
-        $this->api = $api;
-        $this->context = $context;
-    }
+    public function __construct(
+        public readonly ApiClientInterface $api,
+        public readonly UpdateContext $context,
+    ) {}
 
     /**
      * Создает объект класса ZG
      *
      * @param string $token   Токен, полученный в BotFather
-     * @param string $baseUrl Адрес локального сервера Telegram (По умолчанию: https://api.telegram.org)
+     * @param string $baseUrl Адрес локального сервера Telegram (По умолчанию:
+     *                        https://api.telegram.org)
      *
      * @return self
      *
      * @see https://zenithgram.github.io/classes/zenith
      */
-    public static function create(string $token, string $baseUrl = ApiClient::DEFAULT_API_URL): self
-    {
+    public static function create(string $token,
+        string $baseUrl = ApiClient::DEFAULT_API_URL,
+    ): self {
+
         $api = new ApiClient($token, $baseUrl);
         $context = UpdateContext::fromWebhook();
 

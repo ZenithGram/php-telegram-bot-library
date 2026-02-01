@@ -6,14 +6,13 @@ namespace ZenithGram\ZenithGram;
 
 use Closure;
 use Throwable;
+use ZenithGram\ZenithGram\Interfaces\ApiClientInterface;
 
 use function Amp\async;
 use function Amp\delay;
 
 class LongPoll
 {
-    private ApiClient $api;
-    private int $timeout;
     private int $offset = 0;
     private bool $skipOldUpdates = false;
     private bool $shortTrace = false;
@@ -23,14 +22,14 @@ class LongPoll
     private Closure|null $handler = null;
     private array $allowedUpdates = [];
 
-    public function __construct(ApiClient $api, int $timeout = 20)
-    {
-        $this->api = $api;
-        $this->timeout = $timeout;
-    }
+    public function __construct(
+        public readonly ApiClientInterface $api,
+        private readonly int $timeout = 20,
+    ) {}
 
     /**
-     * Создает объект класса LongPoll
+     * Создает объект класса LongPoll </br>
+     * Использует нативный ApiClient библиотеки
      *
      * @param string $token   Токен Telegram
      * @param int    $timeout Сколько будет удерживаться соединение с Telegram

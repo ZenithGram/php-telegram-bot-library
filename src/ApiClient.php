@@ -11,11 +11,12 @@ use Amp\Http\Client\Form;
 use Amp\File;
 use ZenithGram\ZenithGram\Exceptions\NetworkException;
 use ZenithGram\ZenithGram\Exceptions\TelegramApiException;
+use ZenithGram\ZenithGram\Interfaces\ApiClientInterface;
 use ZenithGram\ZenithGram\Utils\LocalFile;
 
 use function Amp\ByteStream\pipe;
 
-class ApiClient
+class ApiClient implements ApiClientInterface
 {
 
     public const DEFAULT_API_URL = 'https://api.telegram.org';
@@ -35,11 +36,7 @@ class ApiClient
     }
 
     /**
-     * @param string $method  Метод API
-     * @param array  $params  Параметры
-     * @param int    $timeout Клиентский таймаут <br> По умолчанию: 10.
-     *
-     * @return array
+     * @inheritDoc
      * @throws \Amp\ByteStream\StreamException
      * @throws \Amp\Http\Client\HttpException
      * @throws \JsonException
@@ -99,9 +96,11 @@ class ApiClient
     }
 
     /**
+     * @inheritDoc
+     * @throws \Amp\File\FilesystemException
+     * @throws \Amp\Http\Client\HttpException
      * @throws \ZenithGram\ZenithGram\Exceptions\TelegramApiException
      * @internal
-     * Асинхронно скачивает файл по ссылке и сохраняет его на диск
      */
     public function downloadFile(string $url, string $destinationPath): void
     {

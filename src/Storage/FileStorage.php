@@ -7,6 +7,7 @@ use function Amp\File\exists;
 use function Amp\File\read;
 use function Amp\File\write;
 use function Amp\File\isDirectory;
+use ZenithGram\ZenithGram\Interfaces\StorageInterface;
 
 class FileStorage implements StorageInterface
 {

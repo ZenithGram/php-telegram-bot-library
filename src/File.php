@@ -3,37 +3,36 @@
 namespace ZenithGram\ZenithGram;
 
 use Amp\File as AmpFile;
+use ZenithGram\ZenithGram\Interfaces\ApiClientInterface;
 
-class File {
+class File
+{
     private array $file_info = [];
-    private ApiClient $api;
-    private string $file_id;
 
-    // Лимиты Telegram (20 МБ для ботов)
     private const MAX_DOWNLOAD_SIZE_BYTES = 20971520;
 
-    public function __construct(string $file_id, ApiClient $api)
-    {
-        $this->api = $api;
-        $this->file_id = $file_id;
-    }
+    public function __construct(
+        private readonly string $file_id,
+        public readonly ApiClientInterface $api,
+    ) {}
+
 
     public function getFileInfo(): array
     {
         if (empty($this->file_info)) {
-            // Это уже работает асинхронно через наш ApiClient
-            $response = $this->api->callAPI('getFile', ['file_id' => $this->file_id]);
+            $response = $this->api->callAPI(
+                'getFile', ['file_id' => $this->file_id],
+            );
             $this->file_info = $response['result'];
         }
 
         return $this->file_info;
     }
 
-    public function getFileSize(string $units = 'B', int $precision = 5): int|float
-    {
+    public function getFileSize(string $units = 'B', int $precision = 5,
+    ): int|float {
         $bytes = $this->getFileInfo()['file_size'] ?? 0;
 
-        // Простая математика, тут асинхронность не нужна
         $division = match ($units) {
             'MB' => 1048576,
             'KB' => 1024,
@@ -45,7 +44,7 @@ class File {
 
     public function getFilePath(): string
     {
-        return $this->api->getApiFileUrl() . $this->getFileInfo()['file_path'];
+        return $this->api->getApiFileUrl().$this->getFileInfo()['file_path'];
     }
 
     /**
@@ -59,55 +58,55 @@ class File {
 
         $downloadUrl = $this->getFilePath();
 
-        // Проверяем, является ли путь директорией (по наличию расширения файла или слеша в конце)
-        // Это упрощенная проверка. Если путь заканчивается на слеш - это папка.
-        $isDir = str_ends_with($path, DIRECTORY_SEPARATOR) || str_ends_with($path, '/');
+        $isDir = str_ends_with($path, DIRECTORY_SEPARATOR)
+            || str_ends_with(
+                $path, '/',
+            );
 
-        if ($isDir || is_dir($path)) { // is_dir блокирующий, но быстрый (кэшируется PHP), можно оставить или заменить на File\isDirectory($path)
-            $path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        if ($isDir
+            || is_dir(
+                $path,
+            )
+        ) { // is_dir блокирующий, но быстрый (кэшируется PHP), можно оставить или заменить на File\isDirectory($path)
+            $path = rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
             $path .= basename($downloadUrl);
         }
 
         $directory = dirname($path);
 
-        // --- АСИНХРОННАЯ МАГИЯ ---
-
-        // 1. Проверяем существование папки асинхронно
         if (!AmpFile\isDirectory($directory)) {
-            // 2. Создаем директорию рекурсивно (как mkdir -p)
             AmpFile\createDirectoryRecursively($directory, 0775);
         }
 
-        // 3. Скачиваем файл через ApiClient
         $this->api->downloadFile($downloadUrl, $path);
 
         return $path;
     }
 
-    // Статический метод getFileId оставляем без изменений, он парсит массив
-    public static function getFileId(array $context, ?string $type = null): ?string
-    {
+    public static function getFileId(array $context, ?string $type = null,
+    ): ?string {
         $message = $context['result'] ?? $context['message'] ?? [];
         if (empty($message)) {
             return null;
         }
 
         if ($type !== null) {
-            // Упрощенная логика выборки
             $obj = match ($type) {
                 'photo' => end($message['photo']),
                 default => $message[$type] ?? null,
             };
+
             return $obj['file_id'] ?? null;
         }
 
-        // Автопоиск
-        $fileTypes = ['photo', 'document', 'video', 'audio', 'voice', 'sticker', 'video_note'];
+        $fileTypes = ['photo', 'document', 'video', 'audio', 'voice', 'sticker',
+                      'video_note'];
         foreach ($fileTypes as $fileType) {
             if (isset($message[$fileType])) {
                 if ($fileType === 'photo') {
                     return end($message['photo'])['file_id'];
                 }
+
                 return $message[$fileType]['file_id'];
             }
         }

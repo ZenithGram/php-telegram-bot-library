@@ -7,6 +7,7 @@ use Amp\Redis\RedisConfig;
 use RuntimeException;
 use ZenithGram\ZenithGram\Exceptions\ZenithGramException;
 use function Amp\Redis\createRedisClient;
+use ZenithGram\ZenithGram\Interfaces\StorageInterface;
 
 class RedisStorage implements StorageInterface
 {
