@@ -64,10 +64,8 @@ class File
             );
 
         if ($isDir
-            || is_dir(
-                $path,
-            )
-        ) { // is_dir блокирующий, но быстрый (кэшируется PHP), можно оставить или заменить на File\isDirectory($path)
+            || AmpFile\isDirectory($path)
+        ) {
             $path = rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
             $path .= basename($downloadUrl);
         }

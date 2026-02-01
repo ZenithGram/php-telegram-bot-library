@@ -8,7 +8,7 @@ use Amp\Http\Client\HttpClient;
 use Amp\Http\Client\HttpClientBuilder;
 use Amp\Http\Client\Request;
 use Amp\Http\Client\Form;
-use Amp\File;
+use Amp\File as AmpFile;
 use ZenithGram\ZenithGram\Exceptions\NetworkException;
 use ZenithGram\ZenithGram\Exceptions\TelegramApiException;
 use ZenithGram\ZenithGram\Interfaces\ApiClientInterface;
@@ -114,7 +114,7 @@ class ApiClient implements ApiClientInterface
             throw new TelegramApiException("Не удалось скачать файл. HTTP код: " . $response->getStatus());
         }
 
-        $file = File\openFile($destinationPath, 'w');
+        $file = AmpFile\openFile($destinationPath, 'w');
 
         try {
             pipe($response->getBody(), $file);
