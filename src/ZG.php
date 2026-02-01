@@ -11,17 +11,18 @@ use ZenithGram\ZenithGram\Enums\MessageParseMode;
 use ZenithGram\ZenithGram\Enums\ChatAction;
 use ZenithGram\ZenithGram\Utils\EnvironmentDetector;
 use ZenithGram\ZenithGram\Storage\StorageInterface;
+use ZenithGram\ZenithGram\Interfaces\ApiClientInterface;
 
 class ZG
 {
     use ErrorHandler;
 
-    public ApiClient $api;
+    public ApiClientInterface $api;
     public UpdateContext $context;
     public MessageParseMode $parseModeDefault = MessageParseMode::None;
     private ?StorageInterface $storage = null;
 
-    public function __construct(ApiClient $api, UpdateContext $context)
+    public function __construct(ApiClientInterface $api, UpdateContext $context)
     {
         $this->api = $api;
         $this->context = $context;
@@ -39,11 +40,6 @@ class ZG
      */
     public static function create(string $token, string $baseUrl = ApiClient::DEFAULT_API_URL): self
     {
-        if (!EnvironmentDetector::isCli()) {
-            http_response_code(200);
-            echo 'ok';
-        }
-
         $api = new ApiClient($token, $baseUrl);
         $context = UpdateContext::fromWebhook();
 
@@ -83,10 +79,26 @@ class ZG
         return $this;
     }
 
-    private function sendOK(): void
+    /**
+     * Явно отправляет 200 OK Telegram'у.
+     * Вызывается автоматически в Bot::run() или вручную.
+     *
+     * @return void
+     *
+     * @see https://zenithgram.github.io/classes/zenithMethods/sendOk
+     */
+    public function sendOk(): void
     {
-        http_response_code(200);
+        if (!headers_sent()) {
+            http_response_code(200);
+            header('Content-Type: text/plain');
+        }
+
         echo 'ok';
+
+        if (function_exists('fastcgi_finish_request')) {
+            fastcgi_finish_request();
+        }
     }
 
     /**

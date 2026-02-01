@@ -1140,6 +1140,11 @@ class Bot
         if ($id === null) {
             $this->processRedirects();
             $this->dispatch();
+
+            // Отправляем OK
+            if (EnvironmentDetector::isWeb() && $this->tg !== null) {
+                $this->tg->sendOk();
+            }
         } else {
             $actionToRun = $this->findActionById($id);
             if ($actionToRun === null) {
