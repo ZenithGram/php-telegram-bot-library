@@ -11,7 +11,6 @@ use Psr\SimpleCache\CacheInterface;
 
 class Bot
 {
-
     private ZG|null $tg;
     private UpdateContext|null $context;
     private array $ctx = [];
@@ -54,11 +53,12 @@ class Bot
     private \Closure|null $middleware_handler = null;
     private bool $useReflection = false;
 
-    public function __construct(ZG|null $tg = null)
-    {
+    public function __construct(ZG|null $tg = null,
+        null|DependencyResolver $resolver = null,
+    ) {
         $this->tg = $tg;
         $this->context = $tg?->context;
-        $this->resolver = new DependencyResolver();
+        $this->resolver = $resolver ?? new DependencyResolver();
     }
 
     /**
@@ -986,7 +986,6 @@ class Bot
                     } else {
                         $noAccessHandler($this->tg);
                     }
-
                 }
 
                 return null;
@@ -1013,7 +1012,7 @@ class Bot
             if (empty($route->getMessageData())) {
                 return null;
             }
-            $this->constructMessage($route);
+            $route->execute($this->tg);
 
             return null;
         }
@@ -1026,7 +1025,7 @@ class Bot
                     ['text' => $route->getQueryText()],
                 );
             }
-            $this->constructMessage($route);
+            $route->execute($this->tg);
 
             return null;
         }
@@ -1048,7 +1047,7 @@ class Bot
 
                 return null;
             }
-            $this->constructMessage($route);
+            $route->execute($this->tg);
 
             return null;
         }
@@ -1061,38 +1060,12 @@ class Bot
             if (empty($route->getMessageData())) {
                 return null;
             }
-            $this->constructMessage($route);
+            $route->execute($this->tg);
 
             return null;
         }
 
         return null;
-    }
-
-    private function constructMessage(Action $action): array
-    {
-        $msg = new Message('', $this->tg);
-
-        $msg->setAdditionallyParams($action->getAdditionallyParams());
-        $msg->setMediaPreviewUrl($action->getMediaPreviewUrl());
-        $msg->setMediaQueue($action->getMediaQueue());
-        $msg->setMessageData($action->getMessageData());
-        $msg->setReplyMarkupRaw($action->getReplyMarkupRaw());
-        $msg->setSendType(...$action->getSendType());
-
-        // 0 - send, 1 - editText, 2 - editCaption, 3 - editMedia
-        $messageAction = $action->getMessageDataAction();
-        if ($messageAction === 0) {
-            return $msg->send();
-        }
-        if ($messageAction === 1) {
-            return $msg->editText();
-        }
-        if ($messageAction === 2) {
-            return $msg->editCaption();
-        }
-
-        return $msg->editMedia();
     }
 
     /**
@@ -1161,7 +1134,6 @@ class Bot
         $handler = $action->getHandler();
         if ($handler !== null) {
             if ($this->useReflection) {
-
                 $dependencies = $this->resolver->resolve(
                     $handler, $this->tg, $other_data,
                 );
@@ -1173,7 +1145,7 @@ class Bot
         }
 
         if (!empty($action->getMessageData())) {
-            return $this->constructMessage($action);
+            return $action->execute($this->tg);
         }
 
         return null;
@@ -1254,6 +1226,4 @@ class Bot
 
         return null;
     }
-
-
 }

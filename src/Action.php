@@ -243,4 +243,28 @@ class Action
     {
         return $this->messageDataAction;
     }
+
+    /**
+     * @throws \Exception
+     * @internal
+     */
+    public function execute(ZG $zg): array
+    {
+        $msg = new Message('', $zg);
+
+        $msg->setAdditionallyParams($this->additionally_params);
+        $msg->setMediaPreviewUrl($this->mediaPreviewUrl);
+        $msg->setMediaQueue($this->mediaQueue);
+        $msg->setMessageData($this->messageData);
+        $msg->setReplyMarkupRaw($this->reply_markup_raw);
+
+        $msg->setSendType($this->sendDice, $this->sendSticker);
+
+        return match ($this->messageDataAction) {
+            1 => $msg->editText(),
+            2 => $msg->editCaption(),
+            3 => $msg->editMedia(),
+            default => $msg->send(),
+        };
+    }
 }

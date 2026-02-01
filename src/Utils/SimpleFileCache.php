@@ -3,6 +3,7 @@
 namespace ZenithGram\ZenithGram\Utils;
 
 use Psr\SimpleCache\CacheInterface;
+use Amp\File as AmpFile;
 
 class SimpleFileCache implements CacheInterface
 {
@@ -11,8 +12,8 @@ class SimpleFileCache implements CacheInterface
     public function __construct(string $path = 'storage/cache')
     {
         $this->cacheDir = rtrim($path, '/\\');
-        if (!is_dir($this->cacheDir)) {
-            mkdir($this->cacheDir, 0777, true);
+        if (!AmpFile\isDirectory($this->cacheDir)) {
+            AmpFile\createDirectoryRecursively($this->cacheDir, 0775);
         }
     }
 
@@ -35,17 +36,16 @@ class SimpleFileCache implements CacheInterface
     public function set(string $key, mixed $value, null|int|\DateInterval $ttl = null): bool
     {
         $file = $this->getFilePath($key);
-        $ttl = is_int($ttl) ? $ttl : 3600; // Default 1 hour
+        $ttl = is_int($ttl) ? $ttl : 3600;
 
         $data = [
             'expires' => time() + $ttl,
             'data' => $value
         ];
 
-        // Используем var_export для опкеша
         $content = "<?php return " . var_export($data, true) . ";";
 
-        return file_put_contents($file, $content) !== false;
+        return file_put_contents($file, $content, LOCK_EX) !== false;
     }
 
     public function delete(string $key): bool
