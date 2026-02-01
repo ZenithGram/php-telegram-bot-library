@@ -7,16 +7,13 @@ use LogicException;
 use ZenithGram\ZenithGram\Dto\ChatDto;
 use ZenithGram\ZenithGram\Dto\MessageDto;
 use ZenithGram\ZenithGram\Dto\UserDto;
-use ZenithGram\ZenithGram\Enums\MessageParseMode;
 use ZenithGram\ZenithGram\Enums\ChatAction;
-use ZenithGram\ZenithGram\Utils\EnvironmentDetector;
 use ZenithGram\ZenithGram\Storage\StorageInterface;
 use ZenithGram\ZenithGram\Interfaces\ApiClientInterface;
 
 class ZG
 {
     use ErrorHandler;
-    public MessageParseMode $parseModeDefault = MessageParseMode::None;
     private ?StorageInterface $storage = null;
 
     public function __construct(
@@ -60,22 +57,6 @@ class ZG
     public function callAPI(string $method, ?array $params = []): array
     {
         return $this->api->callAPI($method, $params);
-    }
-
-    /**
-     * Устанавливает режим парсинга по умолчанию для всех сообщений
-     *
-     * @param MessageParseMode $mode
-     *
-     * @return ZG
-     *
-     * @see https://zenithgram.github.io/classes/zenithMethods/defaultParseMode
-     */
-    public function defaultParseMode(MessageParseMode $mode): self
-    {
-        $this->parseModeDefault = $mode;
-
-        return $this;
     }
 
     /**
@@ -141,7 +122,7 @@ class ZG
      */
     public function inline(string $type = ''): Inline
     {
-        return new Inline($type, $this->parseModeDefault);
+        return new Inline($type);
     }
 
     /**

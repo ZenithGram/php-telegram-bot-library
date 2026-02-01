@@ -14,7 +14,7 @@ class Inline
 //    private const PHOTO_SIZE_LIMIT = 5242880;  // 5 MB
 
     private string $type;
-    private MessageParseMode $parse_mode;
+    private string $parse_mode;
     private string $id = '';
     private string $title = '';
     private string $description = '';
@@ -29,7 +29,7 @@ class Inline
     private float $longitude = 0;
     private string $address = '';
 
-    public function __construct(string $type, MessageParseMode $defaultParseMode)
+    public function __construct(string $type)
     {
         if (!in_array(
             $type,
@@ -41,7 +41,6 @@ class Inline
         }
 
         $this->type = $type;
-        $this->parse_mode = $defaultParseMode;
     }
 
     /**
