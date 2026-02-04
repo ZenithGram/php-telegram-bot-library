@@ -259,7 +259,7 @@ class Inline
         }
     }
 
-    private function createText(): array
+    private function createArticle(): array
     {
         $message = [
             'message_text' => $this->message_text,
@@ -492,9 +492,7 @@ class Inline
      */
     public function create(): array
     {
-        $methodName = ($this->type === 'article')
-            ? 'createText'
-            : 'create' . str_replace('_', '', ucwords($this->type, '_'));
+        $methodName = 'create' . str_replace('_', '', ucwords($this->type, '_'));
 
         return $this->$methodName();
     }
