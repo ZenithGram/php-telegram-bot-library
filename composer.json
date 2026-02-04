@@ -17,6 +17,14 @@
       "ZenithGram\\ZenithGram\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "Tests/"
+    }
+  },
   "prefer-stable": true,
-  "license": "MIT"
+  "license": "MIT",
+  "require-dev": {
+    "phpunit/phpunit": "^12.5"
+  }
 }
