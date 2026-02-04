@@ -252,9 +252,18 @@ class Inline
      */
     public function create(): array
     {
-        $methodName = 'create' . str_replace('_', '', ucwords($this->type, '_'));
-
-        return $this->$methodName();
+        return match ($this->type) {
+            'article'    => $this->createArticle(),
+            'photo'      => $this->createPhoto(),
+            'gif'        => $this->createGif(),
+            'mpeg4_gif'  => $this->createMpeg4Gif(),
+            'audio'      => $this->createAudio(),
+            'video'      => $this->createVideo(),
+            'voice'      => $this->createVoice(),
+            'document'   => $this->createDocument(),
+            'location'   => $this->createLocation(),
+            'venue'      => $this->createVenue(),
+        };
     }
 
     private function createParams(): array
