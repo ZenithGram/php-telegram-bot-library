@@ -243,6 +243,20 @@ class Inline
         return $this;
     }
 
+    /**
+     * Собирает все данные в один массив
+     *
+     * @return array
+     *
+     * @see https://zenithgram.github.io/classes/inlineMethods/create
+     */
+    public function create(): array
+    {
+        $methodName = 'create' . str_replace('_', '', ucwords($this->type, '_'));
+
+        return $this->$methodName();
+    }
+
     private function createParams(): array
     {
         return [
@@ -483,17 +497,4 @@ class Inline
         return $params + $this->params_additionally;
     }
 
-    /**
-     * Собирает все данные в один массив
-     *
-     * @return array
-     *
-     * @see https://zenithgram.github.io/classes/inlineMethods/create
-     */
-    public function create(): array
-    {
-        $methodName = 'create' . str_replace('_', '', ucwords($this->type, '_'));
-
-        return $this->$methodName();
-    }
 }
