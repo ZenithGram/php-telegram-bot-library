@@ -13,7 +13,7 @@ class Inline
     //    private const PHOTO_SIZE_LIMIT = 5242880;  // 5 MB
 
     private string $type;
-    private string $parse_mode;
+    private string $parse_mode = '';
     private string $id = '';
     private string $title = '';
     private string $description = '';
@@ -533,7 +533,6 @@ class Inline
             case 'venue':
                 $return = $this->createVenue();
                 break;
-
         }
 
         return $return;
