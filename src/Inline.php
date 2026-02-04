@@ -492,50 +492,10 @@ class Inline
      */
     public function create(): array
     {
-        $return = [];
-        switch ($this->type) {
-            case 'article':
-                $return = $this->createText();
-                break;
+        $methodName = ($this->type === 'article')
+            ? 'createText'
+            : 'create' . str_replace('_', '', ucwords($this->type, '_'));
 
-            case 'photo':
-                $return = $this->createPhoto();
-                break;
-
-            case 'gif':
-                $return = $this->createGif();
-                break;
-
-            case 'mpeg4_gif':
-                $return = $this->createMpeg4Gif();
-                break;
-
-            case 'audio':
-                $return = $this->createAudio();
-                break;
-
-            case 'video':
-                $return = $this->createVideo();
-                break;
-
-            case 'voice':
-                $return = $this->createVoice();
-                break;
-
-            case 'document':
-                $return = $this->createDocument();
-                break;
-
-            case 'location':
-                $return = $this->createLocation();
-                break;
-
-            case 'venue':
-                $return = $this->createVenue();
-                break;
-        }
-
-        return $return;
+        return $this->$methodName();
     }
-
 }
