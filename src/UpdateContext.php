@@ -61,6 +61,7 @@ class UpdateContext
     {
         return $this->update['message']['text']
             ?? $this->update['message']['caption']
+            ?? $this->update['edited_message']['text']
             ?? $this->update['inline_query']['query']
             ?? null;
     }
