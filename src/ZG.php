@@ -710,6 +710,15 @@ class ZG
     }
 
     /**
+     * Возвращает контекст
+     * @internal
+     */
+    public function getContext(): UpdateContext
+    {
+        return $this->context;
+    }
+
+    /**
      * Возвращает данные обновления
      *
      * @return array

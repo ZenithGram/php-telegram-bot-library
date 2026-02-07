@@ -55,7 +55,7 @@ class DependencyResolver
             if ($typeName) {
                 $resolvedSystem = match ($typeName) {
                     ZG::class => $zg,
-                    UpdateContext::class => $zg->context,
+                    UpdateContext::class => $zg->getContext(),
                     ChatDto::class => $zg->getChat(),
                     UserDto::class => $zg->getUser(),
                     MessageDto::class => $zg->getMessage(),
