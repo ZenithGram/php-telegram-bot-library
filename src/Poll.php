@@ -3,26 +3,27 @@
 namespace ZenithGram\ZenithGram;
 
 use ZenithGram\ZenithGram\Enums\MessageParseMode;
+use ZenithGram\ZenithGram\Interfaces\ApiClientInterface;
 
 class Poll
 {
 
-    private ApiClient $api;
+    private ApiClientInterface $api;
     private UpdateContext $context;
     private string $type = 'regular';
-    private MessageParseMode $question_parse_mode = MessageParseMode::None;
+    private string $question_parse_mode = '';
     private ?string $question = null;
     private array $options = [];
     private bool $is_anonymous = true;
     private bool $allows_multiple_answers = false;
     private ?int $correct_option_id = null;
-    private MessageParseMode $explanation_parse_mode = MessageParseMode::None;
+    private string $explanation_parse_mode = '';
     private ?string $explanation = null;
     private bool $is_closed = false;
     private ?int $open_period = null;
     private ?int $close_date = null;
 
-    public function __construct(string $type, ApiClient $api, UpdateContext $context)
+    public function __construct(string $type, ApiClientInterface $api, UpdateContext $context)
     {
         $type = in_array($type, ['regular', 'quiz']) ? $type : 'regular';
         $this->type = $type;
