@@ -1,7 +1,7 @@
 <?php
 
 $directoriesToScan = ['src', 'Tests'];
-$outputFile = 'source-code.txt';
+$outputFile = 'ai-context/source-code.txt';
 $allowedExtensions = ['php'];
 $ignoreFiles = ['.DS_Store'];
 
