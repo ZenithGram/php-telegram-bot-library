@@ -1,10 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace ZenithGram\ZenithGram\Utils;
 
 use Psr\SimpleCache\CacheInterface;
-
-//use Amp\File as AmpFile;
 
 use function Amp\File\write;
 use function Amp\File\createDirectoryRecursively;
