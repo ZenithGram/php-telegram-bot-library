@@ -1,0 +1,38 @@
+name: Generate Source Bundle
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'src/**'
+      - 'Tests/**'
+      - 'scripts/bundle_source.php'
+  workflow_dispatch:
+
+jobs:
+  bundle-code:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+
+      - name: Run Bundle Script
+        run: php scripts/bundle_source.php
+
+      - name: Commit and Push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "🤖 Update source-code.txt [skip ci]"
+          file_pattern: source-code.txt
+          branch: ${{ github.head_ref }}
