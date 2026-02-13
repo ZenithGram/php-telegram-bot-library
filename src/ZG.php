@@ -768,6 +768,30 @@ class ZG
     }
 
     /**
+     * Является ли чат форумом? true/false
+     *
+     * @return bool
+     *
+     * @see https://zenithgram.github.io/classes/zenithMethods/get#getIsForum
+     */
+    public function getIsForum(): bool
+    {
+        return $this->context->getIsForum($this->getChat());
+    }
+
+    /**
+     * Является ли пользователь ботом? true/false
+     *
+     * @return bool
+     *
+     * @see https://zenithgram.github.io/classes/zenithMethods/get#getIsBot
+     */
+    public function getIsBot(): bool
+    {
+        return $this->context->getIsBot($this->getUser());
+    }
+
+    /**
      * Возвращает переменную msg_id
      *
      * @return int|string|null

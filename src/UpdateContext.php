@@ -1,7 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ZenithGram\ZenithGram;
+
+use ZenithGram\ZenithGram\Dto\UserDto;
+use ZenithGram\ZenithGram\Dto\ChatDto;
 
 class UpdateContext
 {
@@ -53,7 +57,8 @@ class UpdateContext
 
     public function getReplyUserId(): ?int
     {
-        return $this->update['message']['reply_to_message']['from']['id'] ?? null;
+        return $this->update['message']['reply_to_message']['from']['id'] ??
+            null;
     }
 
     public function getText(): ?string
@@ -82,7 +87,8 @@ class UpdateContext
 
     public function getReplyMessageId(): null|int|string
     {
-        return $this->update['message']['reply_to_message']['message_id'] ?? null;
+        return $this->update['message']['reply_to_message']['message_id'] ??
+            null;
     }
 
     public function getCallbackData(): ?string
@@ -111,16 +117,27 @@ class UpdateContext
         }
 
         if (isset($this->update['message'])) {
-             if (!empty($this->update['message']['entities'])
+            if (!empty($this->update['message']['entities'])
                 && $this->update['message']['entities'][0]['type']
                 === 'bot_command'
             ) {
                 return 'bot_command';
             }
+
             return 'text';
         }
 
         return null;
+    }
+
+    public function getIsForum(ChatDto $chat): bool
+    {
+        return $chat->isForum ?? false;
+    }
+
+    public function getIsBot(UserDto $user): bool
+    {
+        return $user->isBot ?? false;
     }
 
 
