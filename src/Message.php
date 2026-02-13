@@ -116,6 +116,7 @@ final class Message
      *
      * @param string|int|null $message_id
      * @param string|int|null $chat_id
+     * @param int|null $message_thread_id
      *
      * @return array
      *
@@ -125,9 +126,9 @@ final class Message
      */
 
     public function editText(string|int|null $message_id = null,
-        string|int|null $chat_id = null,
+        string|int|null $chat_id = null, int|null $message_thread_id = null
     ): array {
-        $params = $this->getIdentifier($message_id, $chat_id);
+        $params = $this->getIdentifier($message_id, $chat_id, $message_thread_id);
 
         if ($this->reply_markup_raw !== []) {
             $this->buildReplyMarkup();
@@ -146,6 +147,7 @@ final class Message
      *
      * @param string|int|null $message_id
      * @param string|int|null $chat_id
+     * @param int|null $message_thread_id
      *
      * @return array
      *
@@ -154,9 +156,9 @@ final class Message
      * @see https://zenithgram.github.io/classes/messageMethods/editCaption
      */
     public function editCaption(string|int|null $message_id = null,
-        string|int|null $chat_id = null,
+        string|int|null $chat_id = null, int|null $message_thread_id = null
     ): array {
-        $params = $this->getIdentifier($message_id, $chat_id);
+        $params = $this->getIdentifier($message_id, $chat_id, $message_thread_id);
 
         if ($this->reply_markup_raw !== []) {
             $this->buildReplyMarkup();
@@ -177,6 +179,7 @@ final class Message
      *
      * @param string|int|null $message_id
      * @param string|int|null $chat_id
+     * @param int|null $message_thread_id
      *
      * @return array
      *
@@ -185,9 +188,9 @@ final class Message
      * @see https://zenithgram.github.io/classes/messageMethods/editCaption
      */
     public function editMedia(string|int|null $message_id = null,
-        string|int|null $chat_id = null,
+        string|int|null $chat_id = null, int|null $message_thread_id = null
     ): array {
-        $params = $this->getIdentifier($message_id, $chat_id);
+        $params = $this->getIdentifier($message_id, $chat_id, $message_thread_id);
 
         if (count($this->mediaQueue) !== 1) {
             throw new MessageBuilderException(
@@ -215,7 +218,7 @@ final class Message
     }
 
     private function getIdentifier(string|int|null $message_id,
-        string|int|null $chat_id,
+        string|int|null $chat_id, int|null $message_thread_id
     ): array {
         $updateData = $this->context->getUpdateData();
 
@@ -223,10 +226,16 @@ final class Message
             return ['inline_message_id' => $updateData['callback_query']['inline_message_id']];
         }
 
-        return [
+        $params = [
             'chat_id'    => $chat_id ?: $this->context->getChatId(),
             'message_id' => $message_id ?: $this->context->getMessageId(),
         ];
+
+        if ($message_thread_id !== null || $this->ZG->getMsgThreadId() !== null) {
+            $params['message_thread_id'] = $message_thread_id;
+        }
+
+        return $params;
     }
 
     private function sendSingleMedia(array $item, array $commonParams,
