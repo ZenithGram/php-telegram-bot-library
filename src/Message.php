@@ -29,6 +29,7 @@ final class Message
      * и т.д.)
      *
      * @param int|string|null $chat_id
+     * @param int|null $message_thread_id
      *
      * @return array Результат запроса (или последнего запроса при
      *               последовательной отправке)
@@ -38,13 +39,17 @@ final class Message
      * @throws \ZenithGram\ZenithGram\Exceptions\MessageBuilderException
      * @see https://zenithgram.github.io/classes/messageMethods/send
      */
-    public function send(int|string|null $chat_id = null): array
+    public function send(int|string|null $chat_id = null, int|null $message_thread_id = null): array
     {
         if ($this->mediaPreviewUrl !== '') {
             $this->applyMediaPreview();
         }
 
         $params = ['chat_id' => $chat_id ?: $this->context->getChatId()];
+
+        if ($message_thread_id !== null || $this->ZG->getMsgThreadId() !== null) {
+            $params['message_thread_id'] = $message_thread_id;
+        }
 
         if ($this->reply_markup_raw !== []) {
             $this->buildReplyMarkup();
