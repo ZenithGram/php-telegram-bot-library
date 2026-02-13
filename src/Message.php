@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ZenithGram\ZenithGram;
 
 use ZenithGram\ZenithGram\Enums\MessageParseMode;
+use ZenithGram\ZenithGram\Interfaces\ApiClientInterface;
 use ZenithGram\ZenithGram\Utils\LocalFile;
 use ZenithGram\ZenithGram\Exceptions\MessageBuilderException;
 
@@ -11,7 +12,7 @@ final class Message
 {
     use MessageBuilderTrait;
 
-    private ApiClient $api;
+    private ApiClientInterface $api;
     private UpdateContext $context;
     private ZG $ZG;
 
