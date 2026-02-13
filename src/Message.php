@@ -47,8 +47,9 @@ final class Message
 
         $params = ['chat_id' => $chat_id ?: $this->context->getChatId()];
 
-        if ($message_thread_id !== null || $this->ZG->getMsgThreadId() !== null) {
-            $params['message_thread_id'] = $message_thread_id;
+        $thread_id = $message_thread_id ?? $this->ZG->getMsgThreadId();
+        if ($thread_id !== null) {
+            $params['message_thread_id'] = $thread_id;
         }
 
         if ($this->reply_markup_raw !== []) {
@@ -231,8 +232,9 @@ final class Message
             'message_id' => $message_id ?: $this->context->getMessageId(),
         ];
 
-        if ($message_thread_id !== null || $this->ZG->getMsgThreadId() !== null) {
-            $params['message_thread_id'] = $message_thread_id;
+        $thread_id = $message_thread_id ?? $this->ZG->getMsgThreadId();
+        if ($thread_id !== null) {
+            $params['message_thread_id'] = $thread_id;
         }
 
         return $params;
