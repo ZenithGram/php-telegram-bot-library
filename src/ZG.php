@@ -827,6 +827,7 @@ class ZG
     {
         return $this->getMessage()->messageThreadId ?? $this->getReplyMessage()->messageThreadId ?? null;
     }
+
     /**
      * Возвращает переменную text
      *
