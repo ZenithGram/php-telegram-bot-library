@@ -10,6 +10,7 @@ use ZenithGram\ZenithGram\Dto\MessageDto;
 use ZenithGram\ZenithGram\Dto\UserDto;
 use ZenithGram\ZenithGram\Enums\ChatAction;
 use ZenithGram\ZenithGram\Enums\InlineType;
+use ZenithGram\ZenithGram\Exceptions\ZenithGramException;
 use ZenithGram\ZenithGram\Storage\StorageInterface;
 use ZenithGram\ZenithGram\Interfaces\ApiClientInterface;
 
@@ -840,6 +841,18 @@ class ZG
     }
 
     /**
+     * Возвращает MessageDto-объект отвеченного сообщения
+     *
+     * @return MessageDto|null
+     *
+     * @see https://zenithgram.github.io/classes/zenithMethods/get#getReplyMessage
+     */
+    public function getReplyMessage(): MessageDto|null
+    {
+        return $this->getMessage()->replyToMessage ?? null;
+    }
+
+    /**
      * Возвращает переменную user_id
      *
      * @return int|string|null user_id
@@ -911,7 +924,7 @@ class ZG
         }
 
         if ($user === null) {
-            throw new LogicException(
+            throw new ZenithGramException(
                 "Не удалось найти данные пользователя ('from') в текущем событии.",
             );
         }
@@ -966,7 +979,7 @@ class ZG
         }
 
         if ($chatData === null) {
-            throw new LogicException(
+            throw new ZenithGramException(
                 "Не удалось найти данные чата ('chat') в текущем событии.",
             );
         }
@@ -1001,7 +1014,7 @@ class ZG
             return MessageDto::fromArray($messageData);
         }
 
-        throw new LogicException(
+        throw new ZenithGramException(
             "Не удалось найти данные сообщения ('Message') в текущем событии.",
         );
     }

@@ -139,6 +139,4 @@ class UpdateContext
     {
         return $user->isBot ?? false;
     }
-
-
 }
