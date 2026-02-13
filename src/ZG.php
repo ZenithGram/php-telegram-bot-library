@@ -817,6 +817,17 @@ class ZG
     }
 
     /**
+     * Возвращает переменную message_thread_id
+     *
+     * @return int|null
+     *
+     * @see https://zenithgram.github.io/classes/zenithMethods/get#getMsgThreadId
+     */
+    public function getMsgThreadId(): int|null
+    {
+        return $this->getMessage()->messageThreadId ?? $this->getReplyMessage()->messageThreadId ?? null;
+    }
+    /**
      * Возвращает переменную text
      *
      * @return string|null
