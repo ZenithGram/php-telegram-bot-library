@@ -99,6 +99,21 @@ class ZG
             $text, $this,
         );
     }
+    /**
+     * Метод создает объект класса MessageDraft для конструктора стриминга
+     *
+     * @param string $text
+     *
+     * @return MessageDraft
+     *
+     * @see https://zenithgram.github.io/classes/zenithMethods/msg
+     */
+    public function msgDraft(string $text = ''): MessageDraft
+    {
+        return new MessageDraft(
+            $text, $this,
+        );
+    }
 
     /**
      * Метод создает объект класса Poll для конструктора опросов
