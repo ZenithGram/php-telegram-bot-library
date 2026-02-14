@@ -1280,8 +1280,9 @@ $bot->run();
 ## Параметры метода
 
 **Parameters:**
-- messageID (int): `null`
-- chatID (int): `null`
+- message\_id (int|null): ID сообщения
+- chat\_id (int|string|null): ID чата
+- message\_thread\_id (int|null): ID темы (для форумов)
 ## Возвращает
 
 `array` - ответ от Телеграма, содержащий информацию о сообщении
@@ -1333,8 +1334,9 @@ $bot->run();
 ## Параметры метода
 
 **Parameters:**
-- messageID (int|null): ID сообщения, которое нужно отредактировать. Если `null`, используется ID из текущего контекста (например, из callback).
-- chatID (int|null): ID чата, в котором находится сообщение. Если `null`, используется ID из текущего контекста.
+- message\_id (int|null): ID сообщения
+- chat\_id (int|string|null): ID чата
+- message\_thread\_id (int|null): ID темы (для форумов)
 ## Возвращает
 
 `array` - ответ от Телеграма, содержащий информацию об измененном сообщении.
@@ -1380,8 +1382,9 @@ $bot->run();
 ## Параметры метода
 
 **Parameters:**
-- messageID (int): `null`
-- chatID (int): `null`
+- message\_id (int|null): ID сообщения
+- chat\_id (int|string|null): ID чата
+- message\_thread\_id (int|null): ID темы (для форумов)
 ## Возвращает
 
 `array` - ответ от Телеграма, содержащий информацию о сообщении
@@ -1446,7 +1449,7 @@ $bot->onState('final_step')->func(function(ZG $tg) {
 
 # DraftMethods::entities
 
-Метод устанавливает особые сущности для сообщения, которые содержат в себе оформление сообщения
+Метод устанавливает особые сущности для сообщения, которые содержат в себе оформление сообщения в режиме стриминга
 
 :::warning Не совместим с parseMode
 Методы entities и parseMode взаимоисключающие и не могут быть определены вместе.
@@ -1465,13 +1468,11 @@ $bot->onState('final_step')->func(function(ZG $tg) {
 ```php
 
 $bot->onCommand('stream', '/stream')->func(function (ZG $tg) {
-    $entities = [
-        [
-            'offset' => 0,
-            'length' => 9,
-            'type' => 'italic'
-        ]
-    ];
+    $entities = [[
+        'offset' => 0,
+        'length' => 9,
+        'type' => 'italic',
+    ]];
 
     $draft = $tg->msgDraft("⏳ Init...")
         ->entities($entities)
@@ -2102,6 +2103,20 @@ $update = $tg->getUpdate();
 $text = $tg->getMessage()->text;
 ```
 
+## getReplyMessage
+
+Метод возвращает DTO-объект со всеми данными отвеченного сообщения.
+
+### Возвращает
+
+`MessageDto` - Объект, содержащий информацию об отвеченном сообщении
+
+### Пример использования
+
+```php
+$text = $tg->getMessageReply()->text;
+```
+
 ## getChatId
 
 Метод возвращает идентификатор чата из пришедшего события.
@@ -2114,6 +2129,20 @@ $text = $tg->getMessage()->text;
 
 ```php
 $chat_id = $tg->getChatId();
+```
+
+## getMsgThreadId
+
+Метод возвращает ID темы/ветки (важно для форумов).
+
+### Возвращает
+
+`int|null` - ID темы или `null`, если его нет в событии.
+
+### Пример использования
+
+```php
+$thread_id = $tg->getMsgThreadId();
 ```
 
 ## getChat
@@ -2270,6 +2299,34 @@ $query_id = $tg->getQueryId();
 $callback_data = $tg->getCallbackData();
 ```
 
+## getIsForum
+
+Метод возвращает true, если обновление пришло из форума и false, если нет.
+
+### Возвращает
+
+`bool` - Сообщение пришло из форума? true/false.
+
+### Пример использования
+
+```php
+$isForum = $tg->getIsForum();
+```
+
+## getIsBot
+
+Метод возвращает true, если пользователь бот и false, если нет.
+
+### Возвращает
+
+`bool` - Является ли пользователь ботом? true/false.
+
+### Пример использования
+
+```php
+$isBot = $tg->getIsBot();
+```
+
 ***
 
 ## Комплексный пример: Эхо-бот
@@ -2286,7 +2343,19 @@ if ($type === 'text') {
     $responseText = "Вы написали: " . $text;
     $tg->sendMessage($chat_id, $responseText);
 }
+
+$tg->sendOk();
 ```
+
+1.
+
+2. **`getIsForum(): bool`** — Проверка, является ли чат форумом.
+
+3. **`getIsBot(): bool`** — Проверка, является ли пользователь ботом.
+
+4. **`getReplyMessage(): ?MessageDto`** — Получение DTO сообщения, на которое ответили.
+
+5. **`getStorage(): ?StorageInterface`** — (В документации назван `storage()`, в коде — `getStorage()`).
 
 ---
 
@@ -4505,6 +4574,39 @@ $bot->run();
 
 ---
 
+# DraftMethods::parseMode
+
+Метод устанавливает режим разметки для сообщения в режиме стриминга
+
+:::warning Не совместим с entities
+Методы entities и parseMode взаимоисключающие и не могут быть определены вместе.
+:::
+
+## Параметры метода
+
+**Parameters:**
+- parse\_mode (MessageParseMode): Возможные значения описаны в [MessageParseMode](/classes/enum#messageparsemode)
+## Возвращает
+
+`MessageDraft` - экземпляр класса `MessageDraft`.
+
+## Пример использования
+
+```php
+
+$bot->onCommand('stream', '/stream')->func(function (ZG $tg) {
+    $draft = $tg->msgDraft("⏳ <b>Init...</b>")
+        ->parseMode(MessageParseMode::HTML)
+        ->send();
+});
+
+$bot->run();
+```
+
+[Подробнее о разметках на официальной документации Telegram](https://core.telegram.org/bots/api#formatting-options)
+
+---
+
 # Inline::parseMode
 
 Метод устанавливает режим разметки для сообщения
@@ -4541,6 +4643,10 @@ $tg->answerInlineQuery($tg->getQueryId(), $results);
 # Message::parseMode
 
 Метод устанавливает режим разметки для сообщения
+
+:::warning Не совместим с entities
+Методы entities и parseMode взаимоисключающие и не могут быть определены вместе.
+:::
 
 ## Параметры метода
 
@@ -5140,7 +5246,8 @@ $tg->msg("Файл сохранён по пути: $path")->send();
 ## Параметры метода
 
 **Parameters:**
-- chat\_id (int|string): `null`
+- chat\_id (int|string|null): ID чата
+- message\_thread\_id (int|null): ID темы (для форумов)
 ## Возвращает
 
 `array` - ответ от Телеграма, содержащий информацию о сообщении
@@ -5705,6 +5812,69 @@ $tg->pagination()->setSigns('⬅️ Назад', 'Вперед ➡️');
 ```php
 
 $tg->setStorage($storage);
+```
+
+---
+
+# DraftMethods::send
+
+Метод отправляет или изменяет сообщение в режиме стриминга
+
+## Параметры метода
+
+**Parameters:**
+- chat\_id (int|string|null): ID чата
+- message\_thread\_id (int|null): ID темы (для форумов)
+- draft\_id (int|null): ID стриминга (либо создается библиотекой, либо передается пользователем)
+## Возвращает
+
+`MessageDraft` - экземпляр класса `MessageDraft`.
+
+## Пример использования
+
+```php
+
+$bot->onCommand('stream', '/stream')->func(function (ZG $tg) {
+    $draft = $tg->msgDraft("⏳ Init...")
+        ->send(); // Отправляем
+        
+    sleep(5); // Не используйте в реальном проекте
+    
+    $draft->setText("New text for streeming mode")
+        ->send(); // Изменяем
+});
+
+$bot->run();
+```
+
+---
+
+# DraftMethods::setText
+
+Метод устанавливает новый текст сообщения в режиме стриминга
+
+## Параметры метода
+
+**Parameters:**
+- text (string): Новое измененное сообщение во время стриминга
+## Возвращает
+
+`MessageDraft` - экземпляр класса `MessageDraft`.
+
+## Пример использования
+
+```php
+
+$bot->onCommand('stream', '/stream')->func(function (ZG $tg) {
+    $draft = $tg->msgDraft("⏳ Init...")
+        ->send();
+        
+    sleep(5); // Не используйте в реальном проекте
+    
+    $draft->setText("New text for streeming mode")->send();
+});
+
+$bot->run();
 ```
 
 ---

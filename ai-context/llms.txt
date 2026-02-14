@@ -27,6 +27,7 @@
 - [Bot](https://zenithgram.github.io/classes/bot.md): Конструктор для создания логики бота.
 - [Action](https://zenithgram.github.io/classes/action.md): Вспомогательный класс для установки действий.
 - [Message](https://zenithgram.github.io/classes/message.md): Конструктор сообщений.
+- [MessageDraft](https://zenithgram.github.io/classes/draft.md): Конструктор сообщений для стриминга.
 - [Button](https://zenithgram.github.io/classes/button.md): Вспомогательный класс для создания кнопок.
 - [File](https://zenithgram.github.io/classes/file.md): Класс для работы с файлами.
 - [Storage](https://zenithgram.github.io/classes/storage.md): Классы для работы с хранилищем состояний (FSM).
@@ -123,12 +124,19 @@
 - [removeKbd](https://zenithgram.github.io/classes/messageMethods/removeKbd.md): Удаляет клавиатуру.
 - [forceReply](https://zenithgram.github.io/classes/messageMethods/forceReply.md): Открывает интерфейс ответа.
 - [parseMode](https://zenithgram.github.io/classes/messageMethods/parseMode.md): Устанавливает режим разметки.
+- [entities](https://zenithgram.github.io/classes/messageMethods/entities.md): Устанавливает сущность для стриминга
 - [reply](https://zenithgram.github.io/classes/messageMethods/reply.md): Устанавливает ID сообщения для ответа.
 - [params](https://zenithgram.github.io/classes/messageMethods/params.md): Устанавливает дополнительные параметры.
 - [send](https://zenithgram.github.io/classes/messageMethods/send.md): Отправляет сформированное сообщение.
 - [editText](https://zenithgram.github.io/classes/messageMethods/editText.md): Редактирует текст сообщения по ID.
 - [editCaption](https://zenithgram.github.io/classes/messageMethods/editCaption.md): Редактирует подпись медиа по ID.
 - [editMedia](https://zenithgram.github.io/classes/messageMethods/editMedia.md): Заменяет медиа в сообщении по ID.
+
+#### MessageDraft
+
+- [parseMode](https://zenithgram.github.io/classes/draftMethods/parseMode.md): Устанавливает режим разметки для стриминга
+- [entities](https://zenithgram.github.io/classes/draftMethods/entities.md): Устанавливает сущность для стриминга
+- [setText](https://zenithgram.github.io/classes/draftMethods/send.md): Устанавливает новый текст для стриминга
 
 #### File
 
@@ -189,8 +197,6 @@
 
 ### Other
 
-- [entities](https://zenithgram.github.io/classes/draftMethods/entities.md): Устанавливает сущность для стриминга
-- [entities](https://zenithgram.github.io/classes/messageMethods/entities.md): Устанавливает сущность для стриминга
-- [MessageDraft](https://zenithgram.github.io/classes/draft.md): Конструктор сообщений для стриминга.
+- [setText](https://zenithgram.github.io/classes/draftMethods/setText.md): Устанавливает новый текст для стриминга
 - [Untitled](https://zenithgram.github.io/index.md)
 
