@@ -189,5 +189,8 @@
 
 ### Other
 
+- [entities](https://zenithgram.github.io/classes/draftMethods/entities.md): Устанавливает сущность для стриминга
+- [entities](https://zenithgram.github.io/classes/messageMethods/entities.md): Устанавливает сущность для стриминга
+- [MessageDraft](https://zenithgram.github.io/classes/draft.md): Конструктор сообщений для стриминга.
 - [Untitled](https://zenithgram.github.io/index.md)
 

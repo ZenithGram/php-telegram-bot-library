@@ -1700,6 +1700,110 @@ $bot->onState('final_step')->func(function(ZG $tg) {
 ---
 
 ---
+url: 'https://zenithgram.github.io/classes/draftMethods/entities.md'
+description: Устанавливает сущность для стриминга
+---
+
+# entities
+
+Метод устанавливает особые сущности для сообщения, которые содержат в себе оформление сообщения
+
+:::warning Не совместим с parseMode
+Методы entities и parseMode взаимоисключающие и не могут быть определены вместе.
+:::
+
+## Параметры метода
+
+| # |   Название   |   Тип   | Описание                                                                                          |
+|:-:|:------------:|:-------:|:--------------------------------------------------------------------------------------------------|
+| 1 | **entities** | `array` | Массив сущности (Подробнее на сайте [Telegram](https://core.telegram.org/bots/api#messageentity)) |
+
+## Возвращает
+
+`MessageDraft` - экземпляр класса `MessageDraft`.
+
+## Пример использования
+
+```php
+<?php
+require_once __DIR__ . '/vendor/autoload.php';
+use ZenithGram\ZenithGram\ZG;
+
+$tg = ZG::create(BOT_TOKEN);
+$bot = new Bot($tg);
+
+$bot->onCommand('stream', '/stream')->func(function (ZG $tg) {
+    $entities = [
+        [
+            'offset' => 0,
+            'length' => 9,
+            'type' => 'italic'
+        ]
+    ];
+
+    $draft = $tg->msgDraft("⏳ Init...")
+        ->entities($entities)
+        ->send();
+});
+
+$bot->run();
+```
+
+---
+
+---
+url: 'https://zenithgram.github.io/classes/messageMethods/entities.md'
+description: Устанавливает сущность для стриминга
+---
+
+# entities
+
+Метод устанавливает особые сущности для сообщения, которые содержат в себе оформление сообщения
+
+:::warning Не совместим с parseMode
+Методы entities и parseMode взаимоисключающие и не могут быть определены вместе.
+:::
+
+## Параметры метода
+
+| # |   Название   |   Тип   | Описание                                                                                          |
+|:-:|:------------:|:-------:|:--------------------------------------------------------------------------------------------------|
+| 1 | **entities** | `array` | Массив сущности (Подробнее на сайте [Telegram](https://core.telegram.org/bots/api#messageentity)) |
+
+## Возвращает
+
+`Message` - экземпляр класса `Message`.
+
+## Пример использования
+
+```php
+<?php
+require_once __DIR__ . '/vendor/autoload.php';
+use ZenithGram\ZenithGram\ZG;
+
+$tg = ZG::create(BOT_TOKEN);
+$bot = new Bot($tg);
+
+$bot->onCommand('/entities')->func(function (ZG $tg) {
+    $entities = [
+        [
+            'offset' => 0,
+            'length' => 9,
+            'type' => 'italic'
+        ]
+    ];
+
+    $tg->msg("⏳ Init...")
+        ->entities($entities)
+        ->send();
+});
+
+$bot->run();
+```
+
+---
+
+---
 url: 'https://zenithgram.github.io/classes/enum.md'
 description: Все Enum и их значения
 ---
@@ -3608,7 +3712,7 @@ description: Конструктор сообщений.
 
 `Message` - экземпляр класса `Message`.
 
-### Пример использования
+## Пример использования
 
 ```php
 <?php
@@ -3694,6 +3798,51 @@ $bot->onBotCommand('promo', '/promo')
 
 $bot->run();
 ```
+
+---
+
+---
+url: 'https://zenithgram.github.io/classes/draft.md'
+description: Конструктор сообщений для стриминга.
+---
+
+# **MessageDraft**
+
+Класс `MessageDraft` представляет собою объект, который используется для создания и отправки особых сообщений в режиме стриминга.
+
+## Создание экземпляра `MessageDraft`
+
+Для создания экземпляра класса используется `msgDraft` – метод из класса *ZG*. Этот метод является «синтаксическим сахаром»
+
+### Параметры метода
+
+| # | Название |     Тип      | Описание                     |
+|:-:|:--------:|:------------:|------------------------------|
+| 1 | **text** |   `string`   | Текст изначального сообщения |
+
+### Возвращает
+
+`MessageDraft` - экземпляр класса `MessageDraft`.
+
+## Пример использования
+
+```php
+<?php
+require_once __DIR__ . '/vendor/autoload.php';
+use ZenithGram\ZenithGram\ZG;
+
+$tg = ZG::create(BOT_TOKEN);
+
+$draft = $tg->msgDraft("Привет, Мир!")->send();
+sleep(3); // Никогда не используйте в реальном проекте, тут для наглядности
+$draft->setText('Привет, Мир! Это сообщение дополнилось новым текстом')->send();
+```
+
+:::tip Особые условия
+Такой тип сообщений возможно использовать только когда в вашем боте включен режим *ThreadedMode*
+:::
+
+![MessageDraftSettings.png](/MessageDraftSettings.png)
 
 ---
 
