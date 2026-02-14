@@ -6653,6 +6653,53 @@ $tg->msg("Файл сохранён по пути: $path")->send();
 ---
 
 ---
+url: 'https://zenithgram.github.io/classes/draftMethods/send.md'
+description: Отправляет или изменяет сообщение в режиме стриминга
+---
+
+# send
+
+Метод отправляет или изменяет сообщение в режиме стриминга
+
+## Параметры метода
+
+| # |       Название        |           Тип           |                                 Описание                                 |
+|:-:|:---------------------:|:-----------------------:|:------------------------------------------------------------------------:|
+| 1 |      **chat\_id**      | `int`|`string`|`null` |                                 ID чата                                  |
+| 2 | **message\_thread\_id** |      `int`|`null`      |                          ID темы (для форумов)                           |
+| 2 |     **draft\_id**      |      `int`|`null`      | ID стриминга (либо создается библиотекой, либо передается пользователем) |
+
+## Возвращает
+
+`MessageDraft` - экземпляр класса `MessageDraft`.
+
+## Пример использования
+
+```php
+<?php
+require_once __DIR__ . '/vendor/autoload.php'; 
+use ZenithGram\ZenithGram\ZG;
+use ZenithGram\ZenithGram\Bot;
+
+$tg = ZG::create(BOT_TOKEN);
+$bot = new Bot($tg);
+
+$bot->onCommand('stream', '/stream')->func(function (ZG $tg) {
+    $draft = $tg->msgDraft("⏳ Init...")
+        ->send(); // Отправляем
+        
+    sleep(5); // Не используйте в реальном проекте
+    
+    $draft->setText("New text for streeming mode")
+        ->send(); // Изменяем
+});
+
+$bot->run();
+```
+
+---
+
+---
 url: 'https://zenithgram.github.io/classes/messageMethods/send.md'
 description: Отправляет сформированное сообщение.
 ---
@@ -7428,53 +7475,6 @@ $tg->setStorage($storage);
 ---
 
 ---
-url: 'https://zenithgram.github.io/classes/draftMethods/send.md'
-description: Устанавливает новый текст для стриминга
----
-
-# send
-
-Метод отправляет или изменяет сообщение в режиме стриминга
-
-## Параметры метода
-
-| # |       Название        |           Тип           |                                 Описание                                 |
-|:-:|:---------------------:|:-----------------------:|:------------------------------------------------------------------------:|
-| 1 |      **chat\_id**      | `int`|`string`|`null` |                                 ID чата                                  |
-| 2 | **message\_thread\_id** |      `int`|`null`      |                          ID темы (для форумов)                           |
-| 2 |     **draft\_id**      |      `int`|`null`      | ID стриминга (либо создается библиотекой, либо передается пользователем) |
-
-## Возвращает
-
-`MessageDraft` - экземпляр класса `MessageDraft`.
-
-## Пример использования
-
-```php
-<?php
-require_once __DIR__ . '/vendor/autoload.php'; 
-use ZenithGram\ZenithGram\ZG;
-use ZenithGram\ZenithGram\Bot;
-
-$tg = ZG::create(BOT_TOKEN);
-$bot = new Bot($tg);
-
-$bot->onCommand('stream', '/stream')->func(function (ZG $tg) {
-    $draft = $tg->msgDraft("⏳ Init...")
-        ->send(); // Отправляем
-        
-    sleep(5); // Не используйте в реальном проекте
-    
-    $draft->setText("New text for streeming mode")
-        ->send(); // Изменяем
-});
-
-$bot->run();
-```
-
----
-
----
 url: 'https://zenithgram.github.io/classes/draftMethods/setText.md'
 description: Устанавливает новый текст для стриминга
 ---
@@ -8199,6 +8199,365 @@ $chat_id = $tg->getChatId();
 $user_id = $tg->getUserId();
 $update = $tg->getUpdate();
 $user_id_dto = $tg->getUser()->id();
+```
+
+---
+
+---
+url: 'https://zenithgram.github.io/classes/attributes.md'
+description: Полный список атрибутов для маршрутизации и их параметры.
+---
+
+# Атрибуты (Attributes Reference)
+
+Список всех доступных атрибутов для декларативного объявления маршрутов в контроллерах.
+Все атрибуты находятся в пространстве имен `ZenithGram\ZenithGram\Attributes`.
+
+Для использования атрибута его необходимо импортировать:
+`use ZenithGram\ZenithGram\Attributes\OnStart;`
+
+## Команды
+
+### `#[OnStart]`
+
+Срабатывает при отправке команды `/start`.
+*Аналог:* `$bot->onStart()`
+
+```php
+#[OnStart]
+public function start(ZG $tg) { ... }
+```
+
+### `#[OnBotCommand]`
+
+Срабатывает на стандартные команды (начинающиеся со слеша `/`).
+*Аналог:* `$bot->onBotCommand()`
+
+|  Параметр   |        Тип        | Описание                                               |
+|:-----------:|:-----------------:|:-------------------------------------------------------|
+| **command** | `string`|`array` | Текст команды (например, `'/help'`) или массив команд. |
+
+```php
+#[OnBotCommand('/help')]
+public function help(ZG $tg) { ... }
+```
+
+### `#[OnCommand]`
+
+Срабатывает на кастомные команды (например, `!ban`, `погода`). Поддерживает плейсхолдеры `{arg}`.
+*Аналог:* `$bot->onCommand()`
+
+|  Параметр   |        Тип        | Описание                                               |
+|:-----------:|:-----------------:|:-------------------------------------------------------|
+| **command** | `string`|`array` | Текст команды или паттерн (например, `'!ban {user}'`). |
+
+```php
+#[OnCommand('!ban {user}')]
+public function ban(ZG $tg, string $user) { ... }
+```
+
+### `#[OnReferral]`
+
+Срабатывает при переходе по реферальной ссылке.
+*Аналог:* `$bot->onReferral()`
+
+```php
+#[OnReferral]
+public function referral(ZG $tg, string $ref) { ... }
+```
+
+## Текст
+
+### `#[OnText]`
+
+Срабатывает при **точном** совпадении текста сообщения.
+*Аналог:* `$bot->onText()`
+
+| Параметр |        Тип        | Описание                                |
+|:--------:|:-----------------:|:----------------------------------------|
+| **text** | `string`|`array` | Текст или массив текстов для сравнения. |
+
+```php
+#[OnText('О нас')]
+public function about(ZG $tg) { ... }
+```
+
+### `#[OnTextPreg]`
+
+Срабатывает при совпадении текста с регулярным выражением.
+*Аналог:* `$bot->onTextPreg()`
+
+|  Параметр   |        Тип        | Описание                     |
+|:-----------:|:-----------------:|:-----------------------------|
+| **pattern** | `string`|`array` | Регулярное выражение (PCRE). |
+
+```php
+#[OnTextPreg('/^ID: (\d+)$/')]
+public function checkId(ZG $tg, array $matches) { ... }
+```
+
+### `#[OnMessage]`
+
+Fallback-обработчик для любых текстовых сообщений, не обработанных другими маршрутами.
+*Аналог:* `$bot->onMessage()`
+
+```php
+#[OnMessage]
+public function fallback(ZG $tg) { ... }
+```
+
+### `#[OnEditedMessage]`
+
+Срабатывает при редактировании сообщения пользователем.
+*Аналог:* `$bot->onEditedMessage()`
+
+```php
+#[OnEditedMessage]
+public function edited(ZG $tg) { ... }
+```
+
+## Кнопки (Callback)
+
+### `#[Btn]`
+
+Создает маршрут для обработки нажатия на кнопку с определенным ID.
+*Аналог:* `$bot->btn()`
+
+::: tip Важно
+Атрибут создает только **обработчик**. Саму кнопку вы должны отправить пользователю отдельно (через клавиатуру), используя тот же ID.
+:::
+
+| Параметр |   Тип    | Описание              |
+|:--------:|:--------:|:----------------------|
+|  **id**  | `string` | Уникальный ID кнопки. |
+
+```php
+#[Btn('main_menu')]
+public function menu(ZG $tg) { ... }
+```
+
+### `#[OnCallback]`
+
+Срабатывает при совпадении `callback_data`. Поддерживает плейсхолдеры.
+*Аналог:* `$bot->onCallback()`
+
+| Параметр |        Тип        | Описание                                             |
+|:--------:|:-----------------:|:-----------------------------------------------------|
+| **data** | `string`|`array` | Данные кнопки или паттерн (например, `'item_{id}'`). |
+
+```php
+#[OnCallback('buy_{id}')]
+public function buy(ZG $tg, int $id) { ... }
+```
+
+### `#[OnCallbackPreg]`
+
+Срабатывает при совпадении `callback_data` с регулярным выражением.
+*Аналог:* `$bot->onCallbackPreg()`
+
+|  Параметр   |        Тип        | Описание              |
+|:-----------:|:-----------------:|:----------------------|
+| **pattern** | `string`|`array` | Регулярное выражение. |
+
+```php
+#[OnCallbackPreg('/^page_(\d+)$/')]
+public function page(ZG $tg, array $matches) { ... }
+```
+
+## Медиа и Файлы
+
+Группа атрибутов, реагирующих на получение определенных типов контента.
+
+| Атрибут          | Описание                        |
+|:-----------------|:--------------------------------|
+| `#[OnPhoto]`     | Получено фото                   |
+| `#[OnVideo]`     | Получено видео                  |
+| `#[OnAudio]`     | Получен аудиофайл               |
+| `#[OnVoice]`     | Получено голосовое сообщение    |
+| `#[OnVideoNote]` | Получен "кружочек" (video note) |
+| `#[OnDocument]`  | Получен документ                |
+| `#[OnSticker]`   | Получен стикер                  |
+
+Пример:
+
+```php
+#[OnPhoto]
+public function savePhoto(ZG $tg) { ... }
+```
+
+## Система и Состояния
+
+### `#[OnState]`
+
+Срабатывает, когда пользователь находится в определенном шаге диалога (FSM).
+*Аналог:* `$bot->onState()`
+
+| Параметр |   Тип    | Описание                                       |
+|:--------:|:--------:|:-----------------------------------------------|
+| **name** | `string` | Название состояния (например, `'wait_email'`). |
+
+```php
+#[OnState('wait_email')]
+public function getEmail(ZG $tg) { ... }
+```
+
+### `#[OnInline]`
+
+Срабатывает при входящем Inline-запросе.
+*Аналог:* `$bot->onInline()`
+
+```php
+#[OnInline]
+public function inlineHandler(ZG $tg) { ... }
+```
+
+### `#[OnDefault]`
+
+Глобальный Fallback. Срабатывает, если ни один другой маршрут не подошел.
+*Аналог:* `$bot->onDefault()`
+
+```php
+#[OnDefault]
+public function unknownUpdate(ZG $tg) { ... }
+```
+
+### Управление участниками
+
+| Атрибут               | Описание                                         |
+|:----------------------|:-------------------------------------------------|
+| `#[OnNewChatMember]`  | В чат вступил новый участник (или добавлен бот). |
+| `#[OnLeftChatMember]` | Участник покинул чат (или бот удален).           |
+
+```php
+#[OnNewChatMember]
+public function welcome(ZG $tg, UserDto $user) { ... }
+```
+
+---
+
+---
+url: 'https://zenithgram.github.io/using/attributes.md'
+description: Использование атрибутов PHP 8 для создания контроллеров и маршрутизации.
+---
+
+# Атрибуты и Контроллеры
+
+ZenithGram поддерживает современный подход к организации кода с использованием **Атрибутов PHP 8**. Вместо того чтобы описывать все маршруты в одном файле через цепочку вызовов `$bot->on...`, вы можете создавать классы-контроллеры и помечать методы специальными атрибутами.
+
+Это делает код чище, позволяет группировать логику по смыслу и использовать возможности Dependency Injection.
+
+## Как это работает
+
+1. Вы создаете класс (Контроллер).
+2. Создаете публичные методы для обработки событий.
+3. Добавляете к методам атрибуты (например, `#[OnStart]`, `#[OnCommand]`).
+4. Регистрируете контроллер в боте.
+
+Библиотека автоматически просканирует класс, создаст маршруты и привяжет их к вашим методам.
+
+## Базовый пример
+
+Создадим простой контроллер `MyController.php`:
+
+```php
+<?php
+namespace App\Controllers;
+
+use ZenithGram\ZenithGram\Attributes\OnStart;
+use ZenithGram\ZenithGram\Attributes\OnCommand;
+use ZenithGram\ZenithGram\Attributes\OnText;
+use ZenithGram\ZenithGram\ZG;
+
+class MyController
+{
+    // Обработка команды /start
+    #[OnStart]
+    public function start(ZG $tg): void
+    {
+        $tg->msg("Добро пожаловать в бота!")->send();
+    }
+
+    // Обработка команды !ping
+    #[OnCommand('!ping')]
+    public function ping(ZG $tg): void
+    {
+        $tg->msg("Pong!")->send();
+    }
+
+    // Обработка текста "Привет"
+    #[OnText('Привет')]
+    public function greeting(ZG $tg): void
+    {
+        $tg->msg("И тебе привет!")->send();
+    }
+}
+```
+
+## Регистрация контроллера
+
+Чтобы бот узнал о вашем контроллере, его нужно зарегистрировать перед запуском `$bot->run()`.
+
+```php
+<?php
+require_once __DIR__ . '/vendor/autoload.php';
+
+use ZenithGram\ZenithGram\ZG;
+use ZenithGram\ZenithGram\Bot;
+use App\Controllers\MyController; // Не забудьте подключить ваш класс
+
+$tg = ZG::create(BOT_TOKEN);
+$bot = new Bot($tg);
+
+// Включаем рефлексию (рекомендуется для контроллеров)
+$bot->reflection();
+
+// Регистрируем массив контроллеров
+$bot->attributes()->registerControllers([
+    MyController::class,
+    // OtherController::class,
+]);
+
+$bot->run();
+```
+
+## Dependency Injection (Внедрение зависимостей)
+
+При использовании атрибутов настоятельно рекомендуется включить `$bot->reflection()`. Это позволит вам запрашивать необходимые объекты (DTO, сервисы) прямо в аргументах метода, не извлекая их вручную из `$tg`.
+
+```php
+use ZenithGram\ZenithGram\Attributes\OnCommand;
+use ZenithGram\ZenithGram\Dto\UserDto;
+use ZenithGram\ZenithGram\ZG;
+
+class StoreController 
+{
+    // Маршрут: /buy {item_id}
+    #[OnCommand('/buy {item_id}')]
+    public function buyItem(ZG $tg, UserDto $user, int $item_id, DatabaseService $db): void
+    {
+        // $user - автоматически заполненный DTO пользователя
+        // $item_id - аргумент из команды
+        // $db - ваш сервис (если настроен DI-контейнер)
+        
+        $db->createOrder($user->id, $item_id);
+        $tg->msg("Заказ #$item_id оформлен для {$user->firstName}")->send();
+    }
+}
+```
+
+## Преимущества использования атрибутов
+
+1. **Структура:** Логика разбита на классы, а не свалена в кучу в `index.php`.
+2. **Читаемость:** Атрибут сразу говорит, на какое событие реагирует метод.
+3. **Автоматизация:** ID маршрутов генерируются автоматически (формат `ClassName::MethodName`), что исключает конфликты имен.
+
+## Кеширование
+
+Сканирование атрибутов использует рефлексию, что может быть затратно по ресурсам. Библиотека автоматически кеширует карту атрибутов, если вы подключили кеш к боту.
+
+```php
+$bot->setCache($myCacheImplementation); // PSR-16 Cache
+// Теперь сканирование контроллеров будет происходить только один раз
 ```
 
 ---
