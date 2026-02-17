@@ -14,6 +14,7 @@
 - [Конструктор сообщений](https://zenithgram.github.io/using/messages.md): Работа с Fluent Interface для создания, форматирования и отправки сообщений.
 - [Обработчики событий](https://zenithgram.github.io/using/handlers.md): Описание обработчиков из класса Bot
 - [Атрибуты и Контроллеры](https://zenithgram.github.io/using/attributes.md): Использование атрибутов PHP 8 для создания контроллеров и маршрутизации.
+- [Работа с Форумами и Топиками](https://zenithgram.github.io/using/topic.md): Полное руководство по работе с форумами (Topics) и потоковым обновлением сообщений (MessageDraft).
 - [Машина состояний (FSM / Диалоги)](https://zenithgram.github.io/using/fsm.md): Создание диалогов и пошаговых сценариев с помощью FSM (Finite State Machine).
 - [Внедрение зависимостей и Рефлексия (Dependency Injection)](https://zenithgram.github.io/using/reflection.md): Использование Dependency Injection и рефлексии для чистого кода.
 - [Middleware](https://zenithgram.github.io/using/middleware.md): Промежуточное ПО для фильтрации запросов, логирования и проверки прав доступа.
@@ -48,7 +49,7 @@
 - [inline](https://zenithgram.github.io/classes/zenithMethods/inline.md): Создает экземпляр класса Inline для ответов на Inline-запросы.
 - [file](https://zenithgram.github.io/classes/zenithMethods/file.md): Создает экземпляр класса File для работы с файлами (скачивание, инфо).
 - [get](https://zenithgram.github.io/classes/zenithMethods/get.md): Методы получения данных из обновления (getChatId, getText и др.).
-- [defaultParseMode](https://zenithgram.github.io/classes/zenithMethods/defaultParseMode.md): Устанавливает режим разметки по умолчанию для всех сообщений.
+- [Методы управления топиками](https://zenithgram.github.io/classes/zenithMethods/topic.md): Методы для управления темами (Topics) в форумах.
 - [sendMessage](https://zenithgram.github.io/classes/zenithMethods/sendMessage.md): Отправляет текстовое сообщение в указанный чат (прямой метод).
 - [reply](https://zenithgram.github.io/classes/zenithMethods/reply.md): Отправляет ответ на текущее сообщение (сокращенный метод).
 - [copyMsg](https://zenithgram.github.io/classes/zenithMethods/copyMsg.md): Копирует сообщение из одного чата в другой.
