@@ -11,7 +11,7 @@ use ZenithGram\ZenithGram\Dto\UserDto;
 use ZenithGram\ZenithGram\Enums\ChatAction;
 use ZenithGram\ZenithGram\Enums\InlineType;
 use ZenithGram\ZenithGram\Exceptions\ZenithGramException;
-use ZenithGram\ZenithGram\Storage\StorageInterface;
+use ZenithGram\ZenithGram\Interfaces\StorageInterface;
 use ZenithGram\ZenithGram\Interfaces\ApiClientInterface;
 
 class ZG

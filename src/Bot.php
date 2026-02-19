@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace ZenithGram\ZenithGram;
 
 use ZenithGram\ZenithGram\Dto\UserDto;
-use ZenithGram\ZenithGram\Storage\StorageInterface;
+use ZenithGram\ZenithGram\Interfaces\StorageInterface;
 use ZenithGram\ZenithGram\Utils\DependencyResolver;
 use ZenithGram\ZenithGram\Utils\EnvironmentDetector;
 use ZenithGram\ZenithGram\Exceptions\RouteException;
