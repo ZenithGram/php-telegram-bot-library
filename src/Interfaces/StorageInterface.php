@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace ZenithGram\ZenithGram\Storage;
+namespace ZenithGram\ZenithGram\Interfaces;
 
 interface StorageInterface
 {
