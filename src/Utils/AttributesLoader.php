@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ZenithGram\ZenithGram\Utils;
@@ -10,40 +11,59 @@ use Psr\SimpleCache\CacheInterface;
 use ZenithGram\ZenithGram\Bot;
 use ZenithGram\ZenithGram\Exceptions\RouteException;
 use ZenithGram\ZenithGram\Attributes\{
-    OnCommand, OnBotCommand, OnStart, OnReferral, OnText, OnTextPreg,
-    Btn, OnCallback, OnCallbackPreg, OnInline, OnPhoto, OnVideo,
-    OnAudio, OnVoice, OnVideoNote, OnDocument, OnSticker,
-    OnNewChatMember, OnLeftChatMember, OnEditedMessage, OnMessage,
-    OnDefault, OnState
+    OnCommand,
+    OnBotCommand,
+    OnStart,
+    OnReferral,
+    OnText,
+    OnTextPreg,
+    Btn,
+    OnCallback,
+    OnCallbackPreg,
+    OnInline,
+    OnPhoto,
+    OnVideo,
+    OnAudio,
+    OnVoice,
+    OnVideoNote,
+    OnDocument,
+    OnSticker,
+    OnNewChatMember,
+    OnLeftChatMember,
+    OnEditedMessage,
+    OnMessage,
+    OnDefault,
+    OnState
 };
 
 class AttributesLoader
 {
-    private const ATTRIBUTE_MAP = [
-        OnStart::class          => 'onStart',
-        OnBotCommand::class     => 'onBotCommand',
-        OnCommand::class        => 'onCommand',
-        OnReferral::class       => 'onReferral',
-        OnText::class           => 'onText',
-        OnTextPreg::class       => 'onTextPreg',
-        Btn::class              => 'btn',
-        OnCallback::class       => 'onCallback',
-        OnCallbackPreg::class   => 'onCallbackPreg',
-        OnInline::class         => 'onInline',
-        OnPhoto::class          => 'onPhoto',
-        OnVideo::class          => 'onVideo',
-        OnAudio::class          => 'onAudio',
-        OnVoice::class          => 'onVoice',
-        OnVideoNote::class      => 'onVideoNote',
-        OnDocument::class       => 'onDocument',
-        OnSticker::class        => 'onSticker',
-        OnNewChatMember::class  => 'onNewChatMember',
-        OnLeftChatMember::class => 'onLeftChatMember',
-        OnEditedMessage::class  => 'onEditedMessage',
-        OnMessage::class        => 'onMessage',
-        OnDefault::class        => 'onDefault',
-        OnState::class          => 'onState',
-    ];
+    private const ATTRIBUTE_MAP
+        = [
+            OnStart::class          => 'onStart',
+            OnBotCommand::class     => 'onBotCommand',
+            OnCommand::class        => 'onCommand',
+            OnReferral::class       => 'onReferral',
+            OnText::class           => 'onText',
+            OnTextPreg::class       => 'onTextPreg',
+            Btn::class              => 'btn',
+            OnCallback::class       => 'onCallback',
+            OnCallbackPreg::class   => 'onCallbackPreg',
+            OnInline::class         => 'onInline',
+            OnPhoto::class          => 'onPhoto',
+            OnVideo::class          => 'onVideo',
+            OnAudio::class          => 'onAudio',
+            OnVoice::class          => 'onVoice',
+            OnVideoNote::class      => 'onVideoNote',
+            OnDocument::class       => 'onDocument',
+            OnSticker::class        => 'onSticker',
+            OnNewChatMember::class  => 'onNewChatMember',
+            OnLeftChatMember::class => 'onLeftChatMember',
+            OnEditedMessage::class  => 'onEditedMessage',
+            OnMessage::class        => 'onMessage',
+            OnDefault::class        => 'onDefault',
+            OnState::class          => 'onState',
+        ];
 
     private const CACHE_KEY_PREFIX = 'zg_attr_map_v1_';
 
@@ -58,15 +78,18 @@ class AttributesLoader
     }
 
     /**
-     * Устанавливает кастомную фабрику для создания контроллеров (Lightweight DI)
+     * Устанавливает кастомную фабрику для создания контроллеров (Lightweight
+     * DI)
      *
-     * @param callable $factory Функция, принимающая FQCN (строку) и возвращающая объект или null
+     * @param callable $factory Функция, принимающая FQCN (строку) и
+     *                          возвращающая объект или null
      *
      * @see https://zenithgram.github.io/classes/botMethods/attributes#setFactory
      */
     public function setFactory(callable $factory): self
     {
         $this->factory = \Closure::fromCallable($factory);
+
         return $this;
     }
 
@@ -84,14 +107,16 @@ class AttributesLoader
      * @throws \Psr\SimpleCache\InvalidArgumentException
      * @see https://zenithgram.github.io/classes/botMethods/attributes#scanDirectory
      */
-    public function scanDirectory(string $directory, string $rootNamespace): void
-    {
-        $cacheKey = self::CACHE_KEY_PREFIX . 'dir_' . md5($directory);
+    public function scanDirectory(string $directory, string $rootNamespace,
+    ): void {
+        $cacheKey = self::CACHE_KEY_PREFIX.'dir_'.md5($directory);
 
         $classes = $this->cache?->get($cacheKey);
 
         if ($classes === null) {
-            $classes = $this->findClassesInDirectory($directory, $rootNamespace);
+            $classes = $this->findClassesInDirectory(
+                $directory, $rootNamespace,
+            );
 
             if (!empty($classes)) {
                 $this->cache?->set($cacheKey, $classes, 3600 * 24);
@@ -117,25 +142,33 @@ class AttributesLoader
         }
     }
 
-    private function findClassesInDirectory(string $directory, string $rootNamespace): array
-    {
+    private function findClassesInDirectory(string $directory,
+        string $rootNamespace,
+    ): array {
         $classes = [];
         $realDirectory = realpath($directory);
 
         if (!$realDirectory || !is_dir($realDirectory)) {
-            throw new RouteException("Директория для сканирования контроллеров '$directory' не найдена.");
+            throw new RouteException(
+                "Директория для сканирования контроллеров '$directory' не найдена.",
+            );
         }
 
-        $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($realDirectory));
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($realDirectory),
+        );
 
         foreach ($iterator as $file) {
             if ($file->isFile() && $file->getExtension() === 'php') {
-                $relativePath = str_replace($realDirectory, '', $file->getPathname());
+                $relativePath = str_replace(
+                    $realDirectory, '', $file->getPathname(),
+                );
                 $relativePath = ltrim($relativePath, '/\\');
 
-                $classPath = str_replace(['/', '\\', '.php'], ['\\', '\\', ''], $relativePath);
+                $classPath = str_replace(['/', '\\', '.php'], ['\\', '\\', ''],
+                    $relativePath);
 
-                $className = rtrim($rootNamespace, '\\') . '\\' . $classPath;
+                $className = rtrim($rootNamespace, '\\').'\\'.$classPath;
 
                 if (class_exists($className)) {
                     $classes[] = $className;
@@ -152,7 +185,7 @@ class AttributesLoader
             throw new RouteException("Контроллер '$className' не найден.");
         }
 
-        $cacheKey = self::CACHE_KEY_PREFIX . md5($className);
+        $cacheKey = self::CACHE_KEY_PREFIX.md5($className);
         $routeMap = $this->cache?->get($cacheKey);
 
         if ($routeMap === null) {
@@ -170,13 +203,27 @@ class AttributesLoader
 
         foreach ($routeMap as $methodName => $routes) {
             $handler = [$instance, $methodName];
-            $routeId = $className . '::' . $methodName;
+            $routeId = $className.'::'.$methodName;
 
             foreach ($routes as $route) {
                 $botMethod = $route['botMethod'];
-                $value = $route['value'];
+                $args = $route['args'];
 
-                $this->bot->$botMethod($routeId, $value)->func($handler);
+                if ($botMethod === 'btn') {
+                    $id = $args['id'] ?? null;
+                    $text = $args['text'] ?? null;
+
+                    if ($id === null) {
+                        $id = reset($args);
+                    }
+
+                    $this->bot->btn($id, $text)->func($handler);
+                } else {
+                    $mainValue = reset($args);
+                    $this->bot->$botMethod($routeId, $mainValue)->func(
+                        $handler,
+                    );
+                }
             }
         }
     }
@@ -186,7 +233,9 @@ class AttributesLoader
         $routeMap = [];
         $reflection = new ReflectionClass($className);
 
-        foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+        foreach (
+            $reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method
+        ) {
             $methodName = $method->getName();
 
             foreach ($method->getAttributes() as $attribute) {
@@ -196,7 +245,7 @@ class AttributesLoader
                     $attrInstance = $attribute->newInstance();
                     $routeMap[$methodName][] = [
                         'botMethod' => self::ATTRIBUTE_MAP[$attrName],
-                        'value'     => $this->getAttributeValue($attrInstance)
+                        'value'     => $this->getAttributeValue($attrInstance),
                     ];
                 }
             }
@@ -224,6 +273,7 @@ class AttributesLoader
     private function getAttributeValue(object $attrInstance): mixed
     {
         $vars = get_object_vars($attrInstance);
+
         return reset($vars);
     }
 }
