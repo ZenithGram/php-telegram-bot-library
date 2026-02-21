@@ -13,7 +13,7 @@
 - [Получение обновлений](https://zenithgram.github.io/using/getting-updates.md): Настройка методов получения обновлений: Long Polling для разработки и Webhook для продакшена.
 - [Конструктор сообщений](https://zenithgram.github.io/using/messages.md): Работа с Fluent Interface для создания, форматирования и отправки сообщений.
 - [Обработчики событий](https://zenithgram.github.io/using/handlers.md): Описание обработчиков из класса Bot
-- [Атрибуты и Контроллеры](https://zenithgram.github.io/using/attributes.md): Использование атрибутов PHP 8 для создания контроллеров и маршрутизации.
+- [Атрибуты и Контроллеры](https://zenithgram.github.io/using/attributes.md)
 - [Работа с Форумами и Топиками](https://zenithgram.github.io/using/topic.md): Полное руководство по работе с форумами (Topics) и потоковым обновлением сообщений (MessageDraft).
 - [Машина состояний (FSM / Диалоги)](https://zenithgram.github.io/using/fsm.md): Создание диалогов и пошаговых сценариев с помощью FSM (Finite State Machine).
 - [Внедрение зависимостей и Рефлексия (Dependency Injection)](https://zenithgram.github.io/using/reflection.md): Использование Dependency Injection и рефлексии для чистого кода.
@@ -28,6 +28,7 @@
 - [LongPoll](https://zenithgram.github.io/classes/longpoll.md): Класс для запуска бота в режиме Long Polling.
 - [Bot](https://zenithgram.github.io/classes/bot.md): Конструктор для создания логики бота.
 - [Action](https://zenithgram.github.io/classes/action.md): Вспомогательный класс для установки действий.
+- [AttributesLoader](https://zenithgram.github.io/classes/attributesLoader.md): Класс для управления контроллерами, сканирования папок и внедрения зависимостей.
 - [Атрибуты (Attributes Reference)](https://zenithgram.github.io/classes/attributes.md): Полный список атрибутов для маршрутизации и их параметры.
 - [Message](https://zenithgram.github.io/classes/message.md): Конструктор сообщений.
 - [MessageDraft](https://zenithgram.github.io/classes/draft.md): Конструктор сообщений для стриминга.
@@ -92,6 +93,7 @@
 - [onDefault](https://zenithgram.github.io/classes/botMethods/onDefault.md): Глобальный fallback-обработчик для любых необработанных событий.
 - [onState](https://zenithgram.github.io/classes/botMethods/onState.md): Создает маршрут для обработки конкретного состояния.
 - [reflection](https://zenithgram.github.io/classes/botMethods/reflection.md): Включает режим рефлексии для автоматического внедрения зависимостей.
+- [attributes](https://zenithgram.github.io/classes/botMethods/attributes.md): Получение загрузчика атрибутов для регистрации контроллеров.
 - [setCache](https://zenithgram.github.io/classes/botMethods/setCache.md): Устанавливает PSR-16 кеш для оптимизации рефлексии.
 - [setContainer](https://zenithgram.github.io/classes/botMethods/setContainer.md): Устанавливает PSR-11 контейнер для внедрения внешних зависимостей.
 - [redirect](https://zenithgram.github.io/classes/botMethods/redirect.md): Перенаправляет выполнение на другой маршрут.
