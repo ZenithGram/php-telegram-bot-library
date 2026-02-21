@@ -233,9 +233,7 @@ class AttributesLoader
         $routeMap = [];
         $reflection = new ReflectionClass($className);
 
-        foreach (
-            $reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method
-        ) {
+        foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
             $methodName = $method->getName();
 
             foreach ($method->getAttributes() as $attribute) {
@@ -243,9 +241,10 @@ class AttributesLoader
 
                 if (isset(self::ATTRIBUTE_MAP[$attrName])) {
                     $attrInstance = $attribute->newInstance();
+
                     $routeMap[$methodName][] = [
                         'botMethod' => self::ATTRIBUTE_MAP[$attrName],
-                        'value'     => $this->getAttributeValue($attrInstance),
+                        'args'      => get_object_vars($attrInstance)
                     ];
                 }
             }
@@ -270,10 +269,4 @@ class AttributesLoader
         return new $className();
     }
 
-    private function getAttributeValue(object $attrInstance): mixed
-    {
-        $vars = get_object_vars($attrInstance);
-
-        return reset($vars);
-    }
 }
