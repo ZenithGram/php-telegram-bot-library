@@ -124,6 +124,7 @@ class AttributesLoader
         }
 
         $this->registerControllers($classes);
+
         return $this;
     }
 
@@ -141,6 +142,7 @@ class AttributesLoader
         foreach ($controllers as $controllerClass) {
             $this->processController($controllerClass);
         }
+
         return $this;
     }
 
@@ -210,16 +212,20 @@ class AttributesLoader
             foreach ($routes as $route) {
                 $botMethod = $route['botMethod'];
                 $args = $route['args'];
+                $mainValue = reset($args);
 
                 if ($botMethod === 'btn') {
                     $id = $args['id'] ?? null;
                     $text = $args['text'] ?? null;
 
                     if ($id === null) {
-                        $id = reset($args);
+                        $id = $mainValue;
                     }
 
                     $this->bot->btn($id, $text)->func($handler);
+                } elseif ($botMethod === 'onState') {
+                    $this->bot->onState($mainValue)->func($handler);
+
                 } else {
                     $mainValue = reset($args);
                     $this->bot->$botMethod($routeId, $mainValue)->func(
@@ -235,7 +241,9 @@ class AttributesLoader
         $routeMap = [];
         $reflection = new ReflectionClass($className);
 
-        foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+        foreach (
+            $reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method
+        ) {
             $methodName = $method->getName();
 
             foreach ($method->getAttributes() as $attribute) {
@@ -246,7 +254,7 @@ class AttributesLoader
 
                     $routeMap[$methodName][] = [
                         'botMethod' => self::ATTRIBUTE_MAP[$attrName],
-                        'args'      => get_object_vars($attrInstance)
+                        'args'      => get_object_vars($attrInstance),
                     ];
                 }
             }
