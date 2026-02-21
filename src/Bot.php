@@ -148,6 +148,13 @@ class Bot
         return $route;
     }
 
+    /**
+     * Создает Объект класса AttributesLoader
+     *
+     * @return AttributesLoader
+     *
+     * @see https://zenithgram.github.io/classes/botMethods/attributes
+     */
     public function attributes(): AttributesLoader
     {
         return new AttributesLoader($this);
