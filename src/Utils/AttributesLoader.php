@@ -102,13 +102,13 @@ class AttributesLoader
      * @param string $rootNamespace Базовый namespace этой папки (например,
      *                              'App\Controllers')
      *
-     * @return void
+     * @return self
      * @throws RouteException
      * @throws \Psr\SimpleCache\InvalidArgumentException
      * @see https://zenithgram.github.io/classes/botMethods/attributes#scanDirectory
      */
     public function scanDirectory(string $directory, string $rootNamespace,
-    ): void {
+    ): self {
         $cacheKey = self::CACHE_KEY_PREFIX.'dir_'.md5($directory);
 
         $classes = $this->cache?->get($cacheKey);
@@ -124,6 +124,7 @@ class AttributesLoader
         }
 
         $this->registerControllers($classes);
+        return $this;
     }
 
     /**
@@ -131,15 +132,16 @@ class AttributesLoader
      *
      * @param array $controllers Массив строк (FQCN классов)
      *
-     * @return void
+     * @return self
      * @throws RouteException
      * @see https://zenithgram.github.io/classes/botMethods/attributes#registerControllers
      */
-    public function registerControllers(array $controllers): void
+    public function registerControllers(array $controllers): self
     {
         foreach ($controllers as $controllerClass) {
             $this->processController($controllerClass);
         }
+        return $this;
     }
 
     private function findClassesInDirectory(string $directory,
