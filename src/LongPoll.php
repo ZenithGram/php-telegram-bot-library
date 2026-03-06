@@ -34,15 +34,16 @@ class LongPoll
      * @param int    $timeout Сколько будет удерживаться соединение с Telegram
      * @param string $baseUrl Адрес локального сервера Telegram (По умолчанию:
      *                        https://api.telegram.org)
+     * @param null|string $proxyUrl Адрес прокси сервера (По умолчанию: null)
      *
      * @return LongPoll
      *
      * @see https://zenithgram.github.io/classes/longpoll
      */
     public static function create(string $token, int $timeout = 20,
-        string $baseUrl = ApiClient::DEFAULT_API_URL,
+        string $baseUrl = ApiClient::DEFAULT_API_URL, ?string $proxyUrl = null
     ): self {
-        return new self(new ApiClient($token, $baseUrl), $timeout);
+        return new self(new ApiClient($token, $baseUrl, $proxyUrl), $timeout);
     }
 
     /**

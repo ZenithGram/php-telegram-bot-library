@@ -7,6 +7,9 @@ use Amp\Http\Client\HttpClient;
 use Amp\Http\Client\HttpClientBuilder;
 use Amp\Http\Client\Request;
 use Amp\Http\Client\Form;
+use Amp\Http\Client\Connection\UnlimitedConnectionPool;
+use Amp\Http\Client\Connection\DefaultConnectionFactory;
+use Amp\Http\Tunnel\Http1TunnelConnector;
 use Amp\File as AmpFile;
 use ZenithGram\ZenithGram\Exceptions\NetworkException;
 use ZenithGram\ZenithGram\Exceptions\TelegramApiException;
@@ -25,12 +28,27 @@ class ApiClient implements ApiClientInterface
     private HttpClient $httpClient;
     private string $token;
 
-    public function __construct(string $token, string $baseUrl = self::DEFAULT_API_URL)
+    public function __construct(string $token, string $baseUrl = self::DEFAULT_API_URL, ?string $proxyUrl = null)
     {
         $baseUrl = rtrim($baseUrl, '/');
         $this->apiUrl = $baseUrl . '/bot' . $token . '/';
         $this->apiFileUrl = $baseUrl . '/file/bot' . $token . '/';
-        $this->httpClient = HttpClientBuilder::buildDefault();
+
+        $builder = new HttpClientBuilder();
+
+        if ($proxyUrl !== null) {
+            $connector = new Http1TunnelConnector($proxyUrl);
+
+            $connectionFactory = new DefaultConnectionFactory($connector);
+
+            $pool = new UnlimitedConnectionPool($connectionFactory);
+
+            $builder = $builder->usingPool($pool);
+        }
+
+        $this->httpClient = $builder->build();
+
+
         $this->token = $token;
     }
 

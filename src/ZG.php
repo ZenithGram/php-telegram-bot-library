@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ZenithGram\ZenithGram;
@@ -17,6 +18,7 @@ use ZenithGram\ZenithGram\Interfaces\ApiClientInterface;
 class ZG
 {
     use ErrorHandler;
+
     private ?StorageInterface $storage = null;
 
     public function __construct(
@@ -27,19 +29,19 @@ class ZG
     /**
      * Создает объект класса ZG
      *
-     * @param string $token   Токен, полученный в BotFather
-     * @param string $baseUrl Адрес локального сервера Telegram (По умолчанию:
-     *                        https://api.telegram.org)
+     * @param string      $token    Токен, полученный в BotFather
+     * @param string      $baseUrl  Адрес локального сервера Telegram (По
+     *                              умолчанию: https://api.telegram.org)
+     * @param null|string $proxyUrl Адрес прокси сервера (По умолчанию: null)
      *
      * @return self
      *
      * @see https://zenithgram.github.io/classes/zenith
      */
     public static function create(string $token,
-        string $baseUrl = ApiClient::DEFAULT_API_URL,
+        string $baseUrl = ApiClient::DEFAULT_API_URL, ?string $proxyUrl = null,
     ): self {
-
-        $api = new ApiClient($token, $baseUrl);
+        $api = new ApiClient($token, $baseUrl, $proxyUrl);
         $context = UpdateContext::fromWebhook();
 
         return new self($api, $context);
@@ -99,6 +101,7 @@ class ZG
             $text, $this,
         );
     }
+
     /**
      * Метод создает объект класса MessageDraft для конструктора стриминга
      *
@@ -172,10 +175,14 @@ class ZG
     /**
      * Создает тему в супергруппе-форуме
      *
-     * @param string          $name                 Название темы (1-128 символов)
-     * @param int|null        $icon_color           Цвет иконки (RGB int). См. документацию Telegram.
-     * @param string|null     $icon_custom_emoji_id ID кастомного эмодзи для иконки
-     * @param int|string|null $chat_id              ID чата (если null, берется из контекста)
+     * @param string          $name                 Название темы (1-128
+     *                                              символов)
+     * @param int|null        $icon_color           Цвет иконки (RGB int). См.
+     *                                              документацию Telegram.
+     * @param string|null     $icon_custom_emoji_id ID кастомного эмодзи для
+     *                                              иконки
+     * @param int|string|null $chat_id              ID чата (если null, берется
+     *                                              из контекста)
      *
      * @return array
      * @throws Exception
@@ -186,7 +193,7 @@ class ZG
         string $name,
         ?int $icon_color = null,
         ?string $icon_custom_emoji_id = null,
-        int|string|null $chat_id = null
+        int|string|null $chat_id = null,
     ): array {
         $chat_id ??= $this->context->getChatId();
 
@@ -208,10 +215,15 @@ class ZG
     /**
      * Редактирует название и иконку темы
      *
-     * @param string|null     $name                 Новое название (null = не менять)
-     * @param string|null     $icon_custom_emoji_id Новый ID эмодзи (null = не менять, "" = удалить иконку)
-     * @param int|null        $message_thread_id    ID темы (если null, берется из контекста)
-     * @param int|string|null $chat_id              ID чата (если null, берется из контекста)
+     * @param string|null     $name                 Новое название (null = не
+     *                                              менять)
+     * @param string|null     $icon_custom_emoji_id Новый ID эмодзи (null = не
+     *                                              менять, "" = удалить
+     *                                              иконку)
+     * @param int|null        $message_thread_id    ID темы (если null, берется
+     *                                              из контекста)
+     * @param int|string|null $chat_id              ID чата (если null, берется
+     *                                              из контекста)
      *
      * @return array
      * @throws Exception
@@ -222,7 +234,7 @@ class ZG
         ?string $name = null,
         ?string $icon_custom_emoji_id = null,
         ?int $message_thread_id = null,
-        int|string|null $chat_id = null
+        int|string|null $chat_id = null,
     ): array {
         $chat_id ??= $this->context->getChatId();
         $message_thread_id ??= $this->getMsgThreadId();
@@ -245,16 +257,19 @@ class ZG
     /**
      * Закрывает тему форума
      *
-     * @param int|null        $message_thread_id ID темы (если null, берется из контекста)
-     * @param int|string|null $chat_id           ID чата (если null, берется из контекста)
+     * @param int|null        $message_thread_id ID темы (если null, берется из
+     *                                           контекста)
+     * @param int|string|null $chat_id           ID чата (если null, берется из
+     *                                           контекста)
      *
      * @return array
      * @throws Exception
      *
      * @see https://zenithgram.github.io/classes/zenithMethods/closeTopic
      */
-    public function closeTopic(?int $message_thread_id = null, int|string|null $chat_id = null): array
-    {
+    public function closeTopic(?int $message_thread_id = null,
+        int|string|null $chat_id = null,
+    ): array {
         $chat_id ??= $this->context->getChatId();
         $message_thread_id ??= $this->getMsgThreadId();
 
@@ -267,16 +282,19 @@ class ZG
     /**
      * Открывает закрытую тему форума
      *
-     * @param int|null        $message_thread_id ID темы (если null, берется из контекста)
-     * @param int|string|null $chat_id           ID чата (если null, берется из контекста)
+     * @param int|null        $message_thread_id ID темы (если null, берется из
+     *                                           контекста)
+     * @param int|string|null $chat_id           ID чата (если null, берется из
+     *                                           контекста)
      *
      * @return array
      * @throws Exception
      *
      * @see https://zenithgram.github.io/classes/zenithMethods/reopenTopic
      */
-    public function reopenTopic(?int $message_thread_id = null, int|string|null $chat_id = null): array
-    {
+    public function reopenTopic(?int $message_thread_id = null,
+        int|string|null $chat_id = null,
+    ): array {
         $chat_id ??= $this->context->getChatId();
         $message_thread_id ??= $this->getMsgThreadId();
 
@@ -289,16 +307,19 @@ class ZG
     /**
      * Удаляет тему форума вместе со всеми сообщениями
      *
-     * @param int|null        $message_thread_id ID темы (если null, берется из контекста)
-     * @param int|string|null $chat_id           ID чата (если null, берется из контекста)
+     * @param int|null        $message_thread_id ID темы (если null, берется из
+     *                                           контекста)
+     * @param int|string|null $chat_id           ID чата (если null, берется из
+     *                                           контекста)
      *
      * @return array
      * @throws Exception
      *
      * @see https://zenithgram.github.io/classes/zenithMethods/deleteTopic
      */
-    public function deleteTopic(?int $message_thread_id = null, int|string|null $chat_id = null): array
-    {
+    public function deleteTopic(?int $message_thread_id = null,
+        int|string|null $chat_id = null,
+    ): array {
         $chat_id ??= $this->context->getChatId();
         $message_thread_id ??= $this->getMsgThreadId();
 
@@ -311,16 +332,19 @@ class ZG
     /**
      * Открепляет все сообщения в теме форума
      *
-     * @param int|null        $message_thread_id ID темы (если null, берется из контекста)
-     * @param int|string|null $chat_id           ID чата (если null, берется из контекста)
+     * @param int|null        $message_thread_id ID темы (если null, берется из
+     *                                           контекста)
+     * @param int|string|null $chat_id           ID чата (если null, берется из
+     *                                           контекста)
      *
      * @return array
      * @throws Exception
      *
      * @see https://zenithgram.github.io/classes/zenithMethods/unpinAllTopicMessages
      */
-    public function unpinAllTopicMessages(?int $message_thread_id = null, int|string|null $chat_id = null): array
-    {
+    public function unpinAllTopicMessages(?int $message_thread_id = null,
+        int|string|null $chat_id = null,
+    ): array {
         $chat_id ??= $this->context->getChatId();
         $message_thread_id ??= $this->getMsgThreadId();
 
@@ -341,8 +365,9 @@ class ZG
      *
      * @see https://zenithgram.github.io/classes/zenithMethods/editGeneralTopic
      */
-    public function editGeneralTopic(string $name, int|string|null $chat_id = null): array
-    {
+    public function editGeneralTopic(string $name,
+        int|string|null $chat_id = null,
+    ): array {
         $chat_id ??= $this->context->getChatId();
 
         return $this->api->callAPI('editGeneralForumTopic', [
@@ -373,7 +398,8 @@ class ZG
     /**
      * Открывает закрытую тему "General" (Основная)
      *
-     * @param int|string|null $chat_id ID чата (если null, берется из контекста)
+     * @param int|string|null $chat_id ID чата (если null, берется из
+     *                                 контекста)
      *
      * @return array
      * @throws Exception
@@ -411,7 +437,8 @@ class ZG
     /**
      * Показывает скрытую тему "General" (Основная)
      *
-     * @param int|string|null $chat_id ID чата (если null, берется из контекста)
+     * @param int|string|null $chat_id ID чата (если null, берется из
+     *                                 контекста)
      *
      * @return array
      * @throws Exception
@@ -430,15 +457,16 @@ class ZG
     /**
      * Открепляет все сообщения в теме "General" (Основная)
      *
-     * @param int|string|null $chat_id ID чата (если null, берется из контекста)
+     * @param int|string|null $chat_id ID чата (если null, берется из
+     *                                 контекста)
      *
      * @return array
      * @throws Exception
      *
      * @see https://zenithgram.github.io/classes/zenithMethods/unpinAllGeneralTopicMessages
      */
-    public function unpinAllGeneralTopicMessages(int|string|null $chat_id = null): array
-    {
+    public function unpinAllGeneralTopicMessages(int|string|null $chat_id = null,
+    ): array {
         $chat_id ??= $this->context->getChatId();
 
         return $this->api->callAPI('unpinAllGeneralForumTopicMessages', [
@@ -1005,6 +1033,7 @@ class ZG
 
     /**
      * Возвращает контекст
+     *
      * @internal
      */
     public function getContext(): UpdateContext
@@ -1117,7 +1146,8 @@ class ZG
      */
     public function getMsgThreadId(): int|null
     {
-        return $this->getMessage()->messageThreadId ?? $this->getReplyMessage()->messageThreadId ?? null;
+        return $this->getMessage()->messageThreadId ??
+            $this->getReplyMessage()->messageThreadId ?? null;
     }
 
     /**
