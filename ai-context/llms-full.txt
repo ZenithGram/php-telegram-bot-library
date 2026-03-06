@@ -3109,6 +3109,7 @@ php bot.php
 - token (string): Токен вашего Telegram бота, полученный от @BotFather.
 - timeout (int): Время, которое будет держаться соединение с сервером Telegram. По умолчанию: 20
 - baseUrl (string): Ссылка на сервер Telegram (Может быть как локально развернутый, так и стандартный). По умолчанию: https://api.telegram.org
+- proxyUrl (string|null): Адрес HTTP-прокси. Формат: `tcp://ip:port` или `http://user:pass@ip:port`. По умолчанию: `null`
 **Возвращает**: `LongPoll` - экземпляр класса `LongPoll`.
 
 ### listen
@@ -6446,6 +6447,7 @@ $lp->listen(function(ZG $tg) use ($bot) {
 **Parameters:**
 - token (string): Токен вашего Telegram бота, полученный от @BotFather.
 - baseUrl (string): Ссылка на сервер Telegram (Может быть как локально развернутый, так и стандартный). По умолчанию: https://api.telegram.org
+- proxyUrl (string|null): Адрес HTTP-прокси. Формат: `tcp://ip:port` или `http://user:pass@ip:port`. По умолчанию: `null`
 ### Возвращает
 
 `ZG` - экземпляр класса `ZG`, готовый к использованию.
