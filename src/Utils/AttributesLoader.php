@@ -269,17 +269,44 @@ class AttributesLoader
     private function resolveController(string $className): object
     {
         if ($this->factory !== null) {
-            $instance = ($this->factory)($className);
-            if ($instance instanceof $className) {
-                return $instance;
+            try {
+                $instance = ($this->factory)($className);
+                if ($instance instanceof $className) {
+                    return $instance;
+                }
+            } catch (\Throwable $e) {
+                throw new RouteException("Ошибка фабрики при создании контроллера '$className': " . $e->getMessage(), 0, $e);
             }
         }
 
         if ($this->container && $this->container->has($className)) {
-            return $this->container->get($className);
+            try {
+                return $this->container->get($className);
+            } catch (\Throwable $e) {
+                throw new RouteException("Ошибка DI-контейнера при получении контроллера '$className': " . $e->getMessage(), 0, $e);
+            }
         }
 
-        return new $className();
+        try {
+            $reflector = new ReflectionClass($className);
+            $constructor = $reflector->getConstructor();
+
+            if ($constructor !== null && $constructor->getNumberOfRequiredParameters() > 0) {
+                throw new RouteException(
+                    sprintf(
+                        "Невозможно создать контроллер '%s'. Его конструктор требует %d аргумент(ов), " .
+                        "но фабрика или DI-контейнер не настроены/не вернули объект. " .
+                        "Используйте \$bot->setContainer() или \$bot->attributes()->setFactory().",
+                        $className,
+                        $constructor->getNumberOfRequiredParameters()
+                    )
+                );
+            }
+
+            return $reflector->newInstance();
+        } catch (\ReflectionException $e) {
+            throw new RouteException("Ошибка рефлексии при проверке класса '$className': " . $e->getMessage(), 0, $e);
+        }
     }
 
 }
