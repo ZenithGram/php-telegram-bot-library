@@ -54,7 +54,6 @@ class ApiClient implements ApiClientInterface
 
     /**
      * @inheritDoc
-     * @throws \Amp\ByteStream\StreamException
      * @throws \Amp\Http\Client\HttpException
      * @throws \JsonException
      * @throws \ZenithGram\ZenithGram\Exceptions\TelegramApiException|\ZenithGram\ZenithGram\Exceptions\NetworkException
@@ -87,11 +86,21 @@ class ApiClient implements ApiClientInterface
 
         try {
             $response = $this->httpClient->request($request);
-        } catch (HttpException $e) {
-            throw new NetworkException("Ошибка сети при запросе к Telegram API: " . $e->getMessage(), 0, $e);
+        } catch (\Amp\Http\Client\SocketException $e) {
+            throw new NetworkException("Не удалось установить сетевое соединение: " . $e->getMessage(), 0, $e);
+        } catch (\Amp\Http\Client\TimeoutException $e) {
+            throw new NetworkException("Превышен таймаут ожидания ответа от Telegram API: " . $e->getMessage(), 0, $e);
+        } catch (\Amp\Http\Client\HttpException $e) {
+            throw new NetworkException("Ошибка HTTP-клиента при выполнении запроса: " . $e->getMessage(), 0, $e);
         }
 
-        $responseJson = $response->getBody()->read();
+        try {
+            $responseJson = $response->getBody()->buffer();
+        } catch (\Amp\ByteStream\StreamException $e) {
+            throw new TelegramApiException("Внезапный обрыв соединения при загрузке ответа от Telegram: " . $e->getMessage(), );
+        } catch (\Throwable $e) {
+            throw new TelegramApiException("Неизвестная ошибка при чтении потока: " . $e->getMessage());
+        }
 
         try {
             $responseArray = json_decode($responseJson, true, 512, JSON_THROW_ON_ERROR);
@@ -119,13 +128,31 @@ class ApiClient implements ApiClientInterface
      * @throws \ZenithGram\ZenithGram\Exceptions\TelegramApiException
      * @internal
      */
+    /**
+     * @inheritDoc
+     * @throws \Amp\File\FilesystemException
+     * @throws \ZenithGram\ZenithGram\Exceptions\TelegramApiException
+     * @throws \ZenithGram\ZenithGram\Exceptions\NetworkException
+     * @internal
+     */
     public function downloadFile(string $url, string $destinationPath): void
     {
         $request = new Request($url, 'GET');
         $request->setTransferTimeout(300);
         $request->setInactivityTimeout(60);
 
-        $response = $this->httpClient->request($request);
+        $request->setTcpConnectTimeout(10);
+        $request->setTlsHandshakeTimeout(10);
+
+        try {
+            $response = $this->httpClient->request($request);
+        } catch (\Amp\Http\Client\SocketException $e) {
+            throw new NetworkException("Не удалось подключиться к серверу для скачивания файла: " . $e->getMessage(), 0, $e);
+        } catch (\Amp\Http\Client\TimeoutException $e) {
+            throw new NetworkException("Таймаут при попытке начать скачивание файла: " . $e->getMessage(), 0, $e);
+        } catch (\Amp\Http\Client\HttpException $e) {
+            throw new NetworkException("Сетевая ошибка при запросе на скачивание файла: " . $e->getMessage(), 0, $e);
+        }
 
         if ($response->getStatus() !== 200) {
             throw new TelegramApiException("Не удалось скачать файл. HTTP код: " . $response->getStatus());
@@ -135,10 +162,18 @@ class ApiClient implements ApiClientInterface
 
         try {
             pipe($response->getBody(), $file);
+        } catch (\Throwable $e) {
+            if ($e instanceof \Amp\File\FilesystemException) {
+                throw new TelegramApiException("Ошибка файловой системы при сохранении файла: " . $e->getMessage(), );
+            }
+
+            throw new NetworkException("Обрыв соединения во время скачивания файла: " . $e->getMessage(), 0, $e);
+
         } finally {
             $file->close();
         }
     }
+
 
     /** @internal  */
     public function getApiUrl(): string { return $this->apiUrl; }
