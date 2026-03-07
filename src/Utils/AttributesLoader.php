@@ -164,17 +164,20 @@ class AttributesLoader
 
         foreach ($iterator as $file) {
             if ($file->isFile() && $file->getExtension() === 'php') {
-                $relativePath = str_replace(
-                    $realDirectory, '', $file->getPathname(),
+                $relativePath = substr(
+                    $file->getPathname(), strlen($realDirectory),
                 );
                 $relativePath = ltrim($relativePath, '/\\');
 
                 $classPath = str_replace(['/', '\\', '.php'], ['\\', '\\', ''],
                     $relativePath);
-
                 $className = rtrim($rootNamespace, '\\').'\\'.$classPath;
 
-                if (class_exists($className)) {
+                if (!class_exists($className, false)) {
+                    require_once $file->getPathname();
+                }
+
+                if (class_exists($className, false)) {
                     $classes[] = $className;
                 }
             }
