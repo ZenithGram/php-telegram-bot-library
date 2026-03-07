@@ -97,7 +97,7 @@ class ApiClient implements ApiClientInterface
         try {
             $responseJson = $response->getBody()->buffer();
         } catch (\Amp\ByteStream\StreamException $e) {
-            throw new TelegramApiException("Внезапный обрыв соединения при загрузке ответа от Telegram: " . $e->getMessage(), );
+            throw new TelegramApiException("Внезапный обрыв соединения при загрузке ответа от Telegram: " . $e->getMessage());
         } catch (\Throwable $e) {
             throw new TelegramApiException("Неизвестная ошибка при чтении потока: " . $e->getMessage());
         }

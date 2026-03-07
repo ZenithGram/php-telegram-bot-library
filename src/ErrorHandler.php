@@ -223,7 +223,7 @@ trait ErrorHandler
 
         echo PHP_EOL;
 
-        echo "$bgRed$type $reset$boldWhite$msg$reset".PHP_EOL;
+        echo "$bgRed$type$reset $boldWhite$msg$reset".PHP_EOL;
 
         echo $cyan.$this->filteredFile($userFile).":$userLine$reset".PHP_EOL;
 
@@ -248,7 +248,7 @@ trait ErrorHandler
             }
         }
 
-        echo PHP_EOL."$yellow Stack Trace: $reset".PHP_EOL.$gray.$fullTrace
+        echo PHP_EOL."{$yellow}Stack Trace: $reset".PHP_EOL.$gray.$fullTrace
             .$reset.PHP_EOL;
     }
 
