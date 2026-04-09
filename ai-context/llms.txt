@@ -32,7 +32,7 @@
 - [Атрибуты (Attributes Reference)](https://zenithgram.github.io/classes/attributes.md): Полный список атрибутов для маршрутизации и их параметры.
 - [Message](https://zenithgram.github.io/classes/message.md): Конструктор сообщений.
 - [MessageDraft](https://zenithgram.github.io/classes/draft.md): Конструктор сообщений для стриминга.
-- [Button](https://zenithgram.github.io/classes/button.md): Вспомогательный класс для создания кнопок.
+- [**Button**](https://zenithgram.github.io/classes/button.md): Вспомогательный класс для создания кнопок.
 - [File](https://zenithgram.github.io/classes/file.md): Класс для работы с файлами.
 - [Storage](https://zenithgram.github.io/classes/storage.md): Классы для работы с хранилищем состояний (FSM).
 - [Poll](https://zenithgram.github.io/classes/poll.md): Класс для создания опросов.
