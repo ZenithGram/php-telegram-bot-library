@@ -197,25 +197,25 @@ class Button
         );
     }
 
-    /**
-     * Inline кнопка для запуска HTML5 игры
-     *
-     * @param string      $text          Текст кнопки
-     * @param ButtonStyle $style         Стиль кнопки
-     * @param string|null $customEmojiId Пользовательский эмодзи перед кнопкой
-     *
-     * @return array
-     * @see https://zenithgram.github.io/classes/button#callbackGame
-     */
-    public static function callbackGame(string $text,
-        ButtonStyle $style = ButtonStyle::None,
-        ?string $customEmojiId = null,
-    ): array {
-        return array_merge(
-            self::buildBase($text, $style->value, $customEmojiId),
-            ['callback_game' => new \stdClass()],
-        );
-    }
+//    /**
+//     * Inline кнопка для запуска HTML5 игры
+//     *
+//     * @param string      $text          Текст кнопки
+//     * @param ButtonStyle $style         Стиль кнопки
+//     * @param string|null $customEmojiId Пользовательский эмодзи перед кнопкой
+//     *
+//     * @return array
+//     * @see https://zenithgram.github.io/classes/button#callbackGame
+//     */
+//    public static function callbackGame(string $text,
+//        ButtonStyle $style = ButtonStyle::None,
+//        ?string $customEmojiId = null,
+//    ): array {
+//        return array_merge(
+//            self::buildBase($text, $style->value, $customEmojiId),
+//            ['callback_game' => new \stdClass()],
+//        );
+//    }
 
     /**
      * Inline кнопка оплаты (Invoice). Должна быть первой в первом ряду.
