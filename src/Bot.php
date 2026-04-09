@@ -564,6 +564,7 @@ class Bot
 
         if ($type === 'bot_command'
             || ($type === "text"
+                && empty($text) === false
                 && str_starts_with($text, '/')
             )
         ) {
