@@ -158,7 +158,7 @@ class Button
      *
      * @param string      $text          Текст кнопки
      * @param array       $chosenChat    Параметры объекта
-     *                                   SwitchInlineQueryChosenChat
+     *                                   SwitchInlineQueryChosenChat (allow_channel_chats, allow_user_chats и т.д.)
      * @param ButtonStyle $style         Стиль кнопки
      * @param string|null $customEmojiId Пользовательский эмодзи перед кнопкой
      *
