@@ -19,7 +19,7 @@
 - [Внедрение зависимостей и Рефлексия (Dependency Injection)](https://zenithgram.github.io/using/reflection.md): Использование Dependency Injection и рефлексии для чистого кода.
 - [Middleware](https://zenithgram.github.io/using/middleware.md): Промежуточное ПО для фильтрации запросов, логирования и проверки прав доступа.
 - [Пагинация (Pagination)](https://zenithgram.github.io/using/pagination.md)
-- [Обработка ошибок](https://zenithgram.github.io/using/errorHandler.md): Руководство по настройке и использованию встроенного обработчика ошибок (ErrorHandler).
+- [Обработка ошибок (Error Handling)](https://zenithgram.github.io/using/errorHandler.md): Руководство по настройке независимого ErrorHandler.
 - [Конструктор опросов](https://zenithgram.github.io/using/poll.md): Создание и отправка опросов и викторин.
 
 ### Классы
@@ -38,7 +38,7 @@
 - [Poll](https://zenithgram.github.io/classes/poll.md): Класс для создания опросов.
 - [Pagination](https://zenithgram.github.io/classes/pagination.md): Класс для пагинации страниц.
 - [Inline](https://zenithgram.github.io/classes/inline.md): Класс для создания инлайн-ответов.
-- [ErrorHandler](https://zenithgram.github.io/classes/errorhandler.md): Настройка обработки и логирования ошибок (ErrorHandler).
+- [**ErrorHandler**](https://zenithgram.github.io/classes/errorhandler.md): Независимый класс для перехвата и логирования ошибок (ErrorHandler).
 - [DTO](https://zenithgram.github.io/classes/dto.md): Объекты данных UserDto и ChatDto.
 - [Enum](https://zenithgram.github.io/classes/enum.md): Все Enum и их значения
 
