@@ -174,11 +174,12 @@ class ApiClient implements ApiClientInterface
         }
     }
 
-
     /** @internal  */
     public function getApiUrl(): string { return $this->apiUrl; }
+
     /** @internal  */
     public function getApiFileUrl(): string { return $this->apiFileUrl; }
+
     /** @internal  */
     public function getToken(): string { return $this->token; }
 

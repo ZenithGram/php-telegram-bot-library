@@ -8,8 +8,12 @@ use ErrorException;
 use Throwable;
 use ZenithGram\ZenithGram\Utils\EnvironmentDetector;
 
-trait ErrorHandler
+class ErrorHandler
 {
+    private static ?self $instance = null;
+    private static bool $isRegistered = false;
+
+    private ApiClient $api;
     private Closure|null $handler = null;
     private array|null $debug_chat_ids = null;
     private bool $short_trace = true;
@@ -17,129 +21,91 @@ trait ErrorHandler
     private bool $isAlreadyExiting = false;
 
     /**
-     * Отображать полный трейт или сокращенный
-     *
-     * @param bool $short_trace
-     *
-     * @return ZG
-     *
-     * @see https://zenithgram.github.io/classes/errorhandler#shortTrace
+     * Конструктор принимает токен и сразу создает свой ApiClient для отправки логов
      */
+    public function __construct(string $token)
+    {
+        $this->api = new ApiClient($token);
+        self::$instance = $this; // Сохраняем глобальный инстанс
+    }
+
     public function shortTrace(bool $short_trace): self
     {
         $this->short_trace = $short_trace;
-
         return $this;
     }
 
-    /**
-     * Устанавливает фильтр на путь к файлу, чтобы не отображать его
-     *
-     * @param string $filter "/path/to/your/project"
-     *
-     * @return ZG
-     *
-     * @see https://zenithgram.github.io/classes/errorhandler#setTracePathFilter
-     */
     public function setTracePathFilter(string $filter): self
     {
         $this->pathFiler = $filter;
-
         return $this;
     }
 
-    /**
-     * Активирует дебаг режим
-     *
-     * Чтобы он работал, нужно задать обработчик, либо перечислить id, куда
-     * будет отправлены ошибки
-     *
-     * @return ZG
-     *
-     * @throws \ErrorException
-     * @see https://zenithgram.github.io/classes/errorhandler#enableDebug
-     */
-    public function enableDebug(): self
-    {
-        ini_set('display_errors', 0);
-        ini_set('display_startup_errors', 1);
-        error_reporting(E_ALL);
-
-        set_error_handler(
-            fn(int $severity, string $message, string $file, int $line)
-                => $this->handleError($severity, $message, $file, $line),
-        );
-
-        set_exception_handler(fn(\Throwable $e)
-            => $this->handleExceptionFatal($e),
-        );
-
-        register_shutdown_function(fn()
-            => $this->handleShutdown(),
-        );
-
-        return $this;
-    }
-
-    /**
-     * Устанавливает ID, куда будут отправлены возникшие ошибки
-     *
-     * @param int|string|array $ids ID пользователя или чата
-     *
-     * @return ZG
-     *
-     * @see https://zenithgram.github.io/classes/errorhandler#setSendIds
-     */
     public function setSendIds(int|string|array $ids): self
     {
         $this->debug_chat_ids = is_array($ids) ? $ids : [$ids];
+        return $this;
+    }
 
+    public function setHandler(callable $handler): self
+    {
+        $this->handler = $handler(...);
         return $this;
     }
 
     /**
-     * Устанавливает обработчик, который срабатывает при возникновении ошибки
-     *
-     * @param callable $handler Обработчик. Пример: function (ZG $tg, Throwable
-     *                          $e)
-     *
-     * @return ZG
-     *
-     * @see https://zenithgram.github.io/classes/errorhandler#setHandler
+     * Активирует глобальный перехват ошибок
      */
-    public function setHandler(callable $handler): self
+    public function register(): self
     {
-        $this->handler = $handler(...);
+        if (self::$isRegistered) {
+            return $this;
+        }
 
+        ini_set('display_errors', '0');
+        ini_set('display_startup_errors', '1');
+        error_reporting(E_ALL);
+
+        set_error_handler(fn(int $sev, string $msg, string $file, int $line)
+            => $this->handleError($sev, $msg, $file, $line));
+
+        set_exception_handler(fn(Throwable $e)
+            => $this->handleExceptionFatal($e));
+
+        register_shutdown_function(fn()
+            => $this->handleShutdown());
+
+        self::$isRegistered = true;
         return $this;
     }
 
-    private function handleError(int $severity, string $message, string $file,
-        int $line,
-    ): bool {
-        if (!(error_reporting() & $severity)) {
-            return false;
+    /**
+     * Статический хелпер для LongPoll и ZG, чтобы они могли явно прокинуть
+     * ошибку в дебаггер, если поймали её в свой try/catch
+     */
+    public static function catch(Throwable $e, ?ZG $zgContext = null): void
+    {
+        if (self::$instance !== null) {
+            self::$instance->reportException($e, $zgContext);
+        } else {
+            // Если ErrorHandler не зарегистрирован, просто пишем в консоль/лог
+            fwrite(STDERR, "[Error] " . $e->getMessage() . PHP_EOL);
         }
+    }
+
+    private function handleError(int $severity, string $message, string $file, int $line): bool
+    {
+        if (!(error_reporting() & $severity)) return false;
         throw new ErrorException($message, 0, $severity, $file, $line);
     }
 
     private function handleShutdown(): void
     {
-        if ($this->isAlreadyExiting) {
-            return;
-        }
+        if ($this->isAlreadyExiting) return;
         $error = error_get_last();
-        if ($error
-            && in_array(
-                $error['type'],
-                [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR],
-            )
-        ) {
+        if ($error && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
             $this->handleExceptionFatal(
-                new ErrorException(
-                    $error['message'], 0, $error['type'], $error['file'],
-                    $error['line'],
-                ),
+                new ErrorException($error['message'], 0, $error['type'], $error['file'], $error['line'])
             );
         }
     }
@@ -151,35 +117,35 @@ trait ErrorHandler
         exit(1);
     }
 
-    public function reportException(Throwable $e): void
+    public function reportException(Throwable $e, ?ZG $zgContext = null): void
     {
         $className = (new \ReflectionClass($e))->getShortName();
         $message = $e->getMessage();
-
         [$userFile, $userLine, $isVendorError] = $this->findUserLocation($e);
 
         $cleanUserFile = $userFile;
         $cleanRealFile = $e->getFile();
-
         $trace = $this->renderTrace($e);
         $snippet = $this->getCodeSnippet($userFile, $userLine);
 
         if (EnvironmentDetector::isCli()) {
             $this->renderCliError(
                 $className, $message, $cleanUserFile, $userLine, $cleanRealFile,
-                $e->getLine(), $snippet, $trace['cli'],
+                $e->getLine(), $snippet, $trace['cli']
             );
         }
 
         if ($this->debug_chat_ids) {
             $this->sendTelegramError(
                 $className, $message, $cleanUserFile, $userLine, $cleanRealFile,
-                $e->getLine(), $snippet, $trace['html'],
+                $e->getLine(), $snippet, $trace['html']
             );
         }
 
         if ($this->handler !== null) {
-            ($this->handler)($this, $e);
+            // Если ошибка произошла глобально, формируем пустой ZG-контекст для вашего колбэка
+            $zg = $zgContext ?? new ZG($this->api, new UpdateContext([]));
+            ($this->handler)($zg, $e);
         }
     }
 
@@ -433,4 +399,5 @@ trait ErrorHandler
         return str_replace($this->pathFiler, '...', $file);
     }
 
+    // ... (приватные методы findUserLocation, renderCliError, sendTelegramError и т.д. остаются без изменений) ...
 }

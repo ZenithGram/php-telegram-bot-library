@@ -17,7 +17,6 @@ use ZenithGram\ZenithGram\Interfaces\ApiClientInterface;
 
 class ZG
 {
-    use ErrorHandler;
 
     private ?StorageInterface $storage = null;
 
@@ -170,6 +169,11 @@ class ZG
     public function file(string $file_id): File
     {
         return new File($file_id, $this->api);
+    }
+
+    public function reportException(\Throwable $e): void
+    {
+        ErrorHandler::catch($e, $this);
     }
 
     /**

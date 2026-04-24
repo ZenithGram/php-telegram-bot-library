@@ -10,12 +10,6 @@ use ZenithGram\ZenithGram\Enums\UpdateType;
 use function Amp\async;
 use function Amp\delay;
 
-/**
- * Класс для получения обновлений через Long Polling.
- *
- * В новой архитектуре полностью изолирован от логики обработки ошибок.
- * Все ошибки прокидываются в глобальный ErrorHandler.
- */
 class LongPoll
 {
     private int $offset = 0;
@@ -87,15 +81,13 @@ class LongPoll
                 foreach ($updates as $updateData) {
                     $this->offset = $updateData['update_id'] + 1;
 
-                    // Обработка каждого апдейта в отдельной корутине
                     async(function() use ($handler, $updateData) {
                         $this->processUpdate($handler, $updateData);
                     });
                 }
             } catch (Throwable $e) {
-                // Ошибки сети или API при получении списка обновлений
                 $this->reportInternalError($e);
-                delay(2); // Пауза перед следующей попыткой при ошибке
+                delay(2);
             }
         }
     }
@@ -111,26 +103,15 @@ class LongPoll
         try {
             $handler($tgInstance);
         } catch (Throwable $e) {
-            /**
-             * Если в логике бота произошла ошибка, мы передаем её в ErrorHandler.
-             * Если ErrorHandler был инициализирован разработчиком через ->register(),
-             * он отправит отчет. Если нет — просто выведет в STDERR.
-             */
-            ErrorHandlerNew::catch($e, $tgInstance);
+            ErrorHandler::catch($e, $tgInstance);
         }
     }
 
-    /**
-     * Логирует системные ошибки самого LongPoll (например, обрыв связи).
-     */
     private function reportInternalError(Throwable $e): void
     {
-        ErrorHandlerNew::catch($e);
+        ErrorHandler::catch($e);
     }
 
-    /**
-     * Выполняет запрос getUpdates к API.
-     */
     private function fetchUpdates(): array
     {
         $clientTimeout = $this->timeout + 15;
@@ -146,9 +127,6 @@ class LongPoll
         return $response['result'] ?? [];
     }
 
-    /**
-     * Сбрасывает очередь обновлений.
-     */
     private function dropPendingUpdates(): void
     {
         try {
