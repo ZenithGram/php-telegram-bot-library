@@ -6,19 +6,20 @@ namespace ZenithGram\ZenithGram;
 use Closure;
 use Throwable;
 use ZenithGram\ZenithGram\Interfaces\ApiClientInterface;
-
+use ZenithGram\ZenithGram\Enums\UpdateType;
 use function Amp\async;
 use function Amp\delay;
 
+/**
+ * Класс для получения обновлений через Long Polling.
+ *
+ * В новой архитектуре полностью изолирован от логики обработки ошибок.
+ * Все ошибки прокидываются в глобальный ErrorHandler.
+ */
 class LongPoll
 {
     private int $offset = 0;
     private bool $skipOldUpdates = false;
-    private bool $shortTrace = false;
-    private string $pathFiler = '';
-    private array|null $debug_chat_ids = null;
-    private bool $debug = false;
-    private Closure|null $handler = null;
     private array $allowedUpdates = [];
 
     public function __construct(
@@ -27,34 +28,24 @@ class LongPoll
     ) {}
 
     /**
-     * Создает объект класса LongPoll </br>
-     * Использует нативный ApiClient библиотеки
+     * Статический метод-фабрика для создания LongPoll.
      *
-     * @param string $token   Токен Telegram
-     * @param int    $timeout Сколько будет удерживаться соединение с Telegram
-     * @param string $baseUrl Адрес локального сервера Telegram (По умолчанию:
-     *                        https://api.telegram.org)
-     * @param null|string $proxyUrl Адрес прокси сервера (По умолчанию: null)
-     *
-     * @return LongPoll
-     *
-     * @see https://zenithgram.github.io/classes/longpoll
+     * @param string $token Токен бота
+     * @param int $timeout Таймаут соединения (сек)
+     * @param string $baseUrl URL API Telegram
+     * @param string|null $proxyUrl Прокси (опционально)
      */
-    public static function create(string $token, int $timeout = 20,
-        string $baseUrl = ApiClient::DEFAULT_API_URL, ?string $proxyUrl = null
+    public static function create(
+        string $token,
+        int $timeout = 20,
+        string $baseUrl = ApiClient::DEFAULT_API_URL,
+        ?string $proxyUrl = null
     ): self {
         return new self(new ApiClient($token, $baseUrl, $proxyUrl), $timeout);
     }
 
     /**
      * Устанавливает типы обновлений, которые бот хочет получать.
-     *
-     * @param array $updates Массив строк или Enum значений UpdateType.
-     *                       Пример: [UpdateType::Message, 'callback_query']
-     *
-     * @return self
-     *
-     * @see https://zenithgram.github.io/classes/longpoll#allowedupdates
      */
     public function allowedUpdates(array $updates): self
     {
@@ -62,43 +53,30 @@ class LongPoll
             if ($item instanceof UpdateType) {
                 return $item->value;
             }
-
             return (string)$item;
         }, $updates);
-
         return $this;
     }
 
     /**
-     * Пропускает старые обновления
-     *
-     * @return LongPoll
-     * @see https://zenithgram.github.io/classes/longpoll#skipoldupdates
+     * Пропускает все накопленные ранее обновления при старте.
      */
     public function skipOldUpdates(): self
     {
         $this->skipOldUpdates = true;
-
         return $this;
     }
 
     /**
-     * Запускает опрос серверов Telegram
-     *
-     * @param Closure $handler
-     *
-     * @return void
-     * @see https://zenithgram.github.io/classes/longpoll#listen
+     * Запускает бесконечный цикл опроса серверов Telegram.
      */
     public function listen(Closure $handler): void
     {
-        $isRunning = true;
-
         if ($this->skipOldUpdates) {
             $this->dropPendingUpdates();
         }
 
-        while ($isRunning) {
+        while (true) {
             try {
                 $updates = $this->fetchUpdates();
 
@@ -109,51 +87,53 @@ class LongPoll
                 foreach ($updates as $updateData) {
                     $this->offset = $updateData['update_id'] + 1;
 
+                    // Обработка каждого апдейта в отдельной корутине
                     async(function() use ($handler, $updateData) {
-                        try {
-                            $this->processUpdate($handler, $updateData);
-                        } catch (Throwable $e) {
-                            $this->reportInternalError($e, 'Update Error');
-                        }
+                        $this->processUpdate($handler, $updateData);
                     });
                 }
-
             } catch (Throwable $e) {
-                $this->reportInternalError($e, 'Network Error');
-                delay(2);
+                // Ошибки сети или API при получении списка обновлений
+                $this->reportInternalError($e);
+                delay(2); // Пауза перед следующей попыткой при ошибке
             }
         }
     }
 
-    private function reportInternalError(Throwable $e, $error): void
+    /**
+     * Обрабатывает конкретный апдейт и изолирует ошибки в нем.
+     */
+    private function processUpdate(Closure $handler, array $updateData): void
     {
-        $context = new UpdateContext([]);
+        $context = new UpdateContext($updateData);
         $tgInstance = new ZG($this->api, $context);
 
-        if ($this->debug) {
-            $tgInstance
-                ->enableDebug()
-                ->shortTrace($this->shortTrace)
-                ->setTracePathFilter($this->pathFiler);
-
-            if ($this->handler !== null) {
-                $tgInstance->setHandler($this->handler);
-            }
-
-            if ($this->debug_chat_ids !== null) {
-                $tgInstance->setSendIds($this->debug_chat_ids);
-            }
-
-            $tgInstance->reportException($e);
-        } else {
-            fwrite(STDERR, "[$error] ".$e->getMessage().PHP_EOL);
+        try {
+            $handler($tgInstance);
+        } catch (Throwable $e) {
+            /**
+             * Если в логике бота произошла ошибка, мы передаем её в ErrorHandler.
+             * Если ErrorHandler был инициализирован разработчиком через ->register(),
+             * он отправит отчет. Если нет — просто выведет в STDERR.
+             */
+            ErrorHandlerNew::catch($e, $tgInstance);
         }
     }
 
+    /**
+     * Логирует системные ошибки самого LongPoll (например, обрыв связи).
+     */
+    private function reportInternalError(Throwable $e): void
+    {
+        ErrorHandlerNew::catch($e);
+    }
+
+    /**
+     * Выполняет запрос getUpdates к API.
+     */
     private function fetchUpdates(): array
     {
         $clientTimeout = $this->timeout + 15;
-
         $response = $this->api->callAPI(
             'getUpdates',
             [
@@ -163,127 +143,22 @@ class LongPoll
             ],
             $clientTimeout,
         );
-
         return $response['result'] ?? [];
     }
 
+    /**
+     * Сбрасывает очередь обновлений.
+     */
     private function dropPendingUpdates(): void
     {
         try {
             $data = $this->api->callAPI(
-                'getUpdates', ['limit' => 1, 'offset' => -1,],
+                'getUpdates', ['limit' => 1, 'offset' => -1]
             );
             if (!empty($data['result'])) {
                 $lastUpdate = end($data['result']);
                 $this->offset = $lastUpdate['update_id'] + 1;
             }
-        } catch (Throwable $e) {
-        }
-    }
-
-    private function processUpdate(Closure $handler, array $updateData): void
-    {
-        $context = new UpdateContext($updateData);
-
-        $tgInstance = new ZG($this->api, $context);
-        if ($this->debug) {
-            $tgInstance
-                ->enableDebug()
-                ->shortTrace($this->shortTrace)
-                ->setTracePathFilter($this->pathFiler);
-            if ($this->handler !== null) {
-                $tgInstance->setHandler($this->handler);
-            }
-            if ($this->debug_chat_ids !== null) {
-                $tgInstance->setSendIds($this->debug_chat_ids);
-            }
-        }
-        try {
-            $handler($tgInstance);
-        } catch (Throwable $e) {
-            $tgInstance->reportException($e);
-        }
-    }
-
-    /**
-     * Активирует дебаг режим
-     *
-     * Чтобы он работал, нужно задать обработчик, либо перечислить id, куда
-     * будет отправлены ошибки
-     *
-     * @return LongPoll
-     *
-     * @see https://zenithgram.github.io/classes/errorhandler#enableDebug
-     */
-    public function enableDebug(): self
-    {
-        $this->debug = true;
-
-        return $this;
-    }
-
-    /**
-     * Устанавливает ID, куда будут отправлены возникшие ошибки
-     *
-     * @param int|string|array $ids ID пользователя или чата
-     *
-     * @return LongPoll
-     *
-     * @see https://zenithgram.github.io/classes/errorhandler#setSendIds
-     */
-    public function setSendIds(int|string|array $ids): self
-    {
-        $this->debug_chat_ids = is_array($ids) ? $ids : [$ids];
-
-        return $this;
-    }
-
-    /**
-     * Устанавливает обработчик, который срабатывает при возникновении ошибки
-     *
-     * @param callable $handler Обработчик. Пример: function (ZG $tg, Throwable
-     *                          $e)
-     *
-     * @return LongPoll
-     *
-     * @see https://zenithgram.github.io/classes/errorhandler#setHandler
-     */
-    public function setHandler(callable $handler): self
-    {
-        $this->handler = $handler(...);
-
-        return $this;
-    }
-
-    /**
-     * Отображать полный трейт или сокращенный
-     *
-     * @param bool $short
-     *
-     * @return LongPoll
-     *
-     * @see https://zenithgram.github.io/classes/errorhandler#shortTrace
-     */
-    public function shortTrace(bool $short = true): self
-    {
-        $this->shortTrace = $short;
-
-        return $this;
-    }
-
-    /**
-     * Устанавливает фильтр на путь к файлу, чтобы не отображать его
-     *
-     * @param string $filter "/path/to/your/project"
-     *
-     * @return LongPoll
-     *
-     * @see https://zenithgram.github.io/classes/errorhandler#setTracePathFilter
-     */
-    public function setTracePathFilter(string $filter): self
-    {
-        $this->pathFiler = $filter;
-
-        return $this;
+        } catch (Throwable) {}
     }
 }
