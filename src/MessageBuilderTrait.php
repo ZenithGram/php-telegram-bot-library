@@ -29,6 +29,11 @@ trait MessageBuilderTrait
     protected array $reply_markup_raw = [];
     protected array $additionally_params = [];
 
+    /* Rich Messages */
+    protected bool $sendRich = false;
+    protected bool $rtl = false;
+    protected bool $skipDetect = false;
+
     /**
      * Задает текст сообщения, которое будет отправлено в ответ
      *
@@ -237,6 +242,54 @@ trait MessageBuilderTrait
                 'payload' => $this->detectInput($item),
             ];
         }
+
+        return $this;
+    }
+
+    /**
+     * Устанавливает тип сообщения (false - Стандартное. true - RichMessage)
+     *
+     * @param bool $is_rich Это RichMessage или нет?
+     *
+     * @return self
+     *
+     * @see https://zenithgram.github.io/classes/messageMethods/rich
+     */
+    public function rich(bool $is_rich = true): self
+    {
+        $this->sendRich = $is_rich;
+
+        return $this;
+    }
+
+    /**
+     * При значении true сообщение будет отображаться справа налево
+     *
+     * @param bool $is_rtl
+     *
+     * @return self
+     *
+     * @see https://zenithgram.github.io/classes/messageMethods/rtl
+     */
+    public function rtl(bool $is_rtl = true): self
+    {
+        $this->rtl = $is_rtl;
+
+        return $this;
+    }
+
+    /**
+     * При значении true пропускает автоматическое определение сущностей (URL-адресов, упоминаний, номеров телефонов и тд) в тексте слева
+     *
+     * @param bool $skip_detect
+     *
+     * @return self
+     *
+     * @see https://zenithgram.github.io/classes/messageMethods/skipEntities
+     */
+    public function skipEntities(bool $skip_detect = true): self
+    {
+        $this->skipDetect = $skip_detect;
 
         return $this;
     }

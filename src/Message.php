@@ -79,6 +79,29 @@ final class Message
         $mediaCount = count($this->mediaQueue);
 
         if ($mediaCount === 0) {
+            if ($this->sendRich) {
+                if ($this->messageData['parse_mode'] === MessageParseMode::None->value) {
+                    throw new MessageBuilderException(
+                        "При использовании метода rich() необходимо указать ParseMode HTML или Markdown/MarkdownV2",
+                    );
+                }
+                $text = $this->messageData['text'];
+                unset($this->messageData['text']);
+
+                $inputRich = [
+                    'is_rtl' => $this->rtl,
+                    'skip_entity_detection' => $this->skipDetect,
+                ];
+
+                if ($this->messageData['parse_mode'] === MessageParseMode::HTML->value) {
+                    $inputRich['html'] = $text;
+                }
+                $inputRich['markdown'] = $text;
+                return $this->api->callAPI(
+                    'sendRichMessage', array_merge($commonParams, $inputRich),
+                );
+
+            }
             return $this->api->callAPI(
                 'sendMessage', array_merge($commonParams, $this->messageData),
             );
